@@ -1,0 +1,13 @@
+.bg_theme_primary {
+  background-color: var(--primaryTheme) !important;
+}
+
+.text_theme_primary {
+  color: var(--primaryText) !important;
+}
+
+.active_gradient_nav {
+  background: linear-gradient(118deg, var(--primaryGradientBG), var(--secondaryGradientBG));
+  color: white !important;
+  border-radius: 5px
+}
