@@ -1,32 +1,3 @@
-# Gym Managements System.
+NEXT_PUBLIC_API_URL=http://194.195.118.99/api/
 
-
-- End to end management system for gym organizations.
-
-## To Run The Project
-
-### Clone the repo 
-- Clone this repo and move to project directory
-
-#### Install Node Modules 
-
-```
-npm install 
-
-```
-
-#### Run On Local 
-```
-npm run dev
-```
-
-#### Run on Production
-```
-npm run start
-```
-
-#### Create a  Build
-```
-npm run build
-```
- 
+NEXT_PUBLIC_APP_NAME="Gym App"
