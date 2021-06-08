@@ -1,0 +1,61 @@
+{
+    "data": [
+        {
+            "step": 1,
+            "title": "Basic Information",
+            "is_completed": true,
+            "input": {
+                "first_name": "",
+                "last_name": "",
+                "gender": "",
+                "date_of_birth": "",
+                "age": 0,
+                "blood_group": "",
+                "height": {
+                    "fit": 0,
+                    "inch": 0
+                },
+                "weight": 0,
+                "bmi": 0,
+                "occupation": 0,
+                "language": []
+            }
+        },
+        {
+            "step": 2,
+            "title": "Contact Information",
+            "is_completed": false,
+            "input": {
+                "address": "",
+                "city": "",
+                "state": "",
+                "zipcode": 0,
+                "email": "",
+                "mobile": 0,
+                "aly_mobile": 0,
+                "emergency_contact_name": "000000",
+                "reference": 1
+            }
+        },
+        {
+            "step": 3,
+            "title": "Plan Details",
+            "is_completed": false,
+            "input": {
+                "offer": "",
+                "membership_plan": 1,
+                "join_membership": false,
+                "application_fee": 10,
+                "membership_start_date": 10,
+                "membership_end_date": 10,
+                "payment_date": 10,
+                "plan_date": 10,
+                "renewal_date": 10,
+                "is_active": false,
+                "feedback": 1,
+                "is_rejoin": false,
+                "is_joint": true
+            }
+        }
+    ]
+}
