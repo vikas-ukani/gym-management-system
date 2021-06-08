@@ -12,10 +12,6 @@ import { uploadImageService } from "services/image";
 const UpdateMaster = ({ id }) => {
   const MODULE_NAME = "Edit Masters";
 
-  const [master, setMaster] = useState(null);
-  const [defaultFileList, setDefaultFileList] = useState([]);
-  const [imageIds, setImageIds] = useState([]);
-
   const { addToast } = useToasts();
   const {
     register,
@@ -24,6 +20,11 @@ const UpdateMaster = ({ id }) => {
     reset,
     formState: { errors },
   } = useForm();
+  const watchAllFields = watch(); // when pass nothing as argument, you are watching everything
+
+  const [master, setMaster] = useState(null);
+  const [defaultFileList, setDefaultFileList] = useState([]);
+  const [imageIds, setImageIds] = useState([]);
 
   useEffect(async () => {
     if (id) {
@@ -142,7 +143,11 @@ const UpdateMaster = ({ id }) => {
                             type="text"
                             className="form-control form-control-lg"
                             name="code"
+                            readOnly={true}
                             defaultValue={master?.code}
+                            value={watchAllFields?.name
+                              ?.replace(/ /g, "_")
+                              .toUpperCase()}
                             {...register("code", {
                               required: "The code is required.",
                             })}

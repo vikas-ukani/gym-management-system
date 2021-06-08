@@ -18,6 +18,7 @@ const CreateMaster = () => {
     watch,
     formState: { errors },
   } = useForm();
+  const watchAllFields = watch(); // when pass nothing as argument, you are watching everything
 
   const [defaultFileList, setDefaultFileList] = useState([]);
   const [code, setCode] = useState();
@@ -124,9 +125,11 @@ const CreateMaster = () => {
                             type="text"
                             className="form-control form-control-lg"
                             name="code"
-                            {...register("code", {
-                              required: "The code is required.",
-                            })}
+                            value={watchAllFields?.name
+                              ?.replace(/ /g, "_")
+                              .toUpperCase()}
+                            readOnly={true}
+                            {...register("code")}
                           />
                           {/* readOnly={true} */}
                           {errors.code && (
