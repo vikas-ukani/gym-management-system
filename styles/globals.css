@@ -1,0 +1,130 @@
+:root {
+  --primaryTheme: #dde6e8;
+  --secondaryTheme: #7367f0;
+  --darkPrimaryTheme: #b8b9be;
+  --primaryText: #1f2f98;
+  --secondaryText: #565656;
+  --primaryGradientBG: #1f2f98;
+  --secondaryGradientBG: #4adede;
+}
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.rc-slider-handle {
+  top: 2px;
+  width: 20px !important;
+  height: 20px !important;
+  background-color: transparent;
+}
+
+.rc-slider-track {
+  background-color: var(--primaryGradientBG) !important;
+}
+.rc-slider-tooltip-hidden {
+  display: block !important;
+}
+.rc-slider-handle:hover {
+  background-color: var(--primaryGradientBG);
+}
+
+.text_theme_primary {
+  color: var(--primaryText) !important;
+}
+
+.bg_theme_primary {
+  background-color: var(--primaryTheme) !important;
+}
+
+.default_gradient {
+  background: -webkit-linear-gradient(
+    120deg,
+    var(--secondaryGradientBG) 0%,
+    var(--primaryGradientBG) 100%
+  ) !important;
+  background: linear-gradient(
+    -30deg,
+    var(--secondaryGradientBG) 0%,
+    var(--primaryGradientBG) 100%
+  ) !important;
+  color: #ffffff !important ;
+  font-weight: 600 !important;
+}
+.wizard li a:hover,
+.wizard li.active a {
+  background-color: var(--primaryText) !important;
+  color: var(--primaryTheme) !important;
+  /* background-color: var(--primaryTheme) !important; */
+}
+
+.sidebar_active_button_in {
+  box-shadow: inset 3px 3px 6px var(--darkPrimaryTheme),
+    -3px -3px 6px var(--primaryTheme);
+  border-radius: 15px;
+}
+.ant-switch-checked {
+  background-color: var(--primaryGradientBG) !important;
+}
+/* .sidebar_active_button_in {
+  box-shadow: inset 2px 2px 5px var(--primaryTheme), inset -3px -3px 7px var(--primaryTheme) !important;
+} */
+
+/* .btn:hover {
+  box-shadow: none !important;
+} */
+
+.custom_btn:active {
+  border-color: var(--primaryTheme) !important;
+  box-shadow: inset 3px 3px 6px var(--darkPrimaryTheme), 6px -6px 12px #ffffff !important;
+}
+.ant-picker,
+.ant-picker-panel {
+  padding: 10px !important;
+  border-color: var(--primaryTheme) !important;
+  box-shadow: inset 2px 2px 5px var(--darkPrimaryTheme),
+    inset -3px -3px 7px #ffffff;
+  background-color: #e6e7ee !important;
+}
+.ant-select-selector {
+  padding: 5px !important;
+  border-color: var(--primaryTheme) !important;
+  box-shadow: inset 2px 2px 5px var(--darkPrimaryTheme),
+    inset -3px -3px 7px #ffffff;
+  background-color: #e6e7ee !important;
+  height: 40px !important;
+}
+.ant-select-selection-placeholder {
+  color: rgb(65, 64, 64);
+}
+.ant-select-selection-overflow-item .ant-select-selection-item {
+  margin: 5px !important;
+  border-radius: 10% !important;
+  height: 20% !important;
+  background-color: var(--darkPrimaryTheme) !important;
+}
+
+.custom_btn:not(:active) {
+  box-shadow: 6px 6px 12px var(--darkPrimaryTheme), 6px -6px 12px #ffffff !important;
+}
+
+.card_in_shadow {
+  box-shadow: inset 6px 6px 12px var(--darkPrimaryTheme), -6px -6px 12px #ffffff !important;
+}
+
+.vs-radio-con input:checked ~ .vs-radio .vs-radio--circle {
+  background: var(--primaryText) !important;
+}
