@@ -1,0 +1,32 @@
+# build output
+dist
+.next
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# Export Build
+/build
+/out
+
+# misc
+.DS_Store
+
+# ENVs
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+
+# Vercel
+.vercel
+.now
