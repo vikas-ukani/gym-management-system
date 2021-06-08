@@ -4,7 +4,10 @@ import NavLinkMasters from "Components/Common/Sidebar/NavLinkMasters";
 import NavLinkLI from "Components/Common/Sidebar/NavLinkLI";
 
 const SideMenu = () => {
-222
+  const goToLink = (link) => {
+    // router.push(link)
+  };
+
   return (
     <div
       className={`main-menu menu-fixed menu-light menu-accordion menu-shadow ${styles.bg_theme_primary} ${styles.text_theme_primary}`}
@@ -19,6 +22,11 @@ const SideMenu = () => {
           id="main-menu-navigation"
           data-menu="menu-navigation"
         >
+          <NavLinkLI
+            url={"/outlets"}
+            title={"outlets"}
+            iconClass={"fa-map-o"}
+          />
           <NavLinkLI
             url={"/add-employee"}
             title={"Employee"}
