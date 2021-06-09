@@ -91,6 +91,24 @@ a {
   border-color: var(--primaryTheme) !important;
   box-shadow: inset 3px 3px 6px var(--darkPrimaryTheme), 6px -6px 12px #ffffff !important;
 }
+.custom_btn:not(:active) {
+  box-shadow: 6px 6px 12px var(--darkPrimaryTheme), 6px -6px 12px #ffffff !important;
+}
+
+.custom_btn_card:active {
+  border-color: var(--primaryTheme) !important;
+  box-shadow: inset 3px 3px 3px var(--darkPrimaryTheme), 3px -1px 3px #ffffff !important;
+}
+.custom_btn_card:not(:active) {
+  box-shadow: 3px 3px 3px var(--darkPrimaryTheme), 3px -1px 3px #ffffff !important;
+}
+.custom_btn_card:not(:hover) {
+  color: black !important;
+}
+.custom_btn_card:hover {
+  color: black !important;
+}
+
 .ant-picker,
 .ant-picker-panel {
   padding: 10px !important;
@@ -117,14 +135,18 @@ a {
   background-color: var(--darkPrimaryTheme) !important;
 }
 
-.custom_btn:not(:active) {
-  box-shadow: 6px 6px 12px var(--darkPrimaryTheme), 6px -6px 12px #ffffff !important;
-}
-
 .card_in_shadow {
   box-shadow: inset 6px 6px 12px var(--darkPrimaryTheme), -6px -6px 12px #ffffff !important;
 }
 
 .vs-radio-con input:checked ~ .vs-radio .vs-radio--circle {
   background: var(--primaryText) !important;
+}
+
+.shadow-soft-in {
+  box-shadow: inset 6px 6px 12px #b8b9be, -6px -6px 12px #ffffff !important;
+}
+
+.hover_bold:hover {
+  font-weight: 700 !important;
 }

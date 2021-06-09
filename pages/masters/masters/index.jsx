@@ -197,20 +197,19 @@ const Masters = () => {
                                   </a>
                                 </Link>
 
-                                <Link
-                                  href={`${SUB_MASTERS_UPDATE_URL}?parent_id=${list.id}`}
-                                >
-                                  <a className="btn btn-primary p-50 round m-50 waves-effect waves-light text_theme_primary custom_btn">
-                                    <i className="fa fa-sliders"></i>
-                                  </a>
-                                </Link>
-
                                 <div
                                   onClick={() => deleteRow(list.id)}
                                   className="btn btn-primary p-50 round m-50 waves-effect waves-light text_theme_primary"
                                 >
                                   <i className="fa fa-trash"></i>
                                 </div>
+                                <Link
+                                  href={`${SUB_MASTERS_UPDATE_URL}?parent_id=${list.id}`}
+                                >
+                                  <a className="btn btn-primary p-75 m-50 waves-effect waves-light text_theme_primary text-bold-600 custom_btn">
+                                    Submasters
+                                  </a>
+                                </Link>
                               </td>
                             </tr>
                           );

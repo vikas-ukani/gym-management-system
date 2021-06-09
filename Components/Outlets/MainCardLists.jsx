@@ -1,53 +1,36 @@
 const MainCardLists = () => {
-  const mainLists = [
-    [{}, {}, {}],
-    [{}, {}, {}, {}],
-    [{}, {}],
-    [{}],
-    [{}, {}, {}],
-  ];
+  const mainLists = [[{}, {}, {}]];
 
   return (
     <>
-      <div className="row">
-        <div className="col-xl-3 col-12">
-          <div className="form-group">
-            <div className="input-group mb-3">
-              <input
-                className="form-control form-control-lg"
-                id="exampleInputIcon2"
-                placeholder="Search Here"
-                aria-label="Input group"
-                type="text"
-              />
-              <div className="input-group-append">
-                <span className="input-group-text">
-                  <span className="fa fa-search"></span>
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
       <div className="row">
         {mainLists.map((lists, index) => {
           return (
             <div
               key={index}
-              className="col-xl-12 mb-3 p-2  bg_theme_primary  shadow-inset"
+              className="col-xl-12 mb-3 p-2  bg_theme_primary   bg-primary shadow-soft border-light    "
             >
-              <h2>Outlet Title - {index + 1}</h2>
-              <div className="row ">
+              <h2 className="text-capitalize title">
+                workspace
+                <a className="float-right mx-1 btn btn-pill mb-sm-0 text_theme_primary custom_btn active">
+                  + Add New
+                </a>
+              </h2>
+              <div className="row mt-2">
                 {lists.map((list, idx) => {
                   return (
-                    <div className="col-xl-4" key={idx}>
-                      <div className="card bg-primary shadow-soft border-light not-interested-box ">
+                    <div className="col-xl-4 col-md-6" key={idx}>
+                      <div
+                        className={`card p-1 bg-primary shadow-soft border-light not-interested-box ${
+                          idx == 0 && "default_gradient shadow-soft-in"
+                        }`}
+                      >
                         <div className="card-body">
-                          <h3 className="title d-flex align-items-center">
-                            Outlet {++idx}{" "}
+                          {/* title */}
+                          <div className="text-default d-flex align-items-center font-large-1 ">
+                            Outlet {++idx}
                             <span className="interested-icon"></span>
-                          </h3>
+                          </div>
                           <div className="lead-contact">
                             <span>Contact :</span> +91 989898 8888
                           </div>
@@ -59,13 +42,19 @@ const MainCardLists = () => {
                               <i className="fa fa-calendar"></i> 14 Feb 2021
                             </span>
                           </div>
-                          <div className="bottom-btn">
-                            <a href="#" className="btn btn-primary mr-1">
+                          <div className="bottom-btn text-center">
+                            {/* <a className="float-right mx-1 btn btn-pill mb-sm-0 text_theme_primary custom_btn active">
+                              + Add New
+                            </a> */}
+                            <button className="btn btn-primary custom_btn_card mr-1">
                               <i className="fa fa-edit"></i> Edit
-                            </a>
-                            <a href="#" className="btn btn-primary">
+                            </button>
+                            <button
+                              href="#"
+                              className="btn btn-primary custom_btn_card"
+                            >
                               <i className="fa fa-trash"></i> Delete
-                            </a>
+                            </button>
                           </div>
                         </div>
                       </div>

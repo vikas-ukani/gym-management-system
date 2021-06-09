@@ -24,7 +24,7 @@ const SideMenu = () => {
         >
           <NavLinkLI
             url={"/outlets"}
-            title={"outlets"}
+            title={"dashboard"}
             iconClass={"fa-map-o"}
           />
           <NavLinkLI
