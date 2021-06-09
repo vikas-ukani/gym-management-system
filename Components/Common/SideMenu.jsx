@@ -2,11 +2,13 @@ import SideMenuLogo from "Components/Common/SideMenuLogo";
 import styles from "styles/Home.module.css";
 import NavLinkMasters from "Components/Common/Sidebar/NavLinkMasters";
 import NavLinkLI from "Components/Common/Sidebar/NavLinkLI";
+import { userDetail } from "services";
+import { USER_ROLE_GYM_OWNER } from "constants";
+import { WORKSPACE_LIST_URL } from "constants";
 
 const SideMenu = () => {
-  const goToLink = (link) => {
-    // router.push(link)
-  };
+  const user = userDetail();
+  console.log("user", user?.role, user);
 
   return (
     <div
@@ -22,11 +24,14 @@ const SideMenu = () => {
           id="main-menu-navigation"
           data-menu="menu-navigation"
         >
-          <NavLinkLI
-            url={"/outlets"}
-            title={"dashboard"}
-            iconClass={"fa-map-o"}
-          />
+          {/* {user && user?.role == USER_ROLE_GYM_OWNER && ( */}
+            <NavLinkLI
+              url={`${WORKSPACE_LIST_URL}`}
+              title={"dashboard"}
+              iconClass={"fa-map-o"}
+            />
+          {/* )} */}
+
           <NavLinkLI
             url={"/add-employee"}
             title={"Employee"}
@@ -53,7 +58,6 @@ const SideMenu = () => {
             iconClass={"fa-bell"}
           />
           <NavLinkMasters />
-
           {/* <NavLinkLI url={"/setting"} title={"Setting"} iconClass={"fa-cog"} /> */}
           {/* <li className={"nav-item"}>
                         <hr />

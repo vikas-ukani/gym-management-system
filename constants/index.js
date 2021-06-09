@@ -14,3 +14,16 @@ export const MASTERS_CREATE_URL = "/masters/masters/create";
 export const MASTERS_UPDATE_URL = "/masters/masters/update";
 
 export const SUB_MASTERS_UPDATE_URL = "/masters/sub-master";
+
+/** WORKSPACE */
+export const WORKSPACE_LIST_URL = "/workspace";
+export const WORKSPACE_CREATE_URL = "/workspace/create";
+export const WORKSPACE_UPDATE_URL = "/workspace/update";
+
+/** OTHER CONSTANTS */
+export const USER_ROLE_ADMIN = "ADMIN";
+export const USER_ROLE_SUPER_ADMIN = "SUPER_ADMIN";
+
+export const USER_ROLE_GYM_OWNER = "GYM_OWNER";
+export const USER_ROLE_MEMBER = "MEMBER";
+export const USER_ROLE_STAFF = "STAFF";

@@ -94,6 +94,12 @@ a {
 .custom_btn:not(:active) {
   box-shadow: 6px 6px 12px var(--darkPrimaryTheme), 6px -6px 12px #ffffff !important;
 }
+.custom_btn:not(:active) {
+  color: black !important;
+}
+.custom_btn:not(:hover) {
+  color: black !important;
+}
 
 .custom_btn_card:active {
   border-color: var(--primaryTheme) !important;
@@ -149,4 +155,8 @@ a {
 
 .hover_bold:hover {
   font-weight: 700 !important;
+}
+
+.w-90 {
+  width: 90% !important;
 }
