@@ -160,3 +160,11 @@ a {
 .w-90 {
   width: 90% !important;
 }
+
+.bg_primary {
+  background-color: var(--primaryText) !important;
+  color: white;
+}
+.border_primary {
+  border:   1px solid var(--primaryText) !important;
+}

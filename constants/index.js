@@ -20,6 +20,18 @@ export const WORKSPACE_LIST_URL = "/workspace";
 export const WORKSPACE_CREATE_URL = "/workspace/create";
 export const WORKSPACE_UPDATE_URL = "/workspace/update";
 
+/** WORKSPACE */
+export const LEAVE_MANAGEMENT_LIST_URL = "/leave-management";
+export const LEAVE_MANAGEMENT_CREATE_URL = "/leave-management/create";
+export const LEAVE_MANAGEMENT_UPDATE_URL = "/leave-management/update";
+
+/** WORKSPACE */
+export const ANNOUNCEMENT_LIST_URL = "/announcement";
+export const ANNOUNCEMENT_CREATE_URL = "/announcement/create";
+export const ANNOUNCEMENT_UPDATE_URL = "/announcement/update";
+
+/** ----------------------------------------------------------------- */
+
 /** OTHER CONSTANTS */
 export const USER_ROLE_ADMIN = "ADMIN";
 export const USER_ROLE_SUPER_ADMIN = "SUPER_ADMIN";
