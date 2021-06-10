@@ -1,10 +1,14 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 const NavLinkLI = ({ url, title, iconClass }) => {
   const router = useRouter();
   let currentRoute = router.asPath;
-
+  useEffect(() => {
+    currentRoute = router.asPath;
+    console.log("currentRoute", currentRoute, url);
+  });
   let activeClass =
     (currentRoute == url || currentRoute.search(url) >= 0) &&
     "sidebar_active_button_in font-weight-bold";

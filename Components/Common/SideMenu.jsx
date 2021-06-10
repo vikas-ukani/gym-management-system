@@ -1,10 +1,14 @@
-import SideMenuLogo from "Components/Common/SideMenuLogo";
 import styles from "styles/Home.module.css";
+import SideMenuLogo from "Components/Common/SideMenuLogo";
 import NavLinkMasters from "Components/Common/Sidebar/NavLinkMasters";
 import NavLinkLI from "Components/Common/Sidebar/NavLinkLI";
 import { userDetail } from "services";
-import { USER_ROLE_GYM_OWNER } from "constants";
-import { WORKSPACE_LIST_URL } from "constants";
+import {
+  USER_ROLE_GYM_OWNER,
+  WORKSPACE_LIST_URL,
+  LEAVE_MANAGEMENT_LIST_URL,
+  ANNOUNCEMENT_LIST_URL,
+} from "constants";
 
 const SideMenu = () => {
   const user = userDetail();
@@ -25,11 +29,11 @@ const SideMenu = () => {
           data-menu="menu-navigation"
         >
           {/* {user && user?.role == USER_ROLE_GYM_OWNER && ( */}
-            <NavLinkLI
-              url={`${WORKSPACE_LIST_URL}`}
-              title={"dashboard"}
-              iconClass={"fa-map-o"}
-            />
+          <NavLinkLI
+            url={`${WORKSPACE_LIST_URL}`}
+            title={"dashboard"}
+            iconClass={"fa-map-o"}
+          />
           {/* )} */}
 
           <NavLinkLI
@@ -48,12 +52,12 @@ const SideMenu = () => {
           <NavLinkLI url={"/diet"} title={"Diet"} iconClass={"fa-cutlery"} />
           <NavLinkLI url={"/offers"} title={"Offers"} iconClass={"fa-bell"} />
           <NavLinkLI
-            url={"/leave-management"}
+            url={`${LEAVE_MANAGEMENT_LIST_URL}`}
             title={"Leave Management"}
             iconClass={"fa-bell"}
           />
           <NavLinkLI
-            url={"/announcement"}
+            url={`${ANNOUNCEMENT_LIST_URL}`}
             title={"announcement"}
             iconClass={"fa-bell"}
           />

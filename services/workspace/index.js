@@ -17,3 +17,21 @@ export const createWorkspaceAPI = (params = {}) => {
     body: params,
   };
 };
+
+export const getWorkspaceAPI = (id = null) => {
+  return {
+    url: "admin/workspaces/" + id,
+    method: "get",
+    headers: { accept: "*/*", Authorization: "Bearer " + getToken() },
+    body: null,
+  };
+};
+
+export const updateWorkspaceAPI = (id = null, params={}) => {
+  return {
+    url: "admin/workspaces/" + id,
+    method: "put",
+    headers: { accept: "*/*", Authorization: "Bearer " + getToken() },
+    body: params,
+  };
+};
