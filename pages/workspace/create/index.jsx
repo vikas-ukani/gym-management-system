@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { useAxios } from "hooks";
 import { useToasts } from "react-toast-notifications";
@@ -6,6 +5,7 @@ import { useToasts } from "react-toast-notifications";
 import Link from "next/link";
 import { createWorkspaceAPI } from "services/workspace";
 import { WORKSPACE_LIST_URL } from "constants";
+import { getUserId } from "services";
 
 const CreateWorkspacePage = () => {
   const MODULE_NAME = "Workspace";
@@ -19,7 +19,7 @@ const CreateWorkspacePage = () => {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      emails: [{ email: "tet" }],
+      emails: [{ email: null }],
       phones: [{ phone: null }],
     },
   });
@@ -27,18 +27,18 @@ const CreateWorkspacePage = () => {
   const mobileFields = useFieldArray({ control, name: "phones" });
 
   const onSubmit = async (input) => {
-    input.is_active = input.is_active === "true" || input.is_active == 1;
-
+    input.is_default = input.is_default === "true" || input.is_default == 1;
+    input.owner_id = getUserId();
     console.log("Final input", input);
-    // const { response, error, loading, statusCode } = await useAxios(
-    //   createWorkspaceAPI(input)
-    // );
-    // if (statusCode == 400 || statusCode == 422) {
-    //   addToast(error.message, { appearance: "error", autoDismiss: true });
-    // } else if (statusCode === 201) {
-    //   addToast(response.message, { appearance: "success", autoDismiss: true });
-    //   router.push(MASTERS_LIST_URL);
-    // }
+    const { response, error, loading, statusCode } = await useAxios(
+      createWorkspaceAPI(input)
+    );
+    if (statusCode == 400 || statusCode == 422) {
+      addToast(error.message, { appearance: "error", autoDismiss: true });
+    } else if (statusCode === 200 || statusCode === 201) {
+      addToast(response.message, { appearance: "success", autoDismiss: true });
+      router.push(WORKSPACE_LIST_URL);
+    }
   };
 
   return (
@@ -119,15 +119,16 @@ const CreateWorkspacePage = () => {
                                 <input
                                   type="text"
                                   className="form-control form-control-lg mb-1 w-90"
-                                  {...register(`emails.${index}.email`, {
-                                    required: "The email is required.",
-                                  })}
+                                  {...register(`emails.${index}.email`)}
                                 />
                               )}
                               name={`emails.${index}.email`}
                               control={control}
                               defaultValue={item.email}
                             />
+                            {/* , {
+                                    required: "The email is required.",
+                                  } */}
                             {/* defaultValue={item.email} // make sure to set up defaultValue */}
                             {emailsFields.fields.length > 1 && (
                               <a
@@ -172,15 +173,16 @@ const CreateWorkspacePage = () => {
                                 <input
                                   type="text"
                                   className="form-control form-control-lg mb-1 w-90"
-                                  {...register(`phones.${index}.phone`, {
-                                    required: "The phone is required.",
-                                  })}
+                                  {...register(`phones.${index}.phone`)}
                                 />
                               )}
                               name={`phones.${index}.phone`}
                               defaultValue={item.phone}
                               control={control}
                             />
+                            {/* , {
+                                    required: "The phone is required.",
+                                  } */}
                             {/* defaultValue={item.phone} // make sure to set up defaultValue */}
                             {mobileFields.fields.length > 1 && (
                               <a
@@ -216,10 +218,10 @@ const CreateWorkspacePage = () => {
                               <div className="vs-radio-con">
                                 <input
                                   type="radio"
-                                  name="is_active"
+                                  name="is_default"
                                   defaultChecked={true}
                                   value={true}
-                                  {...register("is_active", {
+                                  {...register("is_default", {
                                     required: "The active is required.",
                                   })}
                                 />
@@ -236,10 +238,10 @@ const CreateWorkspacePage = () => {
                               <div className="vs-radio-con">
                                 <input
                                   type="radio"
-                                  name="is_active"
+                                  name="is_default"
                                   defaultChecked={false}
                                   value={false}
-                                  {...register("is_active")}
+                                  {...register("is_default")}
                                 />
                                 <span className="vs-radio">
                                   <span className="vs-radio--border"></span>

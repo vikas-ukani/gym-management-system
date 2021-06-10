@@ -47,7 +47,7 @@ const useAxios = async ({ url, method, body = null, headers = {} }) => {
                 statusCode = response.statusCode
             })
             .catch((err) => {
-                error = err.response.data;
+                error = err.response?.data;
                 console.error('ERR', error);
                 statusCode = error.statusCode
             })
