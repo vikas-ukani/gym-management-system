@@ -3,7 +3,8 @@ export const FORGOT_PASSWORD_URL = "/auth/forgot-password";
 export const ENTER_OTP_URL = "/auth/enter-otp";
 export const NEW_PASSWORD_URL = "/auth/new-password";
 
-export const DASHBOARD_URL = "/add-employee";
+export const DASHBOARD_URL = "/";
+export const ADDEMPLOYEE = "/add-employee";
 
 export const USERS_LIST_URL = "/users";
 export const USERS_CREATE_URL = "/users/create";

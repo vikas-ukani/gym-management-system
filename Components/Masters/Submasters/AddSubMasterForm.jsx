@@ -161,7 +161,7 @@ const AddSubMasterForm = ({ onAddSubmit, setIsAddForm }) => {
                     <button
                       onClick={handleSubmit(onAddSubmit)}
                       className={
-                        "float-right mx-1 btn btn-pill mb-sm-0 mb-2 text_theme_primary custom_btn default_gradient"
+                        "float-right mx-1 btn btn-pill mb-sm-0 mb-2 text_theme_primary   default_gradient"
                       }
                     >
                       Create{" "}

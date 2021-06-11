@@ -364,7 +364,7 @@ const Step1 = ({ currentInput, goToNextStep }) => {
               </div>
 
               <div className="col-xl-12">
-                <div className="form-group pl-25">
+                <div className="form-group pl-25 mt-75">
                   <label className="h6">Weight</label>
                   <div className="">
                     <div className="float-left font-small-2 pl-lg-25">
@@ -399,7 +399,7 @@ const Step1 = ({ currentInput, goToNextStep }) => {
               </div>
 
               <div className="col-xl-12">
-                <div className="form-group">
+                <div className="form-group mt-75">
                   <label className="top-label">Language </label>
                   <div className="form-group">
                     <Select
@@ -455,7 +455,7 @@ const Step1 = ({ currentInput, goToNextStep }) => {
                                 </a> */}
                 <a
                   onClick={handleSubmit(onSubmit)}
-                  className="float-right mx-1 btn btn-pill mb-sm-0 mb-2 text_theme_primary custom_btn default_gradient"
+                  className="float-right mx-1 btn btn-pill mb-sm-0 mb-2 text_theme_primary   default_gradient"
                 >
                   NEXT <i className="fa fa-angle-right"> </i>
                 </a>

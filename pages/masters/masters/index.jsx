@@ -13,6 +13,8 @@ import { MASTERS_CREATE_URL, MASTERS_UPDATE_URL } from "constants";
 import Pagination from "react-js-pagination";
 import Swal from "sweetalert2";
 import { SUB_MASTERS_UPDATE_URL } from "constants";
+import UpdateRowIcon from "Components/UX/TableActions/UpdateRowIcon";
+import DeleteButtonIcon from "Components/UX/TableActions/DeleteButtonIcon";
 
 /** Start */
 const MODULE_NAME = "Masters";
@@ -191,23 +193,19 @@ const Masters = () => {
                               </td>
                               {/* <td className="text-center edit-delete-member-rate "> */}
                               <td className="text-center ">
-                                <Link href={`${MASTERS_UPDATE_URL}/${list.id}`}>
-                                  <a className="btn btn-primary p-50 round m-50 waves-effect waves-light text_theme_primary custom_btn">
-                                    <i className="fa fa-edit"></i>
-                                  </a>
-                                </Link>
-
-                                <div
-                                  onClick={() => deleteRow(list.id)}
-                                  className="btn btn-primary p-50 round m-50 waves-effect waves-light text_theme_primary"
-                                >
-                                  <i className="fa fa-trash"></i>
-                                </div>
+                                <UpdateRowIcon
+                                  url={MASTERS_UPDATE_URL}
+                                  id={list.id}
+                                />
+                                <DeleteButtonIcon
+                                  deleteRow={deleteRow}
+                                  id={list.id}
+                                />
                                 <Link
                                   href={`${SUB_MASTERS_UPDATE_URL}?parent_id=${list.id}`}
                                 >
-                                  <a className="btn btn-primary p-75 m-50 waves-effect waves-light text_theme_primary text-bold-600 custom_btn">
-                                    Submasters
+                                  <a className="btn btn-primary round p-75 m-50 waves-effect waves-light text_theme_primary text-bold-600 custom_btn">
+                                    <div className="">Submasters</div>
                                   </a>
                                 </Link>
                               </td>

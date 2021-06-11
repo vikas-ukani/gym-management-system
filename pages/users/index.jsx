@@ -11,6 +11,8 @@ import { filter, findWhere } from "underscore";
 import { Switch } from "antd";
 import { useToasts } from "react-toast-notifications";
 import Swal from "sweetalert2";
+import UpdateRowIcon from "Components/UX/TableActions/UpdateRowIcon";
+import DeleteButtonIcon from "Components/UX/TableActions/DeleteButtonIcon";
 
 const Users = () => {
   const { addToast } = useToasts();
@@ -66,17 +68,17 @@ const Users = () => {
       }
     });
 
-    if (foundUser && foundUser.id) {
-      // const { response, error, loading, statusCode } = await useAxios(deleteUserByIdAPI(id))
-      // if (statusCode === 200) {
-      //     let newUsers = filter(oldUsers, user => user.id !== foundUser.id)
-      //     console.log('newUsers', newUsers);
-      //     setUsers(newUsers)
-      //     addToast(response.message, { appearance: 'success', autoDismiss: true })
-      // } else {
-      //     addToast(response.message, { appearance: 'error', autoDismiss: true })
-      // }
-    }
+    // if (foundUser && foundUser.id) {
+    // const { response, error, loading, statusCode } = await useAxios(deleteUserByIdAPI(id))
+    // if (statusCode === 200) {
+    //     let newUsers = filter(oldUsers, user => user.id !== foundUser.id)
+    //     console.log('newUsers', newUsers);
+    //     setUsers(newUsers)
+    //     addToast(response.message, { appearance: 'success', autoDismiss: true })
+    // } else {
+    //     addToast(response.message, { appearance: 'error', autoDismiss: true })
+    // }
+    // }
   };
 
   const onActiveChange = async (checked, id) => {
@@ -177,7 +179,15 @@ const Users = () => {
                               </td>
                               {/* <td className="text-center edit-delete-member-rate "> */}
                               <td className="text-center ">
-                                <Link href={`${USERS_UPDATE_URL}/${user.id}`}>
+                                <UpdateRowIcon
+                                  url={USERS_UPDATE_URL}
+                                  id={user.id}
+                                />
+                                <DeleteButtonIcon
+                                  deleteRow={deleteRow}
+                                  id={user.id}
+                                />
+                                {/* <Link href={`${USERS_UPDATE_URL}/${user.id}`}>
                                   <div className="btn btn-primary p-50 round m-50 waves-effect waves-light text_theme_primary custom_btn">
                                     <i className="fa fa-edit"></i>
                                   </div>
@@ -188,7 +198,7 @@ const Users = () => {
                                   className="btn btn-primary p-50 round m-50 waves-effect waves-light text_theme_primary"
                                 >
                                   <i className="fa fa-trash"></i>
-                                </div>
+                                </div> */}
                               </td>
                             </tr>
                           );

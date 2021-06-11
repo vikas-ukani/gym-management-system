@@ -70,7 +70,7 @@ const Step5 = ({ currentInput, goToNextStep, goToPrevStep }) => {
                         <div className="row">
                             <div className="col-12 mb-5">
                                 <a onClick={() => stepPrev()} className="float-left mx-1 btn btn-pill mb-sm-0 mb-2 text_theme_primary custom_btn"><i className="fa fa-angle-left"></i> BACK</a>
-                                <a onClick={() => stepNext()} className="float-right mx-1 btn btn-pill mb-sm-0 mb-2 text_theme_primary custom_btn default_gradient">
+                                <a onClick={() => stepNext()} className="float-right mx-1 btn btn-pill mb-sm-0 mb-2 text_theme_primary   default_gradient">
                                     NEXT {" "}
                                     <i className="fa fa-angle-right"></i>
                                 </a>

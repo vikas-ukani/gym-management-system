@@ -134,7 +134,7 @@ const ChangePassword = () => {
 											<div className="col-xl-12 pb-5">
 												{/* "step-2.html" */}
 												<button
-													className="float-right mx-1 btn btn-pill mb-sm-0 mb-2 text_theme_primary custom_btn default_gradient"
+													className="float-right mx-1 btn btn-pill mb-sm-0 mb-2 text_theme_primary   default_gradient"
 													onClick={handleSubmit(onSubmit)}
 												>
 													Update Password <i className="fa fa-angle-right"> </i>

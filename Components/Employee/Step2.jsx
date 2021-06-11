@@ -180,7 +180,7 @@ const Step2 = ({ currentInput, goToNextStep, goToPrevStep }) => {
 								</a>
 								<a
 									onClick={() => stepNext()}
-									className="float-right mx-1 btn btn-pill mb-sm-0 mb-2 text_theme_primary custom_btn default_gradient"
+									className="float-right mx-1 btn btn-pill mb-sm-0 mb-2 text_theme_primary   default_gradient"
 								>
 									NEXT <i className="  fa fa-angle-right"></i>
 								</a>

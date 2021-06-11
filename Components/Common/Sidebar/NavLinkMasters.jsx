@@ -15,11 +15,11 @@ const NavLinkMasters = () => {
   }, []);
 
   return (
-    <li className="nav-item navigation mt-1 mb-1">
+    <li className="nav-item navigation mb-50">
       {/* ${activeClass} */}
       <a
         className={` text_theme_primary ${
-          isShow && "sidebar_active_button_in"
+          isShow && "sidebar_active_button_in1"
         }`}
         onClick={() => setIsShow(!isShow)}
       >
@@ -27,7 +27,7 @@ const NavLinkMasters = () => {
         <span className="menu-title font-weight-bold">Settings</span>
       </a>
       {isShow && (
-        <div className="pt-1 ">
+        <div className="pt-0 ">
           <ul className="navigation ">
             <NavLinkLI
               url={"/masters/masters"}

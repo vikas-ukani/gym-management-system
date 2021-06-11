@@ -46,7 +46,6 @@ const OutletsPage = () => {
         <div className="header-navbar-shadow"></div>
         <div className="content-wrapper">
           <div className="content-header row"></div>
-
           <div className="content-body">
             <h3 className="wizard-title text-left text_theme_primary text-capitalize">
               {MODULE_NAME}
