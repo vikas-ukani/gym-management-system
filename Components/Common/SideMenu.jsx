@@ -54,7 +54,7 @@ const SideMenu = () => {
           <NavLinkLI
             url={`${LEAVE_MANAGEMENT_LIST_URL}`}
             title={"Leave Management"}
-            iconClass={"fa-bell"}
+            iconClass={"fa-calendar-check-o"}
           />
           <NavLinkLI
             url={`${ANNOUNCEMENT_LIST_URL}`}

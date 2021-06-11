@@ -66,6 +66,7 @@ const LeaveManagement = () => {
                     <table className="table membership-table table-hover table-borderless ">
                       <thead>
                         <tr>
+                          {/* <th className="table-date table-primary text-capitalize"></th> */}
                           <th className="table-date table-primary text-capitalize">
                             Date
                           </th>
@@ -87,6 +88,16 @@ const LeaveManagement = () => {
                         {leaves.map((leave, idx) => {
                           return (
                             <tr key={leave.id}>
+                              {/* <td className="right text-center px-2 pr-0 ">
+                                <div className="bg-danger p-25 rounded-pill  ">
+                                  <div className=" pt-50 pb-0 font-small-4 ">
+                                    1.5
+                                  </div>
+                                  <div className="pb-50 font-medium-3 ">
+                                    Day
+                                  </div>
+                                </div>
+                              </td> */}
                               <td className="text-center px-2 ">
                                 <div className="d-flex">
                                   <div className="card w-50 mb-0">
