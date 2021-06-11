@@ -15,6 +15,10 @@ import Swal from "sweetalert2";
 import { SUB_MASTERS_UPDATE_URL } from "constants";
 import UpdateRowIcon from "Components/UX/TableActions/UpdateRowIcon";
 import DeleteButtonIcon from "Components/UX/TableActions/DeleteButtonIcon";
+import {
+  MODEL_CANCEL_CLASSES,
+  MODEL_CONFIRM_CLASSES,
+} from "utils/button-classes";
 
 /** Start */
 const MODULE_NAME = "Masters";
@@ -55,6 +59,10 @@ const Masters = () => {
       title: "Are you sure you want to delete this record?",
       showCancelButton: true,
       confirmButtonText: `Delete`,
+      customClass: {
+        cancelButton: MODEL_CANCEL_CLASSES,
+        confirmButton: MODEL_CONFIRM_CLASSES,
+      },
     }).then(async (result) => {
       if (result.isConfirmed) {
         let oldLists = lists;

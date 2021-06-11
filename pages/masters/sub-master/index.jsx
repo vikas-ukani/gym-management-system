@@ -18,6 +18,10 @@ import AddSubMasterForm from "Components/Masters/Submasters/AddSubMasterForm";
 import EditSubMasterForm from "Components/Masters/Submasters/EditSubMasterForm";
 import Swal from "sweetalert2";
 import { filter, findWhere } from "underscore";
+import {
+  MODEL_CANCEL_CLASSES,
+  MODEL_CONFIRM_CLASSES,
+} from "utils/button-classes";
 
 const SubMaster = () => {
   let router = useRouter();
@@ -97,6 +101,10 @@ const SubMaster = () => {
       title: "Are you sure you want to delete this record?",
       showCancelButton: true,
       confirmButtonText: `Delete`,
+      customClass: {
+        cancelButton: MODEL_CANCEL_CLASSES,
+        confirmButton: MODEL_CONFIRM_CLASSES,
+      },
     }).then(async (result) => {
       if (result.isConfirmed) {
         let oldLists = subMasters;

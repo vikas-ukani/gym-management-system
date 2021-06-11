@@ -166,5 +166,9 @@ a {
   color: white;
 }
 .border_primary {
-  border:   1px solid var(--primaryText) !important;
+  border: 1px solid var(--primaryText) !important;
+}
+
+.round {
+  border-radius: 1.5rem !important;
 }

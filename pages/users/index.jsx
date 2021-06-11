@@ -41,6 +41,10 @@ const Users = () => {
       title: "Are you sure you want to delete this record?",
       showCancelButton: true,
       confirmButtonText: `Delete`,
+      customClass: {
+        cancelButton: MODEL_CANCEL_CLASSES,
+        confirmButton: MODEL_CONFIRM_CLASSES,
+      },
     }).then(async (result) => {
       if (result.isConfirmed) {
         let oldLists = users;
@@ -57,14 +61,15 @@ const Users = () => {
               appearance: "success",
               autoDismiss: true,
             });
+            Swal.fire("Deleted!", "", "success");
           } else {
-            addToast(response.message, {
+            console.log("response", error);
+            addToast(error?.message, {
               appearance: "error",
               autoDismiss: true,
             });
           }
         }
-        Swal.fire("Deleted!", "", "success");
       }
     });
 
