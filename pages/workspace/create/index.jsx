@@ -6,6 +6,7 @@ import Link from "next/link";
 import { createWorkspaceAPI } from "services/workspace";
 import { WORKSPACE_LIST_URL } from "constants";
 import { getUserId } from "services";
+import { EMAIL_VALID_PATTERN } from "constants/common";
 
 const CreateWorkspacePage = () => {
   const MODULE_NAME = "Workspace";
@@ -38,6 +39,7 @@ const CreateWorkspacePage = () => {
     } else if (statusCode === 200 || statusCode === 201) {
       addToast(response.message, { appearance: "success", autoDismiss: true });
       router.push(WORKSPACE_LIST_URL);
+      console.log("RED", WORKSPACE_LIST_URL);
     }
   };
 
@@ -113,39 +115,46 @@ const CreateWorkspacePage = () => {
                       </label>
                       {emailsFields.fields.map((item, index) => {
                         return (
-                          <div key={item.id} className="d-flex">
-                            <Controller
-                              render={({ field }) => (
-                                <input
-                                  type="text"
-                                  className="form-control form-control-lg mb-1 w-90"
-                                  {...register(`emails.${index}.email`)}
-                                />
-                              )}
-                              name={`emails.${index}.email`}
-                              control={control}
-                              defaultValue={item.email}
-                            />
-                            {/* , {
+                          <>
+                            <div key={item.id} className="d-flex">
+                              <Controller
+                                render={({ field }) => (
+                                  <input
+                                    type="text"
+                                    className="form-control form-control-lg mb-25 mt-25"
+                                    {...field}
+                                    {...register(`emails.${index}.email`, {
+                                      required: "Email is required.",
+                                      pattern: {
+                                        value: EMAIL_VALID_PATTERN,
+                                        message: "Enter a valid e-mail address",
+                                      },
+                                    })}
+                                  />
+                                )}
+                                name={`emails.${index}.email`}
+                                control={control}
+                                defaultValue={item.email}
+                              />
+                              {/* , {
                                     required: "The email is required.",
                                   } */}
-                            {/* defaultValue={item.email} // make sure to set up defaultValue */}
-                            {emailsFields.fields.length > 1 && (
-                              <a
-                                onClick={() => emailsFields.remove(index)}
-                                className="btn btn-danger custom_btn add-icon mt-1 ml-1 "
-                              >
-                                <i className="fa fa-minus "></i>
-                              </a>
-                            )}
-                            {/* {errors.emails[index] && (
+                              {/* defaultValue={item.email} // make sure to set up defaultValue */}
+                              {emailsFields.fields.length > 1 && (
+                                <a
+                                  onClick={() => emailsFields.remove(index)}
+                                  className="btn btn-danger custom_btn add-icon mt-1 ml-1 "
+                                >
+                                  <i className="fa fa-minus "></i>
+                                </a>
+                              )}
+                            </div>
+                            {errors?.emails && errors?.emails[index] && (
                               <p className=" text-danger">
-                                <pre>
-                                  {JSON.stringify(errors.emails[index].email)}
-                                </pre>
+                                {errors?.emails[index].email.message}
                               </p>
-                            )} */}
-                          </div>
+                            )}
+                          </>
                         );
                       })}
                     </div>
@@ -172,8 +181,10 @@ const CreateWorkspacePage = () => {
                               render={({ field }) => (
                                 <input
                                   type="text"
-                                  className="form-control form-control-lg mb-1 w-90"
-                                  {...register(`phones.${index}.phone`)}
+                                  className="form-control form-control-lg mb-1 mt-25"
+                                  {...register(`phones.${index}.phone`, {
+                                    required: "Phone is required.",
+                                  })}
                                 />
                               )}
                               name={`phones.${index}.phone`}
@@ -219,7 +230,7 @@ const CreateWorkspacePage = () => {
                                 <input
                                   type="radio"
                                   name="is_default"
-                                  defaultChecked={true}
+                                  defaultChecked={false}
                                   value={true}
                                   {...register("is_default", {
                                     required: "The active is required.",
@@ -239,7 +250,7 @@ const CreateWorkspacePage = () => {
                                 <input
                                   type="radio"
                                   name="is_default"
-                                  defaultChecked={false}
+                                  defaultChecked={true}
                                   value={false}
                                   {...register("is_default")}
                                 />
