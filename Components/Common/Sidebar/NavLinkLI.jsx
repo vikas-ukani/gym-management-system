@@ -7,7 +7,7 @@ const NavLinkLI = ({ url, title, iconClass }) => {
   let currentRoute = router.asPath;
   useEffect(() => {
     currentRoute = router.asPath;
-    console.log("currentRoute", currentRoute, url);
+    // console.log("currentRoute", currentRoute, url);
   });
   let activeClass =
     (currentRoute == url || currentRoute.search(url) >= 0) &&
