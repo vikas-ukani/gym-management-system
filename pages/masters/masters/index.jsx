@@ -99,7 +99,7 @@ const Masters = () => {
     if (statusCode === 200) {
       addToast(response.message, { appearance: "success", autoDismiss: true });
     } else {
-      addToast(response.message, { appearance: "error", autoDismiss: true });
+      addToast(error.message, { appearance: "error", autoDismiss: true });
     }
   };
 

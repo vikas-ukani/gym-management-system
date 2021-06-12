@@ -67,7 +67,6 @@ const MainCardLists = ({ workspaces = [] }) => {
             });
             // Swal.fire("Saved!", "", "success");
           } else {
-            console.log("response", error);
             addToast(error?.message, {
               appearance: "error",
               autoDismiss: true,
