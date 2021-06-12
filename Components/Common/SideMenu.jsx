@@ -29,7 +29,7 @@ const SideMenu = () => {
         >
           {/* {user && user?.role == USER_ROLE_GYM_OWNER && ( */}
           <NavLinkLI
-            url={`${WORKSPACE_LIST_URL}`}
+            url={`/workspace`}
             title={"dashboard"}
             iconClass={"fa-map-o"}
           />
@@ -51,12 +51,12 @@ const SideMenu = () => {
           <NavLinkLI url={"/diet"} title={"Diet"} iconClass={"fa-cutlery"} />
           <NavLinkLI url={"/offers"} title={"Offers"} iconClass={"fa-bell"} />
           <NavLinkLI
-            url={`${LEAVE_MANAGEMENT_LIST_URL}`}
+            url={`/leave-management`}
             title={"Leave Management"}
             iconClass={"fa-calendar-check-o"}
           />
           <NavLinkLI
-            url={`${ANNOUNCEMENT_LIST_URL}`}
+            url={`/announcement`}
             title={"announcement"}
             iconClass={"fa-bell"}
           />

@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import Axios from "axios";
 
-const baseAPIUrl = process.env.NEXT_PUBLIC_API_URL;
+export const baseAPIUrl = process.env.NEXT_PUBLIC_API_URL;
 
-const init = {
+export const init = {
   cache: "no-cache",
   credentials: "same-origin",
   headers: {
@@ -14,16 +14,6 @@ const init = {
   redirect: "follow",
   referrer: "no-referrer",
   withCredentials: true,
-
-  // cache: "no-cache",
-  // credentials: "same-origin",
-  // "headers": {
-  //     "Content-Type": "application/json"
-  // }
-  // mode: "cors",
-  // redirect: "follow",
-  // referrer: "no-referrer",
-  // withCredentials: true,
 };
 const axios = Axios.create({
   baseURL: baseAPIUrl,

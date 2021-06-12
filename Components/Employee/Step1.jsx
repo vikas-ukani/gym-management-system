@@ -37,13 +37,13 @@ const Step1 = ({ currentInput, goToNextStep }) => {
   } = useForm();
 
   /** Custom Validation Not Working now */
-  useEffect(() => {
-    setError("language", {
-      types: {
-        required: "The language is required",
-      },
-    });
-  }, [setError]);
+  // useEffect(() => {
+  //   setError("language", {
+  //     types: {
+  //       required: "The language is required",
+  //     },
+  //   });
+  // }, [setError]);
 
   useEffect(() => {
     setStepInput(currentInput);
@@ -248,11 +248,11 @@ const Step1 = ({ currentInput, goToNextStep }) => {
                     <DatePicker
                       className="w-100"
                       format="DD-MM-YYYY"
-                      defaultChecked={getDefaultDOB(
-                        stepInput?.input?.date_of_birth
-                      )}
                       onChange={(date) => changeDOB(date)}
                     />
+                    {/*   defaultChecked={getDefaultDOB(
+                        stepInput?.input?.date_of_birth
+                      )} */}
                     {/* {...register('date_of_birth', {
 												required: 'The date of birth required.',
 											})} */}
@@ -435,9 +435,9 @@ const Step1 = ({ currentInput, goToNextStep }) => {
                         {errors.language.types.required}
                       </p>
                     )}
-                    {errors.language && (
+                    {/* {errors.language && (
                       <p className=" text-danger">{errors.language.message}</p>
-                    )}
+                    )} */}
                     {/* <select className="select2 form-control" multiple={true}>
 											<option value="English">English</option>
 											<option value="Hindi">Hindi</option>

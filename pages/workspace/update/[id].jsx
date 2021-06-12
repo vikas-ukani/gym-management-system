@@ -1,20 +1,17 @@
+import { useEffect, useState } from "react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { useAxios } from "hooks";
 import { useToasts } from "react-toast-notifications";
 import router from "next/router";
-
 import Link from "next/link";
-import { createWorkspaceAPI, getWorkspaceAPI } from "services/workspace";
+
+import { getWorkspaceAPI } from "services/workspace";
 import { WORKSPACE_LIST_URL } from "constants";
 import { getUserId } from "services";
-import { useEffect, useState } from "react";
-
-export const getServerSideProps = async ({ params }) => {
-  return { props: { id: params.id } };
-};
+import getAxios from "hooks/getAxios";
 
 const UpdateWorkspacePage = ({ id }) => {
-  const MODULE_NAME = " WorUpdatekspace";
+  const MODULE_NAME = " Update Workspace";
   const { addToast } = useToasts();
   const [workspace, setWorkspace] = useState({});
 
@@ -307,5 +304,15 @@ const UpdateWorkspacePage = ({ id }) => {
     </div>
   );
 };
+UpdateWorkspacePage.getInitialProps = async (ctx) => {
+  let token = ctx.req.cookies.token;
+  let id = ctx.query.id || null;
+  console.log('data"response" ', id);
 
+  // let data = getAxios(getWorkspaceAPI(id));
+
+  return {
+    data: null,
+  };
+};
 export default UpdateWorkspacePage;

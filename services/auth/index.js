@@ -1,7 +1,7 @@
 import Axios from "axios";
 // import axios from "axios";
 import { useAxios } from "hooks";
-import { getToken } from "services";
+import { getToken, setToken } from "services";
 import Cookies from "js-cookie";
 const baseAPIUrl = process.env.NEXT_PUBLIC_API_URL;
 
@@ -35,8 +35,9 @@ export const loginProcess = async (params) => {
       .catch((err) => err.response);
 
     if (status == 200 && data) {
-      // console.log('data Token', data?.data?.token);
+      let token = data?.data?.token || null;
       Cookies.set("user", JSON.stringify(data?.data), { expires: 7 });
+      setToken(token);
     } else if (status === 400 || status == 401) {
       console.error("ERROR!", data?.message);
     }

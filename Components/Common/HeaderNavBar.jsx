@@ -3,8 +3,7 @@ import { useEffect, useState } from "react";
 import router from "next/router";
 import Link from "next/link";
 import { useToasts } from "react-toast-notifications";
-import { userDetail } from "services";
-import Cookies from "js-cookie";
+import { removeToken, removeUser, userDetail } from "services";
 
 const HeaderNavBar = () => {
   const [user, setUser] = useState(null);
@@ -14,7 +13,9 @@ const HeaderNavBar = () => {
   const { addToast } = useToasts();
 
   const handleLogout = () => {
-    Cookies.remove("user");
+    removeUser();
+    removeToken();
+
     router.push(LOGIN_URL);
     // addToast()
   };
