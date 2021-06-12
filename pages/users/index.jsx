@@ -14,6 +14,10 @@ import Swal from "sweetalert2";
 import UpdateRowIcon from "Components/UX/TableActions/UpdateRowIcon";
 import DeleteButtonIcon from "Components/UX/TableActions/DeleteButtonIcon";
 import { WORKSPACE_LIST_URL } from "constants";
+import {
+  MODEL_CANCEL_CLASSES,
+  MODEL_CONFIRM_CLASSES,
+} from "utils/button-classes";
 
 const Users = () => {
   const { addToast } = useToasts();
