@@ -15,10 +15,9 @@ const UpdateWorkspacePage = ({ id }) => {
   const [workspace, setWorkspace] = useState({});
 
   const {
+    register,
     handleSubmit,
-    watch,
     control,
-    reset,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -33,7 +32,7 @@ const UpdateWorkspacePage = ({ id }) => {
     if (id) {
       const {
         response: { data },
-        statusCode, 
+        statusCode,
       } = await useAxios(getWorkspaceAPI(id));
       if (statusCode == 200) {
         setWorkspace(data);

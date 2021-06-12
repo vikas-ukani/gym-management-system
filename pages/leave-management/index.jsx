@@ -40,20 +40,30 @@ const LeaveManagement = () => {
             <div className="content-body">
               <section>
                 <div className="row">
-                  <div className="col-lg-3 col-sm-6 col-12">
+                  <div className="col-6 ">
                     <h3 className="wizard-title text_theme_primary text-left text-capitalize">
                       {MODULE_NAME}
                       {/* <div className="badge badge-light badge-sm text_theme_primary badge-pill">{offers.length}</div> */}
                     </h3>
                   </div>
-                  <div className="col-lg-3 col-sm-6 col-12 mb-lg-0 mt-sm-25 offset-lg-6 text-sm-right text-center">
+                  <div className="col-6  mb-lg-0 mt-sm-25 text-sm-right text-center">
+                    {/* <Link href={`${LEAVE_MANAGEMENT_CREATE_URL}`}> */}
+                    <a
+                      className={
+                        "btn btn-pill mb-sm-0 mb-2 waves-effect waves-light text_theme_primary px-1 mx-1  "
+                      }
+                    >
+                      <i className="fa fa-bar-chart-o"> </i> Leave Request
+                      History
+                    </a>
+                    {/* </Link> */}
                     <Link href={`${LEAVE_MANAGEMENT_CREATE_URL}`}>
                       <a
                         className={
-                          "btn btn-pill mb-sm-0 mb-2 waves-effect waves-light text_theme_primary "
+                          "btn btn-pill mb-sm-0 mb-2 waves-effect waves-light text_theme_primary px-1"
                         }
                       >
-                        <i className="fa fa-plus"> </i> Add New offer
+                        <i className="fa fa-plus"> </i> New Leave Request
                       </a>
                     </Link>
                   </div>

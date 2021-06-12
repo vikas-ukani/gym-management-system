@@ -30,7 +30,6 @@ const CreateWorkspace = () => {
   const onSubmit = async (input) => {
     input.is_default = input.is_default === "true" || input.is_default == 1;
     input.owner_id = getUserId();
-    console.log("Final input", input);
     const { response, error, loading, statusCode } = await useAxios(
       createWorkspaceAPI(input)
     );
@@ -39,7 +38,6 @@ const CreateWorkspace = () => {
     } else if (statusCode === 200 || statusCode === 201) {
       addToast(response.message, { appearance: "success", autoDismiss: true });
       router.push(WORKSPACE_LIST_URL);
-      console.log("RED", WORKSPACE_LIST_URL);
     }
   };
 

@@ -13,6 +13,7 @@ import { useToasts } from "react-toast-notifications";
 import Swal from "sweetalert2";
 import UpdateRowIcon from "Components/UX/TableActions/UpdateRowIcon";
 import DeleteButtonIcon from "Components/UX/TableActions/DeleteButtonIcon";
+import { WORKSPACE_LIST_URL } from "constants";
 
 const Users = () => {
   const { addToast } = useToasts();
@@ -192,6 +193,11 @@ const Users = () => {
                                   deleteRow={deleteRow}
                                   id={user.id}
                                 />
+                                <Link href={`${WORKSPACE_LIST_URL}`}>
+                                  <a className="btn btn-primary round p-75 m-50 waves-effect waves-light text_theme_primary text-bold-600 custom_btn">
+                                    <div className="">Workspaces</div>
+                                  </a>
+                                </Link>
                                 {/* <Link href={`${USERS_UPDATE_URL}/${user.id}`}>
                                   <div className="btn btn-primary p-50 round m-50 waves-effect waves-light text_theme_primary custom_btn">
                                     <i className="fa fa-edit"></i>
