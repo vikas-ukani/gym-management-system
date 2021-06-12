@@ -224,8 +224,7 @@ const CreateWorkspace = () => {
                     <div className="col-xl-12 pl-0">
                       <div className="form-group">
                         <label className="text-capitalize">
-                          {" "}
-                          Set it default?
+                          Do you want to set it as default?
                         </label>
                         <ul className="list-unstyled mb-0">
                           <li className="d-inline-block mr-2">

@@ -246,7 +246,7 @@ const UpdateWorkspace = ({ workspace }) => {
                       <div className="form-group">
                         <label className="text-capitalize">
                           {" "}
-                          Set it default?
+                          Do you want to set it as default?
                         </label>
                         <ul className="list-unstyled mb-0">
                           <li className="d-inline-block mr-2">
@@ -255,7 +255,10 @@ const UpdateWorkspace = ({ workspace }) => {
                                 <input
                                   type="radio"
                                   name="is_default"
-                                  defaultChecked={workspace.is_default}
+                                  defaultChecked={
+                                    workspace?.is_default === true ||
+                                    workspace?.is_default === 1
+                                  }
                                   value={true}
                                   {...register("is_default", {
                                     required: "The active is required.",
@@ -275,7 +278,10 @@ const UpdateWorkspace = ({ workspace }) => {
                                 <input
                                   type="radio"
                                   name="is_default"
-                                  defaultChecked={workspace.is_default}
+                                  defaultChecked={
+                                    workspace?.is_default === false ||
+                                    workspace?.is_default === 0
+                                  }
                                   value={false}
                                   {...register("is_default")}
                                 />

@@ -44,3 +44,12 @@ export const setDefaultWorkspaceAPI = (id = null, params = {}) => {
     body: params,
   };
 };
+
+export const deleteWorkspaceAPI = (id = null ) => {
+  return {
+    url: "admin/workspaces/" + id,
+    method: "delete",
+    headers: { accept: "*/*", Authorization: "Bearer " + getToken() },
+    body: null,
+  };
+};

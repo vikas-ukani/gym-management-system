@@ -4,9 +4,9 @@ import { useAxios } from "hooks";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useToasts } from "react-toast-notifications";
-import { setDefaultWorkspaceAPI } from "services/workspace";
+import { deleteWorkspaceAPI, setDefaultWorkspaceAPI } from "services/workspace";
 import Swal from "sweetalert2";
-import { findWhere } from "underscore";
+import { filter, findWhere } from "underscore";
 import {
   MODEL_CANCEL_CLASSES,
   MODEL_CONFIRM_CLASSES,
@@ -20,7 +20,6 @@ const MainCardLists = ({ workspaces = [] }) => {
   const { addToast } = useToasts();
 
   useEffect(() => {
-    console.log("workspaces", workspaces);
     let found = findWhere(workspaces, { is_default: 1 });
     if (found?.id) {
       setActiveRecordId(found?.id);
@@ -31,9 +30,6 @@ const MainCardLists = ({ workspaces = [] }) => {
 
   const setDetafaultCard = (id) => {
     if (id == activeRecordId) return false;
-    // console.log("ID", id);
-    // return false;
-    console.log("same id");
     Swal.fire({
       title: "Are you sure you want to set it default workspace?",
       showCancelButton: true,
@@ -78,6 +74,42 @@ const MainCardLists = ({ workspaces = [] }) => {
             });
           }
         }
+      }
+    });
+  };
+
+  const deleteRow = async (id) => {
+    Swal.fire({
+      title: "Are you sure you want to delete this workspace?",
+      showCancelButton: true,
+      confirmButtonText: `Delete`,
+      customClass: {
+        cancelButton: MODEL_CANCEL_CLASSES,
+        confirmButton: MODEL_CONFIRM_CLASSES,
+      },
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        let oldLists = workspaces;
+        const foundList = findWhere(oldLists, { id });
+        if (foundList && foundList.id) {
+          const { response, error, loading, statusCode } = await useAxios(
+            deleteWorkspaceAPI(id)
+          );
+          if (statusCode === 200) {
+            let newLists = filter(oldLists, (list) => list.id !== foundList.id);
+            workspaces = newLists;
+            addToast(response.message, {
+              appearance: "success",
+              autoDismiss: true,
+            });
+          } else {
+            addToast(error.message, {
+              appearance: "error",
+              autoDismiss: true,
+            });
+          }
+        }
+        Swal.fire("Deleted!", "", "success");
       }
     });
   };
@@ -147,7 +179,10 @@ const MainCardLists = ({ workspaces = [] }) => {
                             </a>
                           </Link>
 
-                          <button className="btn btn-primary custom_btn_card px-1">
+                          <button
+                            className="btn btn-primary custom_btn_card px-1"
+                            onClick={() => deleteRow(list.id)}
+                          >
                             <i className="fa fa-trash"></i> Delete
                           </button>
                         </div>
