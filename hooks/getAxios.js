@@ -8,8 +8,6 @@ export default async ({ url, method, headers = {} }) => {
   var statusCode = null;
   var loading = true;
 
-  console.log("TOKEN::", getToken());
-  console.log("GET::", baseAPIUrl + url, { ...headers });
   await axios
     .get(baseAPIUrl + url, { headers: { ...init, ...headers } })
     .then((res) => {

@@ -1,61 +1,64 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { useAxios } from "hooks";
 import { useToasts } from "react-toast-notifications";
 import router from "next/router";
 import Link from "next/link";
 
-import { getWorkspaceAPI } from "services/workspace";
+import { getWorkspaceAPI, updateWorkspaceAPI } from "services/workspace";
 import { WORKSPACE_LIST_URL } from "constants";
-import { getUserId } from "services";
+import { getTokenType } from "services";
 import getAxios from "hooks/getAxios";
+import { MOBILE_VALID_PATTERN } from "constants/common";
 
-const UpdateWorkspacePage = ({ id }) => {
+export const getServerSideProps = async (ctx) => {
+  let token = await ctx.req?.cookies.token;
+  let id = ctx.query.id || null;
+  let newRequest = getWorkspaceAPI(id);
+  newRequest.headers.Authorization = getTokenType() + token;
+  let {
+    response: { statusCode, data: workspace },
+  } = await getAxios(newRequest);
+
+  if (statusCode == 422 || statusCode == 400) {
+    return { workspace };
+  }
+  workspace.is_default =
+    workspace.is_default == 1 || workspace.is_default == "true";
+  return {
+    props: { workspace },
+  };
+};
+
+const UpdateWorkspace = ({ workspace }) => {
   const MODULE_NAME = " Update Workspace";
   const { addToast } = useToasts();
-  const [workspace, setWorkspace] = useState({});
-
+  const id = workspace?.id;
   const {
     register,
     handleSubmit,
     control,
-    reset,
     formState: { errors },
   } = useForm({
     defaultValues: {
       emails: [{ email: null }],
       phones: [{ phone: null }],
+      ...workspace,
     },
   });
   const emailsFields = useFieldArray({ control, name: "emails" });
   const mobileFields = useFieldArray({ control, name: "phones" });
 
-  useEffect(async () => {
-    console.log("Effect", id);
-    if (id) {
-      const {
-        response: { data },
-        statusCode,
-      } = await useAxios(getWorkspaceAPI(id));
-      console.log("data", data);
-      if (statusCode == 200) {
-        setWorkspace(data);
-        reset({ defaultValue: { ...workspace } });
-      }
-    }
-  }, []);
-
   const onSubmit = async (input) => {
     input.is_default = input.is_default === "true" || input.is_default == 1;
-    input.owner_id = getUserId();
-    const { response, error, loading, statusCode } = await useAxios(
+    const { response, error, statusCode } = await useAxios(
       updateWorkspaceAPI(id, input)
     );
     if (statusCode == 400 || statusCode == 422) {
       addToast(error.message, { appearance: "error", autoDismiss: true });
     } else if (statusCode === 200 || statusCode === 201) {
       addToast(response.message, { appearance: "success", autoDismiss: true });
-      router.push(WORKSPACE_LIST_URL);
+      router.push(await WORKSPACE_LIST_URL);
     }
   };
 
@@ -131,39 +134,41 @@ const UpdateWorkspacePage = ({ id }) => {
                       </label>
                       {emailsFields.fields.map((item, index) => {
                         return (
-                          <div key={item.id} className="d-flex">
-                            <Controller
-                              render={({ field }) => (
-                                <input
-                                  type="text"
-                                  className="form-control form-control-lg mb-1 w-90"
-                                  {...register(`emails.${index}.email`)}
-                                />
-                              )}
-                              name={`emails.${index}.email`}
-                              control={control}
-                              defaultValue={item.email}
-                            />
-                            {/* , {
+                          <>
+                            <div key={item.id} className="d-flex">
+                              <Controller
+                                render={({ field }) => (
+                                  <input
+                                    type="text"
+                                    className="form-control form-control-lg mb-1 w-90"
+                                    {...register(`emails.${index}.email`)}
+                                    {...field}
+                                  />
+                                )}
+                                name={`emails.${index}.email`}
+                                control={control}
+                                defaultValue={workspace?.emails[index].email}
+                              />
+
+                              {/* , {
                                     required: "The email is required.",
                                   } */}
-                            {/* defaultValue={item.email} // make sure to set up defaultValue */}
-                            {emailsFields.fields.length > 1 && (
-                              <a
-                                onClick={() => emailsFields.remove(index)}
-                                className="btn btn-danger custom_btn add-icon mt-1 ml-1 "
-                              >
-                                <i className="fa fa-minus "></i>
-                              </a>
-                            )}
-                            {/* {errors.emails[index] && (
+                              {/* defaultValue={item.email} // make sure to set up defaultValue */}
+                              {emailsFields.fields.length > 1 && (
+                                <a
+                                  onClick={() => emailsFields.remove(index)}
+                                  className="btn btn-danger custom_btn add-icon mt-1 ml-1 "
+                                >
+                                  <i className="fa fa-minus "></i>
+                                </a>
+                              )}
+                            </div>
+                            {errors?.emails && errors?.emails[index] && (
                               <p className=" text-danger">
-                                <pre>
-                                  {JSON.stringify(errors.emails[index].email)}
-                                </pre>
+                                {errors?.emails[index].email.message}
                               </p>
-                            )} */}
-                          </div>
+                            )}
+                          </>
                         );
                       })}
                     </div>
@@ -185,39 +190,52 @@ const UpdateWorkspacePage = ({ id }) => {
                       </label>
                       {mobileFields.fields.map((item, index) => {
                         return (
-                          <div key={item.id} className="d-flex">
-                            <Controller
-                              render={({ field }) => (
-                                <input
-                                  type="text"
-                                  className="form-control form-control-lg mb-1 w-90"
-                                  {...register(`phones.${index}.phone`)}
-                                />
+                          <>
+                            <div key={item.id} className="d-flex">
+                              <Controller
+                                render={({ field }) => (
+                                  <input
+                                    type="text"
+                                    className="form-control form-control-lg mb-1 w-90"
+                                    {...field}
+                                  />
+                                )}
+                                name={`phones.${index}.phone`}
+                                defaultValue={workspace?.phones[index].phone}
+                                control={control}
+                                {...register(`phones.${index}.phone`, {
+                                  required: "Phone is required.",
+                                  pattern: {
+                                    value: MOBILE_VALID_PATTERN,
+                                    message: "Enter a valid phone number",
+                                  },
+                                  minLength: {
+                                    value: 8,
+                                    message:
+                                      "Min length should be 8 digit long",
+                                  },
+                                  maxLength: {
+                                    value: 10,
+                                    message:
+                                      "Max length should be 12 digit long",
+                                  },
+                                })}
+                              />
+                              {mobileFields.fields.length > 1 && (
+                                <a
+                                  onClick={() => mobileFields.remove(index)}
+                                  className="btn btn-danger custom_btn add-icon mt-1 ml-1 "
+                                >
+                                  <i className="fa fa-minus "></i>
+                                </a>
                               )}
-                              name={`phones.${index}.phone`}
-                              defaultValue={item.phone}
-                              control={control}
-                            />
-                            {/* , {
-                                    required: "The phone is required.",
-                                  } */}
-                            {/* defaultValue={item.phone} // make sure to set up defaultValue */}
-                            {mobileFields.fields.length > 1 && (
-                              <a
-                                onClick={() => mobileFields.remove(index)}
-                                className="btn btn-danger custom_btn add-icon mt-1 ml-1 "
-                              >
-                                <i className="fa fa-minus "></i>
-                              </a>
-                            )}
-                            {/* {errors.phones[index] && (
+                            </div>
+                            {errors?.phones && errors?.phones[index] && (
                               <p className=" text-danger">
-                                <pre>
-                                  {JSON.stringify(errors.phones[index].phone)}
-                                </pre>
+                                {errors?.phones[index].phone.message}
                               </p>
-                            )} */}
-                          </div>
+                            )}
+                          </>
                         );
                       })}
                     </div>
@@ -237,7 +255,7 @@ const UpdateWorkspacePage = ({ id }) => {
                                 <input
                                   type="radio"
                                   name="is_default"
-                                  defaultChecked={true}
+                                  defaultChecked={workspace.is_default}
                                   value={true}
                                   {...register("is_default", {
                                     required: "The active is required.",
@@ -257,7 +275,7 @@ const UpdateWorkspacePage = ({ id }) => {
                                 <input
                                   type="radio"
                                   name="is_default"
-                                  defaultChecked={false}
+                                  defaultChecked={workspace.is_default}
                                   value={false}
                                   {...register("is_default")}
                                 />
@@ -304,15 +322,5 @@ const UpdateWorkspacePage = ({ id }) => {
     </div>
   );
 };
-UpdateWorkspacePage.getInitialProps = async (ctx) => {
-  let token = ctx.req.cookies.token;
-  let id = ctx.query.id || null;
-  console.log('data"response" ', id);
 
-  // let data = getAxios(getWorkspaceAPI(id));
-
-  return {
-    data: null,
-  };
-};
-export default UpdateWorkspacePage;
+export default UpdateWorkspace;

@@ -13,6 +13,10 @@ export const setToken = (token = null) => {
   return Cookies.set("token", token) || null;
 };
 
+export const getTokenType = () => {
+  return "Bearer " || null;
+};
+
 export const getToken = () => {
   return Cookies.get("token") || null;
 };

@@ -174,8 +174,8 @@ const CreateWorkspace = () => {
                                 render={({ field }) => (
                                   <input
                                     type="text"
-                                    {...field}
                                     className="form-control form-control-lg mb-1 mt-25"
+                                    {...field}
                                   />
                                 )}
                                 name={`phones.${index}.phone`}

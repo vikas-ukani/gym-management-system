@@ -36,7 +36,6 @@ const useAxios = async ({ url, method, body = null, headers = {} }) => {
       })
       .catch((err) => {
         error = err.response?.data;
-        console.error("ERR", error);
         statusCode = error.statusCode;
       })
       .finally(() => {
@@ -51,7 +50,6 @@ const useAxios = async ({ url, method, body = null, headers = {} }) => {
       })
       .catch((err) => {
         error = err.response.data;
-        console.error("ERR", error);
         statusCode = error.statusCode;
       })
       .finally(() => {
