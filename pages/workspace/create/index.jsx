@@ -57,15 +57,13 @@ const CreateWorkspace = () => {
                 <div className="row">
                   <div className="col-xl-6">
                     <div className="form-group">
-                      <label className="top-label text-capitalize">
-                        location name
-                      </label>
+                      <label className="top-label text-capitalize">name</label>
                       <input
                         type="text"
                         className="form-control form-control-lg"
                         name="location_name"
                         {...register("location_name", {
-                          required: "The location name is required.",
+                          required: "The   name is required.",
                         })}
                       />
                       {errors.location_name && (
@@ -79,14 +77,14 @@ const CreateWorkspace = () => {
                   <div className="col-xl-6">
                     <div className="form-group">
                       <label className="top-label text-capitalize">
-                        location address
+                        address
                       </label>
                       <input
                         type="text"
                         className="form-control form-control-lg"
                         name="location_address"
                         {...register("location_address", {
-                          required: "The location address is required.",
+                          required: "The  address is required.",
                         })}
                       />
                       {errors.location_address && (

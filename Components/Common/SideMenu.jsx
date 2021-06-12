@@ -12,7 +12,6 @@ import {
 
 const SideMenu = () => {
   const user = userDetail();
-  console.log("user", user?.role, user);
 
   return (
     <div

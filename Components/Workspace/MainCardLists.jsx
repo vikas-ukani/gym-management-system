@@ -1,3 +1,4 @@
+import { WORKSPACE_UPDATE_URL } from "constants";
 import { WORKSPACE_CREATE_URL } from "constants";
 import { useAxios } from "hooks";
 import Link from "next/link";
@@ -141,9 +142,9 @@ const MainCardLists = ({ workspaces = [] }) => {
                         </div>
                         <div className="bottom-btn text-center pt-50">
                           <Link href={`${WORKSPACE_UPDATE_URL}/${list.id}`}>
-                            <button className="btn btn-primary custom_btn_card mr-1 px-1">
+                            <a className="btn btn-primary custom_btn_card mr-1 px-1">
                               <i className="fa fa-edit"></i> Edit
-                            </button>
+                            </a>
                           </Link>
 
                           <button className="btn btn-primary custom_btn_card px-1">

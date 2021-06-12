@@ -9,8 +9,12 @@ import { WORKSPACE_LIST_URL } from "constants";
 import { getUserId } from "services";
 import { useEffect, useState } from "react";
 
+export const getServerSideProps = async ({ params }) => {
+  return { props: { id: params.id } };
+};
+
 const UpdateWorkspacePage = ({ id }) => {
-  const MODULE_NAME = "Update Workspace";
+  const MODULE_NAME = " WorUpdatekspace";
   const { addToast } = useToasts();
   const [workspace, setWorkspace] = useState({});
 
@@ -18,6 +22,7 @@ const UpdateWorkspacePage = ({ id }) => {
     register,
     handleSubmit,
     control,
+    reset,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -29,11 +34,13 @@ const UpdateWorkspacePage = ({ id }) => {
   const mobileFields = useFieldArray({ control, name: "phones" });
 
   useEffect(async () => {
+    console.log("Effect", id);
     if (id) {
       const {
         response: { data },
         statusCode,
       } = await useAxios(getWorkspaceAPI(id));
+      console.log("data", data);
       if (statusCode == 200) {
         setWorkspace(data);
         reset({ defaultValue: { ...workspace } });
@@ -65,22 +72,20 @@ const UpdateWorkspacePage = ({ id }) => {
           <div className="content-body">
             <section>
               <h3 className="wizard-title text-capitalize text-left mb-3 text_theme_primary">
-                Update {MODULE_NAME}
+                {MODULE_NAME}
               </h3>
               <form role="form">
                 <div className="row">
                   <div className="col-xl-6">
                     <div className="form-group">
-                      <label className="top-label text-capitalize">
-                        location name
-                      </label>
+                      <label className="top-label text-capitalize">name</label>
                       <input
                         type="text"
                         className="form-control form-control-lg"
                         name="location_name"
                         defaultValue={workspace?.location_name}
                         {...register("location_name", {
-                          required: "The location name is required.",
+                          required: "The   name is required.",
                         })}
                       />
                       {errors.location_name && (
