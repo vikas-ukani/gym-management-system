@@ -27,7 +27,7 @@ export const getWorkspaceAPI = (id = null) => {
   };
 };
 
-export const updateWorkspaceAPI = (id = null, params={}) => {
+export const updateWorkspaceAPI = (id = null, params = {}) => {
   return {
     url: "admin/workspaces/" + id,
     method: "put",
@@ -36,9 +36,9 @@ export const updateWorkspaceAPI = (id = null, params={}) => {
   };
 };
 
-export const setDefaultWorkspaceAPI = (id = null, params={}) => {
+export const setDefaultWorkspaceAPI = (id = null, params = {}) => {
   return {
-    url: "admin/workspaces/partiallyUpdate/1" + id,
+    url: "admin/workspaces/partiallyUpdate/" + id,
     method: "put",
     headers: { accept: "*/*", Authorization: "Bearer " + getToken() },
     body: params,

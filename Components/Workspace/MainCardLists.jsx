@@ -1,7 +1,7 @@
 import { WORKSPACE_CREATE_URL } from "constants";
 import { useAxios } from "hooks";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useToasts } from "react-toast-notifications";
 import { setDefaultWorkspaceAPI } from "services/workspace";
 import Swal from "sweetalert2";
@@ -18,20 +18,32 @@ const MainCardLists = ({ workspaces = [] }) => {
 
   const { addToast } = useToasts();
 
+  useEffect(() => {
+    console.log("workspaces", workspaces);
+    let found = findWhere(workspaces, { is_default: 1 });
+    if (found?.id) {
+      setActiveRecordId(found?.id);
+      console.log("found?.id", found?.id);
+    }
+    console.log("setted ");
+  }, [workspaces]);
+
   const setDetafaultCard = (id) => {
-    console.log("ID", id);
-    return false;
+    if (id == activeRecordId) return false;
+    // console.log("ID", id);
+    // return false;
+    console.log("same id");
     Swal.fire({
       title: "Are you sure you want to set it default workspace?",
       showCancelButton: true,
-      confirmButtonText: `Yes`,
+      confirmButtonText: `Confirm`,
       customClass: {
         cancelButton: MODEL_CANCEL_CLASSES,
         confirmButton: MODEL_CONFIRM_CLASSES,
       },
     }).then(async (result) => {
       if (result.isConfirmed) {
-        let oldLists = workspaces;
+        var oldLists = workspaces;
         const foundList = findWhere(oldLists, { id });
         if (foundList && foundList.id) {
           let params = { is_default: 1 };
@@ -40,21 +52,23 @@ const MainCardLists = ({ workspaces = [] }) => {
           );
           if (statusCode === 200) {
             setActiveRecordId(id);
-            let newLists = oldLists.map((list) => {
+            let newLists = workspaces.forEach((list) => {
+              let newData = {
+                ...list,
+              };
+              console.log("oldLists", list.is_default);
               if (list.id === foundList.id) {
-                list.is_default = true;
-              } else {
-                list.is_default = false;
+                newData.is_default = true;
               }
+              list = newData;
             });
-            // setUsers(newLists);
+
             workspaces = newLists;
-            // setTotalCount(totalCount - 1);
             addToast(response.message, {
               appearance: "success",
               autoDismiss: true,
             });
-            Swal.fire("Deleted!", "", "success");
+            // Swal.fire("Saved!", "", "success");
           } else {
             console.log("response", error);
             addToast(error?.message, {
@@ -73,7 +87,8 @@ const MainCardLists = ({ workspaces = [] }) => {
         <div className="col-xl-12 mb-3 p-2  bg_theme_primary   bg-primary shadow-soft border-light    ">
           <h2 className="text-capitalize title">
             workspace
-            <Link href={`${WORKSPACE_CREATE_URL}`}>
+            <Link href={`${WORKSPACE_CREATE_URL} `}>
+              {/* <Link href={`${WORKSPACE_CREATE_URL}`}> */}
               <a className="float-right mx-1 btn btn-pill mb-sm-0 text_theme_primary custom_btn active">
                 + Add New
               </a>
@@ -84,50 +99,53 @@ const MainCardLists = ({ workspaces = [] }) => {
             {workspaces &&
               workspaces.map((list, idx) => {
                 return (
-                  <div
-                    className="col-xl-4 col-md-6"
-                    key={idx}
-                    onClick={() => setDetafaultCard(list.id)}
-                  >
+                  <div className="col-xl-4 col-md-6" key={idx}>
                     <div
                       className={`card pl-25 bg-primary shadow-soft border-light not-interested-box ${
                         activeRecordId == list.id && activeClass
                       }`}
                     >
-                      {/* <fieldset>
-                        <div className="vs-radio-con">
-                          <input
-                            type="radio"
-                            name="specialized"
-                            value="false"
-                          />
-                          <span className="vs-radio">
-                            <span className="vs-radio--border"></span>
-                            <span className="vs-radio--circle"></span>
-                          </span>
-                        </div>
-                      </fieldset> */}
-
                       <div className="card-body">
-                        <div className="text-default d-flex align-items-center font-medium-4 pb-50 font-weight-bold text-capitalize">
-                          {list.location_address}
-                        </div>{" "}
-                        <div className="lead-contact font-medium-3">
-                          <i className="fa fa-map-marker "></i>{" "}
-                          {list.location_address}
+                        <div style={{ position: "absolute", right: "10px" }}>
+                          <fieldset>
+                            <div className="vs-radio-con">
+                              <input
+                                type="radio"
+                                name="is_default"
+                                defaultChecked={activeRecordId == list.id}
+                                onClick={() => setDetafaultCard(list.id)}
+                              />
+                              <span className="vs-radio">
+                                <span className="vs-radio--border"></span>
+                                <span className="vs-radio--circle"></span>
+                              </span>{" "}
+                            </div>
+                          </fieldset>
                         </div>
-                        <div className="lead-contact font-medium-3">
-                          <i className="fa fa-phone"></i>{" "}
-                          {list?.phones[0]?.phone}
-                        </div>
-                        <div className="lead-contact font-medium-3">
-                          <i className="fa fa-mail-forward"></i>{" "}
-                          {list?.emails[0]?.email}
+                        <div>
+                          <div className="text-default d-flex align-items-center font-medium-4 pb-50 font-weight-bold text-capitalize">
+                            {list.location_address}
+                          </div>{" "}
+                          <div className="lead-contact font-medium-3">
+                            <i className="fa fa-map-marker "></i>{" "}
+                            {list.location_address}
+                          </div>
+                          <div className="lead-contact font-medium-3">
+                            <i className="fa fa-phone"></i>{" "}
+                            {list?.phones[0]?.phone}
+                          </div>
+                          <div className="lead-contact font-medium-3">
+                            <i className="fa fa-mail-forward"></i>{" "}
+                            {list?.emails[0]?.email}
+                          </div>
                         </div>
                         <div className="bottom-btn text-center pt-50">
-                          <button className="btn btn-primary custom_btn_card mr-1 px-1">
-                            <i className="fa fa-edit"></i> Edit
-                          </button>
+                          <Link href={`${WORKSPACE_UPDATE_URL}/${list.id}`}>
+                            <button className="btn btn-primary custom_btn_card mr-1 px-1">
+                              <i className="fa fa-edit"></i> Edit
+                            </button>
+                          </Link>
+
                           <button className="btn btn-primary custom_btn_card px-1">
                             <i className="fa fa-trash"></i> Delete
                           </button>

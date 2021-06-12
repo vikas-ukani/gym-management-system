@@ -101,8 +101,11 @@ a {
   color: black !important;
 }
 .swal2-actions:not(.swal2-loading) .swal2-styled:hover {
-  background-image: none !important; /* background-image: linear-gradient(rgba(0,0,0,.1),rgba(0,0,0,.1)); */
+  background-image: none;
 }
+/* .swal2-actions:not(.swal2-loading) .swal2-styled:hover {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1));
+}  */
 
 .custom_btn_card:active {
   border-color: var(--primaryTheme) !important;
