@@ -35,3 +35,12 @@ export const updateWorkspaceAPI = (id = null, params={}) => {
     body: params,
   };
 };
+
+export const setDefaultWorkspaceAPI = (id = null, params={}) => {
+  return {
+    url: "admin/workspaces/partiallyUpdate/1" + id,
+    method: "put",
+    headers: { accept: "*/*", Authorization: "Bearer " + getToken() },
+    body: params,
+  };
+};

@@ -59,7 +59,7 @@ export const usersRoleListAPI = (params = {}) => {
     method: "get",
     headers: { accept: "*/*", Authorization: "Bearer " + getToken() },
     body: JSON.stringify(params),
-  };
+  }; 
 };
 
 // export const usersListAPI = (params = {}) => {

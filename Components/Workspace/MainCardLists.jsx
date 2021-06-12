@@ -1,8 +1,72 @@
 import { WORKSPACE_CREATE_URL } from "constants";
+import { useAxios } from "hooks";
 import Link from "next/link";
+import { useState } from "react";
+import { useToasts } from "react-toast-notifications";
+import { setDefaultWorkspaceAPI } from "services/workspace";
+import Swal from "sweetalert2";
+import { findWhere } from "underscore";
+import {
+  MODEL_CANCEL_CLASSES,
+  MODEL_CONFIRM_CLASSES,
+} from "utils/button-classes";
 import EmptyWorkspaceCard from "./EmptyWorkspaceCard";
 
 const MainCardLists = ({ workspaces = [] }) => {
+  const [activeRecordId, setActiveRecordId] = useState();
+  const activeClass = "default_gradient shadow-soft-in";
+
+  const { addToast } = useToasts();
+
+  const setDetafaultCard = (id) => {
+    console.log("ID", id);
+    return false;
+    Swal.fire({
+      title: "Are you sure you want to set it default workspace?",
+      showCancelButton: true,
+      confirmButtonText: `Yes`,
+      customClass: {
+        cancelButton: MODEL_CANCEL_CLASSES,
+        confirmButton: MODEL_CONFIRM_CLASSES,
+      },
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        let oldLists = workspaces;
+        const foundList = findWhere(oldLists, { id });
+        if (foundList && foundList.id) {
+          let params = { is_default: 1 };
+          const { response, error, loading, statusCode } = await useAxios(
+            setDefaultWorkspaceAPI(id, params)
+          );
+          if (statusCode === 200) {
+            setActiveRecordId(id);
+            let newLists = oldLists.map((list) => {
+              if (list.id === foundList.id) {
+                list.is_default = true;
+              } else {
+                list.is_default = false;
+              }
+            });
+            // setUsers(newLists);
+            workspaces = newLists;
+            // setTotalCount(totalCount - 1);
+            addToast(response.message, {
+              appearance: "success",
+              autoDismiss: true,
+            });
+            Swal.fire("Deleted!", "", "success");
+          } else {
+            console.log("response", error);
+            addToast(error?.message, {
+              appearance: "error",
+              autoDismiss: true,
+            });
+          }
+        }
+      }
+    });
+  };
+
   return (
     <>
       <div className="row">
@@ -20,10 +84,14 @@ const MainCardLists = ({ workspaces = [] }) => {
             {workspaces &&
               workspaces.map((list, idx) => {
                 return (
-                  <div className="col-xl-4 col-md-6" key={idx}>
+                  <div
+                    className="col-xl-4 col-md-6"
+                    key={idx}
+                    onClick={() => setDetafaultCard(list.id)}
+                  >
                     <div
                       className={`card pl-25 bg-primary shadow-soft border-light not-interested-box ${
-                        idx == 0 && "default_gradient shadow-soft-in"
+                        activeRecordId == list.id && activeClass
                       }`}
                     >
                       {/* <fieldset>
@@ -41,7 +109,7 @@ const MainCardLists = ({ workspaces = [] }) => {
                       </fieldset> */}
 
                       <div className="card-body">
-                        <div className="text-default d-flex align-items-center font-medium-5 pb-1 font-weight-bold text-capitalize">
+                        <div className="text-default d-flex align-items-center font-medium-4 pb-50 font-weight-bold text-capitalize">
                           {list.location_address}
                         </div>{" "}
                         <div className="lead-contact font-medium-3">
