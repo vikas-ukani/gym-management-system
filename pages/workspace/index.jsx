@@ -30,7 +30,6 @@ const OutletsPage = () => {
     if (statusCode == 200) {
       setWorkspaces(data);
       /** save to store */
-      console.log("O", data);
       dispatch(initializeWorkspace(data));
     } else {
       setWorkspaces([]);

@@ -104,7 +104,7 @@ const Step4 = ({ currentInput, goToNextStep, goToPrevStep }) => {
 											</div> */}
                     </div>
                   </div>
-                  <ul className="list-unstyled  mb-0">
+                  {/* <ul className="list-unstyled  mb-0">
                     <li className="d-inline-block mr-2 checkbox-mobile">
                       <fieldset>
                         <div className="vs-radio-con">
@@ -121,7 +121,7 @@ const Step4 = ({ currentInput, goToNextStep, goToPrevStep }) => {
                         </div>
                       </fieldset>
                     </li>
-                  </ul>
+                  </ul> */}
                 </div>
               </div>
             </div>

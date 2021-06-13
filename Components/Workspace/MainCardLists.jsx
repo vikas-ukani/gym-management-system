@@ -23,9 +23,7 @@ const MainCardLists = ({ workspaces = [] }) => {
     let found = findWhere(workspaces, { is_default: 1 });
     if (found?.id) {
       setActiveRecordId(found?.id);
-      console.log("found?.id", found?.id);
     }
-    console.log("setted ");
   }, [workspaces]);
 
   const setDetafaultCard = (id) => {
@@ -53,7 +51,6 @@ const MainCardLists = ({ workspaces = [] }) => {
               let newData = {
                 ...list,
               };
-              console.log("oldLists", list.is_default);
               if (list.id === foundList.id) {
                 newData.is_default = true;
               }

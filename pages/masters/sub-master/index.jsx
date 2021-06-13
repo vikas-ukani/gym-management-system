@@ -96,7 +96,6 @@ const SubMaster = () => {
   };
 
   const deleteRow = (id) => {
-    console.log("id", id);
     Swal.fire({
       title: "Are you sure you want to delete this record?",
       showCancelButton: true,

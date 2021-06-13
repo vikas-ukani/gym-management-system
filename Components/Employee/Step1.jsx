@@ -95,6 +95,7 @@ const Step1 = ({ currentInput, goToNextStep }) => {
   };
 
   const onSubmit = (input) => {
+    console.log("input", input);
     let UpdatedData = {
       ...stepInput,
       input: {
@@ -106,6 +107,7 @@ const Step1 = ({ currentInput, goToNextStep }) => {
       },
       NextStep: 2,
     };
+    console.log("UpdatedData", UpdatedData);
     goToNextStep(UpdatedData);
   };
 
@@ -248,14 +250,15 @@ const Step1 = ({ currentInput, goToNextStep }) => {
                     <DatePicker
                       className="w-100"
                       format="DD-MM-YYYY"
+                      defaultChecked={getDefaultDOB(
+                        stepInput?.input?.date_of_birth
+                      )}
                       onChange={(date) => changeDOB(date)}
                     />
-                    {/*   defaultChecked={getDefaultDOB(
-                        stepInput?.input?.date_of_birth
-                      )} */}
-                    {/* {...register('date_of_birth', {
-												required: 'The date of birth required.',
-											})} */}
+                    {/* {...register("date_of_birth", {
+                        required: "The date of birth required.",
+                      })} */}
+
                     {/* <Controller
 											control={control}
 											rules={{ required: true }}

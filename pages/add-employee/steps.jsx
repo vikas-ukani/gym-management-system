@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { updateInputByStep } from "store/staff/StaffSlice";
 import { findIndex, findWhere, max, min } from "underscore";
 import Cookies from "js-cookie";
+import router from "next/router";
 
 const Steps = () => {
   const add_staff_clone = useSelector((state) => state.staff.add_staff_clone);
@@ -20,7 +21,6 @@ const Steps = () => {
     // ;
     // 	const item = Cookies.get("emp_current_step");
     //	// const item = localStorage.getItem('emp_current_step');
-    // 	console.log('item', item);
     // 	if (item) {
     // 		setCurrentStep(item);
     // 	}
@@ -42,10 +42,15 @@ const Steps = () => {
   };
 
   const goToNextStep = (UpdatedData) => {
-    dispatch(updateInputByStep({ add_staff_clone, UpdatedData }));
+    console.log("Next Update", UpdatedData);
+    // dispatch(updateInputByStep({ add_staff_clone, UpdatedData }));
+    console.log("Next Update", UpdatedData);
     if (currentStep < MAX_STEP) {
       setCurrentStep(currentStep + 1);
     } else {
+      /** Saving Data After Completing all Steps. */
+      router.push('/add-employee')
+      console.log("Final Step");
     }
   };
 
