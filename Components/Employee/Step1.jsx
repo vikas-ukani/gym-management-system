@@ -37,13 +37,13 @@ const Step1 = ({ currentInput, goToNextStep }) => {
   } = useForm();
 
   /** Custom Validation Not Working now */
-  useEffect(() => {
-    setError("language", {
-      types: {
-        required: "The language is required",
-      },
-    });
-  }, [setError]);
+  // useEffect(() => {
+  //   setError("language", {
+  //     types: {
+  //       required: "The language is required",
+  //     },
+  //   });
+  // }, [setError]);
 
   useEffect(() => {
     setStepInput(currentInput);
@@ -95,6 +95,7 @@ const Step1 = ({ currentInput, goToNextStep }) => {
   };
 
   const onSubmit = (input) => {
+    console.log("input", input);
     let UpdatedData = {
       ...stepInput,
       input: {
@@ -106,6 +107,7 @@ const Step1 = ({ currentInput, goToNextStep }) => {
       },
       NextStep: 2,
     };
+    console.log("UpdatedData", UpdatedData);
     goToNextStep(UpdatedData);
   };
 
@@ -253,9 +255,10 @@ const Step1 = ({ currentInput, goToNextStep }) => {
                       )}
                       onChange={(date) => changeDOB(date)}
                     />
-                    {/* {...register('date_of_birth', {
-												required: 'The date of birth required.',
-											})} */}
+                    {/* {...register("date_of_birth", {
+                        required: "The date of birth required.",
+                      })} */}
+
                     {/* <Controller
 											control={control}
 											rules={{ required: true }}
@@ -364,7 +367,7 @@ const Step1 = ({ currentInput, goToNextStep }) => {
               </div>
 
               <div className="col-xl-12">
-                <div className="form-group pl-25">
+                <div className="form-group pl-25 mt-75">
                   <label className="h6">Weight</label>
                   <div className="">
                     <div className="float-left font-small-2 pl-lg-25">
@@ -399,7 +402,7 @@ const Step1 = ({ currentInput, goToNextStep }) => {
               </div>
 
               <div className="col-xl-12">
-                <div className="form-group">
+                <div className="form-group mt-75">
                   <label className="top-label">Language </label>
                   <div className="form-group">
                     <Select
@@ -435,9 +438,9 @@ const Step1 = ({ currentInput, goToNextStep }) => {
                         {errors.language.types.required}
                       </p>
                     )}
-                    {errors.language && (
+                    {/* {errors.language && (
                       <p className=" text-danger">{errors.language.message}</p>
-                    )}
+                    )} */}
                     {/* <select className="select2 form-control" multiple={true}>
 											<option value="English">English</option>
 											<option value="Hindi">Hindi</option>
@@ -455,7 +458,7 @@ const Step1 = ({ currentInput, goToNextStep }) => {
                                 </a> */}
                 <a
                   onClick={handleSubmit(onSubmit)}
-                  className="float-right mx-1 btn btn-pill mb-sm-0 mb-2 text_theme_primary custom_btn default_gradient"
+                  className="float-right mx-1 btn btn-pill mb-sm-0 mb-2 text_theme_primary   default_gradient"
                 >
                   NEXT <i className="fa fa-angle-right"> </i>
                 </a>

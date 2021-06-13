@@ -9,8 +9,22 @@ export const userDetail = () => {
   }
 };
 
+export const setToken = (token = null) => {
+  return Cookies.set("token", token) || null;
+};
+
+export const getTokenType = () => {
+  return "Bearer " || null;
+};
+
 export const getToken = () => {
-  return userDetail()?.token || null;
+  return Cookies.get("token") || null;
+};
+export const removeToken = () => {
+  return Cookies.remove("token") || null;
+};
+export const removeUser = () => {
+  return Cookies.remove("user") || null;
 };
 
 export const getUserId = () => {

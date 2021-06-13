@@ -6,15 +6,16 @@ import Link from "next/link";
 import { createWorkspaceAPI } from "services/workspace";
 import { WORKSPACE_LIST_URL } from "constants";
 import { getUserId } from "services";
+import { EMAIL_VALID_PATTERN, MOBILE_VALID_PATTERN } from "constants/common";
+import router from "next/router";
 
-const CreateWorkspacePage = () => {
+const CreateWorkspace = () => {
   const MODULE_NAME = "Workspace";
   const { addToast } = useToasts();
 
   const {
     register,
     handleSubmit,
-    watch,
     control,
     formState: { errors },
   } = useForm({
@@ -29,7 +30,6 @@ const CreateWorkspacePage = () => {
   const onSubmit = async (input) => {
     input.is_default = input.is_default === "true" || input.is_default == 1;
     input.owner_id = getUserId();
-    console.log("Final input", input);
     const { response, error, loading, statusCode } = await useAxios(
       createWorkspaceAPI(input)
     );
@@ -57,15 +57,13 @@ const CreateWorkspacePage = () => {
                 <div className="row">
                   <div className="col-xl-6">
                     <div className="form-group">
-                      <label className="top-label text-capitalize">
-                        location name
-                      </label>
+                      <label className="top-label text-capitalize">name</label>
                       <input
                         type="text"
                         className="form-control form-control-lg"
                         name="location_name"
                         {...register("location_name", {
-                          required: "The location name is required.",
+                          required: "The   name is required.",
                         })}
                       />
                       {errors.location_name && (
@@ -79,14 +77,14 @@ const CreateWorkspacePage = () => {
                   <div className="col-xl-6">
                     <div className="form-group">
                       <label className="top-label text-capitalize">
-                        location address
+                        address
                       </label>
                       <input
                         type="text"
                         className="form-control form-control-lg"
                         name="location_address"
                         {...register("location_address", {
-                          required: "The location address is required.",
+                          required: "The  address is required.",
                         })}
                       />
                       {errors.location_address && (
@@ -113,39 +111,42 @@ const CreateWorkspacePage = () => {
                       </label>
                       {emailsFields.fields.map((item, index) => {
                         return (
-                          <div key={item.id} className="d-flex">
-                            <Controller
-                              render={({ field }) => (
-                                <input
-                                  type="text"
-                                  className="form-control form-control-lg mb-1 w-90"
-                                  {...register(`emails.${index}.email`)}
-                                />
+                          <>
+                            <div key={item.id} className="d-flex">
+                              <Controller
+                                render={({ field }) => (
+                                  <input
+                                    type="text"
+                                    className="form-control form-control-lg mb-25 mt-25"
+                                    {...field}
+                                  />
+                                )}
+                                name={`emails.${index}.email`}
+                                control={control}
+                                defaultValue={item.email}
+                                {...register(`emails.${index}.email`, {
+                                  required: "Email is required.",
+                                  pattern: {
+                                    value: EMAIL_VALID_PATTERN,
+                                    message: "Enter a valid e-mail address",
+                                  },
+                                })}
+                              />
+                              {emailsFields.fields.length > 1 && (
+                                <a
+                                  onClick={() => emailsFields.remove(index)}
+                                  className="btn btn-danger custom_btn add-icon mt-1 ml-1 "
+                                >
+                                  <i className="fa fa-minus "></i>
+                                </a>
                               )}
-                              name={`emails.${index}.email`}
-                              control={control}
-                              defaultValue={item.email}
-                            />
-                            {/* , {
-                                    required: "The email is required.",
-                                  } */}
-                            {/* defaultValue={item.email} // make sure to set up defaultValue */}
-                            {emailsFields.fields.length > 1 && (
-                              <a
-                                onClick={() => emailsFields.remove(index)}
-                                className="btn btn-danger custom_btn add-icon mt-1 ml-1 "
-                              >
-                                <i className="fa fa-minus "></i>
-                              </a>
-                            )}
-                            {/* {errors.emails[index] && (
+                            </div>
+                            {errors?.emails && errors?.emails[index] && (
                               <p className=" text-danger">
-                                <pre>
-                                  {JSON.stringify(errors.emails[index].email)}
-                                </pre>
+                                {errors?.emails[index].email.message}
                               </p>
-                            )} */}
-                          </div>
+                            )}
+                          </>
                         );
                       })}
                     </div>
@@ -167,39 +168,53 @@ const CreateWorkspacePage = () => {
                       </label>
                       {mobileFields.fields.map((item, index) => {
                         return (
-                          <div key={item.id} className="d-flex">
-                            <Controller
-                              render={({ field }) => (
-                                <input
-                                  type="text"
-                                  className="form-control form-control-lg mb-1 w-90"
-                                  {...register(`phones.${index}.phone`)}
-                                />
+                          <>
+                            <div key={item.id} className="d-flex">
+                              <Controller
+                                render={({ field }) => (
+                                  <input
+                                    type="text"
+                                    className="form-control form-control-lg mb-1 mt-25"
+                                    {...field}
+                                  />
+                                )}
+                                name={`phones.${index}.phone`}
+                                defaultValue={item.phone}
+                                control={control}
+                                {...register(`phones.${index}.phone`, {
+                                  required: "Phone is required.",
+                                  pattern: {
+                                    value: MOBILE_VALID_PATTERN,
+                                    message: "Enter a valid phone number",
+                                  },
+                                  minLength: {
+                                    value: 8,
+                                    message:
+                                      "Min length should be 8 digit long",
+                                  },
+                                  maxLength: {
+                                    value: 10,
+                                    message:
+                                      "Max length should be 12 digit long",
+                                  },
+                                })}
+                              />
+
+                              {mobileFields.fields.length > 1 && (
+                                <a
+                                  onClick={() => mobileFields.remove(index)}
+                                  className="btn btn-danger custom_btn add-icon mt-1 ml-1 "
+                                >
+                                  <i className="fa fa-minus "></i>
+                                </a>
                               )}
-                              name={`phones.${index}.phone`}
-                              defaultValue={item.phone}
-                              control={control}
-                            />
-                            {/* , {
-                                    required: "The phone is required.",
-                                  } */}
-                            {/* defaultValue={item.phone} // make sure to set up defaultValue */}
-                            {mobileFields.fields.length > 1 && (
-                              <a
-                                onClick={() => mobileFields.remove(index)}
-                                className="btn btn-danger custom_btn add-icon mt-1 ml-1 "
-                              >
-                                <i className="fa fa-minus "></i>
-                              </a>
-                            )}
-                            {/* {errors.phones[index] && (
+                            </div>
+                            {errors?.phones && errors?.phones[index] && (
                               <p className=" text-danger">
-                                <pre>
-                                  {JSON.stringify(errors.phones[index].phone)}
-                                </pre>
+                                {errors?.phones[index].phone.message}
                               </p>
-                            )} */}
-                          </div>
+                            )}
+                          </>
                         );
                       })}
                     </div>
@@ -209,8 +224,7 @@ const CreateWorkspacePage = () => {
                     <div className="col-xl-12 pl-0">
                       <div className="form-group">
                         <label className="text-capitalize">
-                          {" "}
-                          Set it default?
+                          Do you want to set it as default?
                         </label>
                         <ul className="list-unstyled mb-0">
                           <li className="d-inline-block mr-2">
@@ -219,7 +233,7 @@ const CreateWorkspacePage = () => {
                                 <input
                                   type="radio"
                                   name="is_default"
-                                  defaultChecked={true}
+                                  defaultChecked={false}
                                   value={true}
                                   {...register("is_default", {
                                     required: "The active is required.",
@@ -239,7 +253,7 @@ const CreateWorkspacePage = () => {
                                 <input
                                   type="radio"
                                   name="is_default"
-                                  defaultChecked={false}
+                                  defaultChecked={true}
                                   value={false}
                                   {...register("is_default")}
                                 />
@@ -262,7 +276,7 @@ const CreateWorkspacePage = () => {
                     <button
                       onClick={handleSubmit(onSubmit)}
                       className={
-                        "float-right mx-1 btn btn-pill mb-sm-0 mb-2 text_theme_primary custom_btn default_gradient"
+                        "float-right mx-1 btn btn-pill mb-sm-0 mb-2 text_theme_primary default_gradient"
                       }
                     >
                       Create{" "}
@@ -287,4 +301,4 @@ const CreateWorkspacePage = () => {
   );
 };
 
-export default CreateWorkspacePage;
+export default CreateWorkspace;

@@ -27,11 +27,29 @@ export const getWorkspaceAPI = (id = null) => {
   };
 };
 
-export const updateWorkspaceAPI = (id = null, params={}) => {
+export const updateWorkspaceAPI = (id = null, params = {}) => {
   return {
     url: "admin/workspaces/" + id,
     method: "put",
     headers: { accept: "*/*", Authorization: "Bearer " + getToken() },
     body: params,
+  };
+};
+
+export const setDefaultWorkspaceAPI = (id = null, params = {}) => {
+  return {
+    url: "admin/workspaces/partiallyUpdate/" + id,
+    method: "put",
+    headers: { accept: "*/*", Authorization: "Bearer " + getToken() },
+    body: params,
+  };
+};
+
+export const deleteWorkspaceAPI = (id = null ) => {
+  return {
+    url: "admin/workspaces/" + id,
+    method: "delete",
+    headers: { accept: "*/*", Authorization: "Bearer " + getToken() },
+    body: null,
   };
 };

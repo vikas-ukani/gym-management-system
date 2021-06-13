@@ -40,20 +40,30 @@ const LeaveManagement = () => {
             <div className="content-body">
               <section>
                 <div className="row">
-                  <div className="col-lg-3 col-sm-6 col-12">
+                  <div className="col-6 ">
                     <h3 className="wizard-title text_theme_primary text-left text-capitalize">
                       {MODULE_NAME}
                       {/* <div className="badge badge-light badge-sm text_theme_primary badge-pill">{offers.length}</div> */}
                     </h3>
                   </div>
-                  <div className="col-lg-3 col-sm-6 col-12 mb-lg-0 mt-sm-25 offset-lg-6 text-sm-right text-center">
+                  <div className="col-6  mb-lg-0 mt-sm-25 text-sm-right text-center">
+                    {/* <Link href={`${LEAVE_MANAGEMENT_CREATE_URL}`}> */}
+                    <a
+                      className={
+                        "btn btn-pill mb-sm-0 mb-2 waves-effect waves-light text_theme_primary px-1 mx-1  "
+                      }
+                    >
+                      <i className="fa fa-bar-chart-o"> </i> Leave Request
+                      History
+                    </a>
+                    {/* </Link> */}
                     <Link href={`${LEAVE_MANAGEMENT_CREATE_URL}`}>
                       <a
                         className={
-                          "btn btn-pill mb-sm-0 mb-2 waves-effect waves-light text_theme_primary "
+                          "btn btn-pill mb-sm-0 mb-2 waves-effect waves-light text_theme_primary px-1"
                         }
                       >
-                        <i className="fa fa-plus"> </i> Add New offer
+                        <i className="fa fa-plus"> </i> New Leave Request
                       </a>
                     </Link>
                   </div>
@@ -66,6 +76,7 @@ const LeaveManagement = () => {
                     <table className="table membership-table table-hover table-borderless ">
                       <thead>
                         <tr>
+                          {/* <th className="table-date table-primary text-capitalize"></th> */}
                           <th className="table-date table-primary text-capitalize">
                             Date
                           </th>
@@ -87,6 +98,16 @@ const LeaveManagement = () => {
                         {leaves.map((leave, idx) => {
                           return (
                             <tr key={leave.id}>
+                              {/* <td className="right text-center px-2 pr-0 ">
+                                <div className="bg-danger p-25 rounded-pill  ">
+                                  <div className=" pt-50 pb-0 font-small-4 ">
+                                    1.5
+                                  </div>
+                                  <div className="pb-50 font-medium-3 ">
+                                    Day
+                                  </div>
+                                </div>
+                              </td> */}
                               <td className="text-center px-2 ">
                                 <div className="d-flex">
                                   <div className="card w-50 mb-0">

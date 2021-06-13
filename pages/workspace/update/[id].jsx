@@ -1,58 +1,64 @@
+import { useEffect } from "react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { useAxios } from "hooks";
 import { useToasts } from "react-toast-notifications";
 import router from "next/router";
-
 import Link from "next/link";
-import { createWorkspaceAPI, getWorkspaceAPI } from "services/workspace";
+
+import { getWorkspaceAPI, updateWorkspaceAPI } from "services/workspace";
 import { WORKSPACE_LIST_URL } from "constants";
-import { getUserId } from "services";
-import { useEffect, useState } from "react";
+import { getTokenType } from "services";
+import getAxios from "hooks/getAxios";
+import { MOBILE_VALID_PATTERN } from "constants/common";
 
-const UpdateWorkspacePage = ({ id }) => {
-  const MODULE_NAME = "Update Workspace";
+export const getServerSideProps = async (ctx) => {
+  let token = await ctx.req?.cookies.token;
+  let id = ctx.query.id || null;
+  let newRequest = getWorkspaceAPI(id);
+  newRequest.headers.Authorization = getTokenType() + token;
+  let {
+    response: { statusCode, data: workspace },
+  } = await getAxios(newRequest);
+
+  if (statusCode == 422 || statusCode == 400) {
+    return { workspace };
+  }
+  workspace.is_default =
+    workspace.is_default == 1 || workspace.is_default == "true";
+  return {
+    props: { workspace },
+  };
+};
+
+const UpdateWorkspace = ({ workspace }) => {
+  const MODULE_NAME = " Update Workspace";
   const { addToast } = useToasts();
-  const [workspace, setWorkspace] = useState({});
-
+  const id = workspace?.id;
   const {
+    register,
     handleSubmit,
-    watch,
     control,
-    reset,
     formState: { errors },
   } = useForm({
     defaultValues: {
       emails: [{ email: null }],
       phones: [{ phone: null }],
+      ...workspace,
     },
   });
   const emailsFields = useFieldArray({ control, name: "emails" });
   const mobileFields = useFieldArray({ control, name: "phones" });
 
-  useEffect(async () => {
-    if (id) {
-      const {
-        response: { data },
-        statusCode, 
-      } = await useAxios(getWorkspaceAPI(id));
-      if (statusCode == 200) {
-        setWorkspace(data);
-        reset({ defaultValue: { ...workspace } });
-      }
-    }
-  }, []);
-
   const onSubmit = async (input) => {
     input.is_default = input.is_default === "true" || input.is_default == 1;
-    input.owner_id = getUserId();
-    const { response, error, loading, statusCode } = await useAxios(
+    const { response, error, statusCode } = await useAxios(
       updateWorkspaceAPI(id, input)
     );
     if (statusCode == 400 || statusCode == 422) {
       addToast(error.message, { appearance: "error", autoDismiss: true });
     } else if (statusCode === 200 || statusCode === 201) {
       addToast(response.message, { appearance: "success", autoDismiss: true });
-      router.push(WORKSPACE_LIST_URL);
+      router.push(await WORKSPACE_LIST_URL);
     }
   };
 
@@ -66,22 +72,20 @@ const UpdateWorkspacePage = ({ id }) => {
           <div className="content-body">
             <section>
               <h3 className="wizard-title text-capitalize text-left mb-3 text_theme_primary">
-                Update {MODULE_NAME}
+                {MODULE_NAME}
               </h3>
               <form role="form">
                 <div className="row">
                   <div className="col-xl-6">
                     <div className="form-group">
-                      <label className="top-label text-capitalize">
-                        location name
-                      </label>
+                      <label className="top-label text-capitalize">name</label>
                       <input
                         type="text"
                         className="form-control form-control-lg"
                         name="location_name"
                         defaultValue={workspace?.location_name}
                         {...register("location_name", {
-                          required: "The location name is required.",
+                          required: "The   name is required.",
                         })}
                       />
                       {errors.location_name && (
@@ -130,39 +134,41 @@ const UpdateWorkspacePage = ({ id }) => {
                       </label>
                       {emailsFields.fields.map((item, index) => {
                         return (
-                          <div key={item.id} className="d-flex">
-                            <Controller
-                              render={({ field }) => (
-                                <input
-                                  type="text"
-                                  className="form-control form-control-lg mb-1 w-90"
-                                  {...register(`emails.${index}.email`)}
-                                />
-                              )}
-                              name={`emails.${index}.email`}
-                              control={control}
-                              defaultValue={item.email}
-                            />
-                            {/* , {
+                          <>
+                            <div key={item.id} className="d-flex">
+                              <Controller
+                                render={({ field }) => (
+                                  <input
+                                    type="text"
+                                    className="form-control form-control-lg mb-1 w-90"
+                                    {...register(`emails.${index}.email`)}
+                                    {...field}
+                                  />
+                                )}
+                                name={`emails.${index}.email`}
+                                control={control}
+                                defaultValue={workspace?.emails[index].email}
+                              />
+
+                              {/* , {
                                     required: "The email is required.",
                                   } */}
-                            {/* defaultValue={item.email} // make sure to set up defaultValue */}
-                            {emailsFields.fields.length > 1 && (
-                              <a
-                                onClick={() => emailsFields.remove(index)}
-                                className="btn btn-danger custom_btn add-icon mt-1 ml-1 "
-                              >
-                                <i className="fa fa-minus "></i>
-                              </a>
-                            )}
-                            {/* {errors.emails[index] && (
+                              {/* defaultValue={item.email} // make sure to set up defaultValue */}
+                              {emailsFields.fields.length > 1 && (
+                                <a
+                                  onClick={() => emailsFields.remove(index)}
+                                  className="btn btn-danger custom_btn add-icon mt-1 ml-1 "
+                                >
+                                  <i className="fa fa-minus "></i>
+                                </a>
+                              )}
+                            </div>
+                            {errors?.emails && errors?.emails[index] && (
                               <p className=" text-danger">
-                                <pre>
-                                  {JSON.stringify(errors.emails[index].email)}
-                                </pre>
+                                {errors?.emails[index].email.message}
                               </p>
-                            )} */}
-                          </div>
+                            )}
+                          </>
                         );
                       })}
                     </div>
@@ -184,39 +190,52 @@ const UpdateWorkspacePage = ({ id }) => {
                       </label>
                       {mobileFields.fields.map((item, index) => {
                         return (
-                          <div key={item.id} className="d-flex">
-                            <Controller
-                              render={({ field }) => (
-                                <input
-                                  type="text"
-                                  className="form-control form-control-lg mb-1 w-90"
-                                  {...register(`phones.${index}.phone`)}
-                                />
+                          <>
+                            <div key={item.id} className="d-flex">
+                              <Controller
+                                render={({ field }) => (
+                                  <input
+                                    type="text"
+                                    className="form-control form-control-lg mb-1 w-90"
+                                    {...field}
+                                  />
+                                )}
+                                name={`phones.${index}.phone`}
+                                defaultValue={workspace?.phones[index].phone}
+                                control={control}
+                                {...register(`phones.${index}.phone`, {
+                                  required: "Phone is required.",
+                                  pattern: {
+                                    value: MOBILE_VALID_PATTERN,
+                                    message: "Enter a valid phone number",
+                                  },
+                                  minLength: {
+                                    value: 8,
+                                    message:
+                                      "Min length should be 8 digit long",
+                                  },
+                                  maxLength: {
+                                    value: 10,
+                                    message:
+                                      "Max length should be 12 digit long",
+                                  },
+                                })}
+                              />
+                              {mobileFields.fields.length > 1 && (
+                                <a
+                                  onClick={() => mobileFields.remove(index)}
+                                  className="btn btn-danger custom_btn add-icon mt-1 ml-1 "
+                                >
+                                  <i className="fa fa-minus "></i>
+                                </a>
                               )}
-                              name={`phones.${index}.phone`}
-                              defaultValue={item.phone}
-                              control={control}
-                            />
-                            {/* , {
-                                    required: "The phone is required.",
-                                  } */}
-                            {/* defaultValue={item.phone} // make sure to set up defaultValue */}
-                            {mobileFields.fields.length > 1 && (
-                              <a
-                                onClick={() => mobileFields.remove(index)}
-                                className="btn btn-danger custom_btn add-icon mt-1 ml-1 "
-                              >
-                                <i className="fa fa-minus "></i>
-                              </a>
-                            )}
-                            {/* {errors.phones[index] && (
+                            </div>
+                            {errors?.phones && errors?.phones[index] && (
                               <p className=" text-danger">
-                                <pre>
-                                  {JSON.stringify(errors.phones[index].phone)}
-                                </pre>
+                                {errors?.phones[index].phone.message}
                               </p>
-                            )} */}
-                          </div>
+                            )}
+                          </>
                         );
                       })}
                     </div>
@@ -227,7 +246,7 @@ const UpdateWorkspacePage = ({ id }) => {
                       <div className="form-group">
                         <label className="text-capitalize">
                           {" "}
-                          Set it default?
+                          Do you want to set it as default?
                         </label>
                         <ul className="list-unstyled mb-0">
                           <li className="d-inline-block mr-2">
@@ -236,7 +255,10 @@ const UpdateWorkspacePage = ({ id }) => {
                                 <input
                                   type="radio"
                                   name="is_default"
-                                  defaultChecked={true}
+                                  defaultChecked={
+                                    workspace?.is_default === true ||
+                                    workspace?.is_default === 1
+                                  }
                                   value={true}
                                   {...register("is_default", {
                                     required: "The active is required.",
@@ -256,7 +278,10 @@ const UpdateWorkspacePage = ({ id }) => {
                                 <input
                                   type="radio"
                                   name="is_default"
-                                  defaultChecked={false}
+                                  defaultChecked={
+                                    workspace?.is_default === false ||
+                                    workspace?.is_default === 0
+                                  }
                                   value={false}
                                   {...register("is_default")}
                                 />
@@ -279,7 +304,7 @@ const UpdateWorkspacePage = ({ id }) => {
                     <button
                       onClick={handleSubmit(onSubmit)}
                       className={
-                        "float-right mx-1 btn btn-pill mb-sm-0 mb-2 text_theme_primary custom_btn default_gradient"
+                        "float-right mx-1 btn btn-pill mb-sm-0 mb-2 text_theme_primary   default_gradient"
                       }
                     >
                       Create{" "}
@@ -304,4 +329,4 @@ const UpdateWorkspacePage = ({ id }) => {
   );
 };
 
-export default UpdateWorkspacePage;
+export default UpdateWorkspace;

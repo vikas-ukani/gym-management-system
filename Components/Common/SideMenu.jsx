@@ -3,17 +3,11 @@ import SideMenuLogo from "Components/Common/SideMenuLogo";
 import NavLinkMasters from "Components/Common/Sidebar/NavLinkMasters";
 import NavLinkLI from "Components/Common/Sidebar/NavLinkLI";
 import { userDetail } from "services";
-import {
-  USER_ROLE_GYM_OWNER,
-  WORKSPACE_LIST_URL,
-  LEAVE_MANAGEMENT_LIST_URL,
-  ANNOUNCEMENT_LIST_URL,
-} from "constants";
+import { USER_ROLE_GYM_OWNER } from "constants";
 
 const SideMenu = () => {
   const user = userDetail();
-  console.log("user", user?.role, user);
-
+  // console.log("TYPE::", !(user?.role == USER_ROLE_GYM_OWNER));
   return (
     <div
       className={`main-menu menu-fixed menu-light menu-accordion menu-shadow ${styles.bg_theme_primary} ${styles.text_theme_primary}`}
@@ -30,7 +24,7 @@ const SideMenu = () => {
         >
           {/* {user && user?.role == USER_ROLE_GYM_OWNER && ( */}
           <NavLinkLI
-            url={`${WORKSPACE_LIST_URL}`}
+            url={`/workspace`}
             title={"dashboard"}
             iconClass={"fa-map-o"}
           />
@@ -39,9 +33,11 @@ const SideMenu = () => {
           <NavLinkLI
             url={"/add-employee"}
             title={"Employee"}
-            iconClass={"fa-user"}
+            iconClass={"fa-users"}
           />
-          <NavLinkLI url={"/users"} title={"Users"} iconClass={"fa-users"} />
+          {!(user?.role == USER_ROLE_GYM_OWNER) && (
+            <NavLinkLI url={"/users"} title={"Users"} iconClass={"fa-users"} />
+          )}
           <NavLinkLI url={"/members"} title={"Members"} iconClass={"fa-user"} />
           <NavLinkLI
             url={"/exercise"}
@@ -52,27 +48,17 @@ const SideMenu = () => {
           <NavLinkLI url={"/diet"} title={"Diet"} iconClass={"fa-cutlery"} />
           <NavLinkLI url={"/offers"} title={"Offers"} iconClass={"fa-bell"} />
           <NavLinkLI
-            url={`${LEAVE_MANAGEMENT_LIST_URL}`}
+            url={`/leave-management`}
             title={"Leave Management"}
-            iconClass={"fa-bell"}
+            iconClass={"fa-calendar-check-o"}
           />
           <NavLinkLI
-            url={`${ANNOUNCEMENT_LIST_URL}`}
-            title={"announcement"}
+            url={`/announcement`}
+            title={"Announcements"}
             iconClass={"fa-bell"}
           />
           <NavLinkMasters />
           {/* <NavLinkLI url={"/setting"} title={"Setting"} iconClass={"fa-cog"} /> */}
-          {/* <li className={"nav-item"}>
-                        <hr />
-                        <Link href="/logout" >
-                            <a className={`${getActiveNavClass("/logout")} ${styles.text_theme_primary}`}>
-                                <i className="fa fa-sign-out">
-                                </i>
-                                <span className={`menu-title `} data-i18n="Form Layout">Logout</span>
-                            </a>
-                        </Link>
-                    </li> */}
         </ul>
       </div>
     </div>

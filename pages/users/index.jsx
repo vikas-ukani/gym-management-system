@@ -11,6 +11,13 @@ import { filter, findWhere } from "underscore";
 import { Switch } from "antd";
 import { useToasts } from "react-toast-notifications";
 import Swal from "sweetalert2";
+import UpdateRowIcon from "Components/UX/TableActions/UpdateRowIcon";
+import DeleteButtonIcon from "Components/UX/TableActions/DeleteButtonIcon";
+import { WORKSPACE_LIST_URL } from "constants";
+import {
+  MODEL_CANCEL_CLASSES,
+  MODEL_CONFIRM_CLASSES,
+} from "utils/button-classes";
 
 const Users = () => {
   const { addToast } = useToasts();
@@ -39,6 +46,10 @@ const Users = () => {
       title: "Are you sure you want to delete this record?",
       showCancelButton: true,
       confirmButtonText: `Delete`,
+      customClass: {
+        cancelButton: MODEL_CANCEL_CLASSES,
+        confirmButton: MODEL_CONFIRM_CLASSES,
+      },
     }).then(async (result) => {
       if (result.isConfirmed) {
         let oldLists = users;
@@ -55,28 +66,28 @@ const Users = () => {
               appearance: "success",
               autoDismiss: true,
             });
+            Swal.fire("Deleted!", "", "success");
           } else {
-            addToast(response.message, {
+            addToast(error?.message, {
               appearance: "error",
               autoDismiss: true,
             });
           }
         }
-        Swal.fire("Deleted!", "", "success");
       }
     });
 
-    if (foundUser && foundUser.id) {
-      // const { response, error, loading, statusCode } = await useAxios(deleteUserByIdAPI(id))
-      // if (statusCode === 200) {
-      //     let newUsers = filter(oldUsers, user => user.id !== foundUser.id)
-      //     console.log('newUsers', newUsers);
-      //     setUsers(newUsers)
-      //     addToast(response.message, { appearance: 'success', autoDismiss: true })
-      // } else {
-      //     addToast(response.message, { appearance: 'error', autoDismiss: true })
-      // }
-    }
+    // if (foundUser && foundUser.id) {
+    // const { response, error, loading, statusCode } = await useAxios(deleteUserByIdAPI(id))
+    // if (statusCode === 200) {
+    //     let newUsers = filter(oldUsers, user => user.id !== foundUser.id)
+    //     console.log('newUsers', newUsers);
+    //     setUsers(newUsers)
+    //     addToast(response.message, { appearance: 'success', autoDismiss: true })
+    // } else {
+    //     addToast(response.message, { appearance: 'error', autoDismiss: true })
+    // }
+    // }
   };
 
   const onActiveChange = async (checked, id) => {
@@ -177,7 +188,20 @@ const Users = () => {
                               </td>
                               {/* <td className="text-center edit-delete-member-rate "> */}
                               <td className="text-center ">
-                                <Link href={`${USERS_UPDATE_URL}/${user.id}`}>
+                                <UpdateRowIcon
+                                  url={USERS_UPDATE_URL}
+                                  id={user.id}
+                                />
+                                <DeleteButtonIcon
+                                  deleteRow={deleteRow}
+                                  id={user.id}
+                                />
+                                {/* <Link href={`${WORKSPACE_LIST_URL}`}> */}
+                                <a className="btn btn-primary round p-75 m-50 waves-effect waves-light text_theme_primary text-bold-600 custom_btn">
+                                  <div className="">Workspaces</div>
+                                </a>
+                                {/* </Link> */}
+                                {/* <Link href={`${USERS_UPDATE_URL}/${user.id}`}>
                                   <div className="btn btn-primary p-50 round m-50 waves-effect waves-light text_theme_primary custom_btn">
                                     <i className="fa fa-edit"></i>
                                   </div>
@@ -188,7 +212,7 @@ const Users = () => {
                                   className="btn btn-primary p-50 round m-50 waves-effect waves-light text_theme_primary"
                                 >
                                   <i className="fa fa-trash"></i>
-                                </div>
+                                </div> */}
                               </td>
                             </tr>
                           );

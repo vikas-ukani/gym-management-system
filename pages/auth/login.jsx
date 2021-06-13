@@ -10,8 +10,8 @@ import axios from "axios";
 import { getToken } from "services";
 
 const initialLogin = {
-  email: "admin@admin.com",
-  password: "admin@123",
+  email: "subadmin@mailinator.com",
+  password: "subadmin@123",
 };
 
 const Login = () => {
@@ -65,9 +65,11 @@ const Login = () => {
                 <form autoComplete="off">
                   <div className="form-group">
                     <label htmlFor="exampleInputIcon3">Your email </label>
+                    <br />
                     <span>
                       <small>
-                        (Use: <i>admin@admin.com</i>, <i>admin@123</i>)
+                        (Use: <i>{initialLogin.email}</i>,{" "}
+                        <i>{initialLogin.password}</i>)
                       </small>
                     </span>
                     <div className="input-group">

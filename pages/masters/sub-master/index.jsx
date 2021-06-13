@@ -18,6 +18,10 @@ import AddSubMasterForm from "Components/Masters/Submasters/AddSubMasterForm";
 import EditSubMasterForm from "Components/Masters/Submasters/EditSubMasterForm";
 import Swal from "sweetalert2";
 import { filter, findWhere } from "underscore";
+import {
+  MODEL_CANCEL_CLASSES,
+  MODEL_CONFIRM_CLASSES,
+} from "utils/button-classes";
 
 const SubMaster = () => {
   let router = useRouter();
@@ -92,11 +96,14 @@ const SubMaster = () => {
   };
 
   const deleteRow = (id) => {
-    console.log("id", id);
     Swal.fire({
       title: "Are you sure you want to delete this record?",
       showCancelButton: true,
       confirmButtonText: `Delete`,
+      customClass: {
+        cancelButton: MODEL_CANCEL_CLASSES,
+        confirmButton: MODEL_CONFIRM_CLASSES,
+      },
     }).then(async (result) => {
       if (result.isConfirmed) {
         let oldLists = subMasters;
@@ -113,14 +120,14 @@ const SubMaster = () => {
               appearance: "success",
               autoDismiss: true,
             });
+            Swal.fire("Deleted!", "", "success");
           } else {
-            addToast(response.message, {
+            addToast(error.message, {
               appearance: "error",
               autoDismiss: true,
             });
           }
         }
-        Swal.fire("Deleted!", "", "success");
       }
     });
   };
@@ -133,7 +140,7 @@ const SubMaster = () => {
     if (statusCode === 200) {
       addToast(response.message, { appearance: "success", autoDismiss: true });
     } else {
-      addToast(response.message, { appearance: "error", autoDismiss: true });
+      addToast(error.message, { appearance: "error", autoDismiss: true });
     }
   };
 
@@ -203,7 +210,7 @@ const SubMaster = () => {
                 </div>
                 <div className="col-lg-3 col-sm-6 col-12 mb-lg-0 mt-sm-25 offset-lg-6 text-sm-right text-center">
                   {/* <Link href={`${USERS_CREATE_URL}`}> */}
-                  {!isEditForm && (
+                  {!isAddForm && !isEditForm && (
                     <button
                       className={
                         "btn btn-pill mb-sm-0 mb-2 waves-effect waves-light text_theme_primary custom_btn"

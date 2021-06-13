@@ -100,6 +100,12 @@ a {
 .custom_btn:not(:hover) {
   color: black !important;
 }
+.swal2-actions:not(.swal2-loading) .swal2-styled:hover {
+  background-image: none;
+}
+/* .swal2-actions:not(.swal2-loading) .swal2-styled:hover {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1));
+}  */
 
 .custom_btn_card:active {
   border-color: var(--primaryTheme) !important;
@@ -166,5 +172,19 @@ a {
   color: white;
 }
 .border_primary {
-  border:   1px solid var(--primaryText) !important;
+  border: 1px solid var(--primaryText) !important;
+}
+
+.round {
+  border-radius: 1.5rem !important;
+}
+
+.font_white {
+  color: #ffffff !important;
+}
+.font_white:not(:active) {
+  color: #ffffff !important;
+}
+.font_white:not(:hover) {
+  color: #ffffff !important;
 }

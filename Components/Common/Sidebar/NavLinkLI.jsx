@@ -7,11 +7,11 @@ const NavLinkLI = ({ url, title, iconClass }) => {
   let currentRoute = router.asPath;
   useEffect(() => {
     currentRoute = router.asPath;
-    console.log("currentRoute", currentRoute, url);
   });
   let activeClass =
-    (currentRoute == url || currentRoute.search(url) >= 0) &&
-    "sidebar_active_button_in font-weight-bold";
+    currentRoute == url || currentRoute.search(url) >= 0
+      ? "sidebar_active_button_in font-weight-bold"
+      : "";
   let navigationClass = "nav-item navigation hover_bold";
   return (
     <li className={navigationClass}>

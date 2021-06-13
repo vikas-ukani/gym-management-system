@@ -1,104 +1,100 @@
 {
-    "data": [
-        {
-            "step": 1,
-            "title": "Basic Information",
-            "is_completed": true,
-            "input": {
-                "employee_id": "",
-                "first_name": "",
-                "last_name": "Vikas",
-                "gender": "FEMALE",
-                "date_of_birth": "01-01-2011",
-                "age": 0,
-                "blood_group": "",
-                "height": {
-                    "fit": 7,
-                    "inch": 6 
-                },
-                "weight": 75,
-                "is_married": false,
-                "date_of_joining": false,
-                "date_of_leave": false,
-                "employee_status": "INACTIVE",
-                "language": []
-            }
+  "data": [
+    {
+      "step": 1,
+      "title": "Basic Information",
+      "is_completed": true,
+      "input": {
+        "employee_id": "",
+        "first_name": "",
+        "last_name": "",
+        "gender": "FEMALE",
+        "date_of_birth": "01-01-2011",
+        "age": 0,
+        "blood_group": "",
+        "height": {
+          "fit": 7,
+          "inch": 6
         },
-        {
-            "step": 2,
-            "title": "Contact Information",
-            "is_completed": false,
-            "input": {
-                "address": "B-",
-                "city": 1,
-                "state": 2,
-                "pin_code": 0,
-                "email": "",
-                "mobile": 0,
-                "is_whatsapp_mobile": true,
-                "alt_mobile": 0,
-                "emergency_contact_name": "",
-                "reference": 1
-            }
-        },
-        {
-            "step": 3,
-            "title": "PROFESSIONAL EXPERIENCE",
-            "is_completed": false,
-            "input": {
-                "educations": [
-                    {
-                        "education_degree": "B.TECH"
-                    }
-                ],
-                "year_of_experience": 1,
-                "specializations": [
-                    1
-                ]
-            }
-        },
-        {
-            "step": 4,
-            "title": "ABOUT ME",
-            "is_completed": false,
-            "input": {
-                "profile_pic": "",
-                "about_me": 1,
-                "department_id": 1,
-                "designation": [
-                    1
-                ],
-                "designation_text": "",
-                "location": ""
-            }
-        },
-        {
-            "step": 5,
-            "title": "Identification Information",
-            "is_completed": false,
-            "input": {
-                "documents": [
-                    {
-                        "document_id": 1,
-                        "document_number": 1,
-                        "document_image": ""
-                    }
-                ]
-            }
-        },
-        {
-            "step": 6,
-            "title": "Bank Account Details",
-            "is_completed": false,
-            "input": {
-                "bank_details": [
-                    {
-                        "name": 1,
-                        "ifsc_code": 1,
-                        "account_number": 1234
-                    }
-                ]
-            }
-        }
-    ]
+        "weight": 75,
+        "is_married": false,
+        "date_of_joining": false,
+        "date_of_leave": false,
+        "employee_status": "INACTIVE",
+        "language": []
+      }
+    },
+    {
+      "step": 2,
+      "title": "Contact Information",
+      "is_completed": false,
+      "input": {
+        "address": "",
+        "city": "",
+        "state": "",
+        "pin_code": 0,
+        "email": "",
+        "mobile": 0,
+        "is_whatsapp_mobile": true,
+        "alt_mobile": 0,
+        "emergency_contact_name": "",
+        "reference": 1
+      }
+    },
+    {
+      "step": 3,
+      "title": "PROFESSIONAL EXPERIENCE",
+      "is_completed": false,
+      "input": {
+        "educations": [
+          {
+            "education_degree": "B.TECH"
+          }
+        ],
+        "year_of_experience": 1,
+        "specializations": []
+      }
+    },
+    {
+      "step": 4,
+      "title": "ABOUT ME",
+      "is_completed": false,
+      "input": {
+        "profile_pic": "",
+        "about_me": 1,
+        "department_id": 1,
+        "designation": [1],
+        "designation_text": "",
+        "location": ""
+      }
+    },
+    {
+      "step": 5,
+      "title": "Identification Information",
+      "is_completed": false,
+      "input": {
+        "documents": [
+          {
+            "document_id": 1,
+            "document_number": 1,
+            "document_image": ""
+          }
+        ]
+      }
+    },
+    {
+      "step": 6,
+      "title": "Bank Account Details",
+      "is_completed": false,
+      "input": {
+        "bank_details": [
+          {
+            "name": 1,
+            "ifsc_code": 1,
+            "account_number": 1234
+          }
+        ]
+      }
+    }
+  ]
 }

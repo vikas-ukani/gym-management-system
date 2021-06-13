@@ -27,11 +27,9 @@ const OutletsPage = () => {
       statusCode,
     } = await useAxios(getWorkspacesByOwnerIdAPI(uid));
 
-    console.log("response", error, data);
     if (statusCode == 200) {
       setWorkspaces(data);
       /** save to store */
-      console.log("O", data);
       dispatch(initializeWorkspace(data));
     } else {
       setWorkspaces([]);
@@ -46,11 +44,10 @@ const OutletsPage = () => {
         <div className="header-navbar-shadow"></div>
         <div className="content-wrapper">
           <div className="content-header row"></div>
-
           <div className="content-body">
-            <h3 className="wizard-title text-left text_theme_primary text-capitalize">
+            {/* <h3 className="wizard-title text-left text_theme_primary text-capitalize">
               {MODULE_NAME}
-            </h3>
+            </h3> */}
 
             <section>
               <div className="row mt-3">

@@ -1,6 +1,8 @@
 import axios from "axios";
 import { getToken } from "services";
 
+const EMPLOYEE_FILE_TYPE_MODULE = "employee";
+
 const baseAPIUrl = process.env.NEXT_PUBLIC_API_URL;
 export const mediaUploadAPI = {
   url: baseAPIUrl + "media/upload",
@@ -11,7 +13,6 @@ export const mediaUploadAPI = {
     headers: {
       Accept: "application/json",
       "Content-Type": "multipart/form-data;",
-
       // "Content-Type": "application/json"
     },
     mode: "cors",

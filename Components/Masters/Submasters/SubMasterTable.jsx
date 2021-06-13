@@ -1,4 +1,5 @@
 import { Switch } from "antd";
+import DeleteButtonIcon from "Components/UX/TableActions/DeleteButtonIcon";
 import { USERS_UPDATE_URL } from "constants";
 import Link from "next/link";
 
@@ -19,7 +20,7 @@ const SubMasterTable = ({
       {subMastersCount == 0 && (
         <div className="p-5 font-large-1 text-center">
           {" "}
-          No Submasters found...
+          No Submasters found.
         </div>
       )}
       {subMastersCount > 0 && (
@@ -58,22 +59,13 @@ const SubMasterTable = ({
                       onChange={(e) => onActiveChange(e, smlist.id)}
                     />
                   </td>
-                  {/* <td className="text-center edit-delete-member-rate "> */}
                   <td className="text-center ">
-                    {/* <Link href={`${USERS_UPDATE_URL}/${smlist.id}`}> */}
                     <a onClick={() => editRecordHandle(smlist)}>
-                      <div className="btn btn-primary p-50 round m-50 waves-effect waves-light text_theme_primary custom_btn">
+                      <div className="btn btn-primary p-50 round m-50 waves-effect waves-light text_theme_primary custom_btn font-medium-5">
                         <i className="fa fa-edit"></i>
                       </div>
                     </a>
-                    {/* </Link> */}
-
-                    <div
-                      onClick={() => deleteRow(smlist.id)}
-                      className="btn btn-primary p-50 round m-50 waves-effect waves-light text_theme_primary"
-                    >
-                      <i className="fa fa-trash"></i>
-                    </div>
+                    <DeleteButtonIcon deleteRow={deleteRow} id={smlist.id} />
                   </td>
                 </tr>
               );
