@@ -135,23 +135,30 @@ const MainCardLists = ({ workspaces = [] }) => {
                       }`}
                     >
                       <div className="card-body">
-                        <div style={{ position: "absolute", right: "10px" }}>
+                        {/* <div style={{ position: "absolute", right: "10px" }}>
                           <fieldset>
+                            <pre>{ list.is_default == 1 || list.is_default == "true"} </pre>
                             <div className="vs-radio-con">
                               <input
+                                key={list.id}
                                 type="radio"
                                 name="is_default"
+                                value={
+                                  list.is_default == 1 ||
+                                  list.is_default == "true"
+                                }
                                 defaultChecked={activeRecordId == list.id}
                                 onClick={() => setDetafaultCard(list.id)}
                               />
                               <span className="vs-radio">
                                 <span className="vs-radio--border"></span>
                                 <span className="vs-radio--circle"></span>
-                              </span>{" "}
+                              </span>
                             </div>
                           </fieldset>
-                        </div>
-                        <div>
+                        </div> */}
+
+                        <div onClick={() => setDetafaultCard(list.id)}>
                           <div className="text-default d-flex align-items-center font-medium-4 pb-50 font-weight-bold text-capitalize">
                             {list.location_address}
                           </div>{" "}
