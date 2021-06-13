@@ -33,8 +33,16 @@ const Step1 = ({ currentInput, goToNextStep }) => {
     setError,
     reset,
     control,
+    clearErrors,
     formState: { errors },
-  } = useForm();
+  } = useForm({
+    criteriaMode: "all",
+
+    validateCriteriaMode: "all",
+    // validationSchema: Schema,
+    mode: "onBlur",
+    reValidateMode: "onChange",
+  });
 
   /** Custom Validation Not Working now */
   // useEffect(() => {
@@ -71,6 +79,8 @@ const Step1 = ({ currentInput, goToNextStep }) => {
       ...stepInput,
       input: { ...stepInput.input, age: currentAge, date_of_birth: date },
     });
+    setDob(date);
+    clearErrors("date_of_birth");
   };
 
   const handleChange = (e) => {
@@ -95,13 +105,22 @@ const Step1 = ({ currentInput, goToNextStep }) => {
   };
 
   const onSubmit = (input) => {
-    console.log("input", input);
+    if (!dob) {
+      console.log("Cuton error");
+
+      setError("date_of_birth", {
+        type: "required",
+        message: "The date of birth field is required.!",
+      });
+    }
+    console.log("input", dob, input);
+    return false;
     let UpdatedData = {
       ...stepInput,
       input: {
         ...stepInput.input,
         ...input,
-        // date_of_birth: dob,
+        date_of_birth: dob,
         language: selectedLanguage,
         blood_group: selectedBloodGroup,
       },
@@ -120,6 +139,8 @@ const Step1 = ({ currentInput, goToNextStep }) => {
     }
     return returnHight;
   };
+
+  const date_of_birth = register("date_of_birth");
 
   return (
     <div>
@@ -183,7 +204,7 @@ const Step1 = ({ currentInput, goToNextStep }) => {
                             name="gender"
                             checked
                             value="MALE"
-                            defaultChecked={stepInput?.input?.gender}
+                            defaultChecked={stepInput?.input?.gender == "MALE"}
                             onChange={handleChange}
                           />
                           {/*  */}
@@ -202,7 +223,9 @@ const Step1 = ({ currentInput, goToNextStep }) => {
                             type="radio"
                             name="gender"
                             value="FEMALE"
-                            defaultChecked={stepInput?.input?.gender}
+                            defaultChecked={
+                              stepInput?.input?.gender == "FEMALE"
+                            }
                             onChange={handleChange}
                           />
                           <span className="vs-radio">
@@ -220,7 +243,7 @@ const Step1 = ({ currentInput, goToNextStep }) => {
                             type="radio"
                             name="gender"
                             value="OTHER"
-                            defaultChecked={stepInput?.input?.gender}
+                            defaultChecked={stepInput?.input?.gender == "OTHER"}
                             onChange={handleChange}
                           />
                           {/* onChange={handleChange} */}
@@ -250,31 +273,13 @@ const Step1 = ({ currentInput, goToNextStep }) => {
                     <DatePicker
                       className="w-100"
                       format="DD-MM-YYYY"
-                      defaultChecked={getDefaultDOB(
-                        stepInput?.input?.date_of_birth
-                      )}
-                      onChange={(date) => changeDOB(date)}
+                      name="date_of_birth"
+                      value={stepInput?.input?.date_of_birth}
+                      onChange={(date) => {
+                        changeDOB(date);
+                      }}
                     />
-                    {/* {...register("date_of_birth", {
-                        required: "The date of birth required.",
-                      })} */}
 
-                    {/* <Controller
-											control={control}
-											rules={{ required: true }}
-											name="date_of_birth"
-											render={({ field }) => (
-												<DatePicker
-													{...field}
-													className="w-100"
-													format="DD-MM-YYYY"
-													defaultChecked={getDefaultDOB(stepInput?.input?.date_of_birth)}
-													onChange={(date) => changeDOB(date)}
-												/>
-											)}
-										/> */}
-                    {/* getDefaultDOB(stepInput?.input?.date_of_birth) */}
-                    {/* onChange={([selected]) => ({ value: selected })} */}
                     {errors.date_of_birth && (
                       <p className=" text-danger">
                         {errors.date_of_birth.message}
@@ -413,6 +418,9 @@ const Step1 = ({ currentInput, goToNextStep }) => {
                       onChange={(id) => setSelectedLanguage(id)}
                       name="language"
                     >
+                      {/* {...register("language", {
+                        required: "Select any languages.",
+                      })} */}
                       {/* {...register('language')} */}
                       {languages.map((list) => {
                         return (

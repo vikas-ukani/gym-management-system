@@ -158,7 +158,10 @@ const MainCardLists = ({ workspaces = [] }) => {
                           </fieldset>
                         </div> */}
 
-                        <div onClick={() => setDetafaultCard(list.id)}>
+                        <div
+                          className="cursor-pointer"
+                          onClick={() => setDetafaultCard(list.id)}
+                        >
                           <div className="text-default d-flex align-items-center font-medium-4 pb-50 font-weight-bold text-capitalize">
                             {list.location_address}
                           </div>{" "}
