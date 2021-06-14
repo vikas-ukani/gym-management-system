@@ -8,7 +8,7 @@
         "employee_id": "",
         "first_name": "",
         "last_name": "",
-        "gender": "FEMALE",
+        "gender": "MALE",
         "date_of_birth": "",
         "age": 0,
         "blood_group": "",
@@ -21,7 +21,9 @@
         "date_of_joining": false,
         "date_of_leave": false,
         "employee_status": "INACTIVE",
-        "language": []
+        "language_ids": [],
+        "password": null,
+        "password_confirmation": null
       }
     },
     {

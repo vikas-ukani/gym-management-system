@@ -30,3 +30,10 @@ export const removeUser = () => {
 export const getUserId = () => {
   return userDetail()?.id || null;
 };
+
+export const getCookie = (key = null) => {
+  return Cookies.get(key) || null;
+};
+export const setCookie = (key = null, value = null) => {
+  Cookies.set(key, value) || null;
+};

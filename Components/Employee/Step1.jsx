@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Slider, { createSliderWithTooltip } from "rc-slider";
 import "rc-slider/assets/index.css";
 import { useForm, Controller } from "react-hook-form";
@@ -6,6 +6,9 @@ import { Select, DatePicker } from "antd";
 import moment, { utc } from "moment";
 import { getNumericalObject, getRangeByStep } from "utils/objects";
 import { getAge } from "utils/date_filters";
+import { getCookie, setCookie } from "services";
+import { findIndex } from "underscore";
+import { saveStepData } from "utils/employee";
 
 const Step1 = ({ currentInput, goToNextStep }) => {
   const [stepInput, setStepInput] = useState({});
@@ -37,21 +40,12 @@ const Step1 = ({ currentInput, goToNextStep }) => {
     formState: { errors },
   } = useForm({
     criteriaMode: "all",
-
     validateCriteriaMode: "all",
-    // validationSchema: Schema,
     mode: "onBlur",
     reValidateMode: "onChange",
   });
-
-  /** Custom Validation Not Working now */
-  // useEffect(() => {
-  //   setError("language", {
-  //     types: {
-  //       required: "The language is required",
-  //     },
-  //   });
-  // }, [setError]);
+  const password = useRef({});
+  password.current = watch("password", "");
 
   useEffect(() => {
     setStepInput(currentInput);
@@ -106,27 +100,24 @@ const Step1 = ({ currentInput, goToNextStep }) => {
 
   const onSubmit = (input) => {
     if (!dob) {
-      console.log("Cuton error");
-
       setError("date_of_birth", {
-        type: "required",
+        type: "manual",
         message: "The date of birth field is required.!",
       });
     }
-    console.log("input", dob, input);
-    return false;
     let UpdatedData = {
       ...stepInput,
       input: {
         ...stepInput.input,
         ...input,
         date_of_birth: dob,
-        language: selectedLanguage,
+        language_ids: selectedLanguage,
         blood_group: selectedBloodGroup,
       },
       NextStep: 2,
     };
-    console.log("UpdatedData", UpdatedData);
+    saveStepData(stepInput.step, UpdatedData);
+    console.log("Final saveStepData", UpdatedData);
     goToNextStep(UpdatedData);
   };
 
@@ -189,78 +180,6 @@ const Step1 = ({ currentInput, goToNextStep }) => {
                       {errors.last_name.message}
                     </span>
                   )}
-                </div>
-              </div>
-
-              <div className="col-xl-12">
-                <div className="form-group">
-                  <label className="">Gender</label>
-                  <ul className="list-unstyled mb-0">
-                    <li className="d-inline-block mr-2">
-                      <fieldset>
-                        <div className="vs-radio-con">
-                          <input
-                            type="radio"
-                            name="gender"
-                            checked
-                            value="MALE"
-                            defaultChecked={stepInput?.input?.gender == "MALE"}
-                            onChange={handleChange}
-                          />
-                          {/*  */}
-                          <span className="vs-radio">
-                            <span className="vs-radio--border"></span>
-                            <span className="vs-radio--circle"></span>
-                          </span>
-                          <span className="">Male</span>
-                        </div>
-                      </fieldset>
-                    </li>
-                    <li className="d-inline-block mr-2">
-                      <fieldset>
-                        <div className="vs-radio-con">
-                          <input
-                            type="radio"
-                            name="gender"
-                            value="FEMALE"
-                            defaultChecked={
-                              stepInput?.input?.gender == "FEMALE"
-                            }
-                            onChange={handleChange}
-                          />
-                          <span className="vs-radio">
-                            <span className="vs-radio--border"></span>
-                            <span className="vs-radio--circle"></span>
-                          </span>
-                          <span className="">Female</span>
-                        </div>
-                      </fieldset>
-                    </li>
-                    <li className="d-inline-block mr-2">
-                      <fieldset>
-                        <div className="vs-radio-con">
-                          <input
-                            type="radio"
-                            name="gender"
-                            value="OTHER"
-                            defaultChecked={stepInput?.input?.gender == "OTHER"}
-                            onChange={handleChange}
-                          />
-                          {/* onChange={handleChange} */}
-                          <span className="vs-radio">
-                            <span className="vs-radio--border"></span>
-                            <span className="vs-radio--circle"></span>
-                          </span>
-                          <span className="">Other</span>
-                        </div>
-                      </fieldset>
-                    </li>
-                    {errors.gender && (
-                      <span className="mt-5 text-danger">
-                        {errors.gender.message}
-                      </span>
-                    )}
-                  </ul>
                 </div>
               </div>
 
@@ -406,7 +325,7 @@ const Step1 = ({ currentInput, goToNextStep }) => {
                 </div>
               </div>
 
-              <div className="col-xl-12">
+              <div className="col-xl-6">
                 <div className="form-group mt-75">
                   <label className="top-label">Language </label>
                   <div className="form-group">
@@ -418,10 +337,6 @@ const Step1 = ({ currentInput, goToNextStep }) => {
                       onChange={(id) => setSelectedLanguage(id)}
                       name="language"
                     >
-                      {/* {...register("language", {
-                        required: "Select any languages.",
-                      })} */}
-                      {/* {...register('language')} */}
                       {languages.map((list) => {
                         return (
                           <Select.Option key={list.id} value={list.id}>
@@ -430,31 +345,122 @@ const Step1 = ({ currentInput, goToNextStep }) => {
                         );
                       })}
                     </Select>
-                    {/* <Controller
-											name="language"
-											defaultValue={selectedLanguage}
-											control={control}
-											render={({ onChange, value }) => (
-												
-											)}
-										/> */}
-                    {/* {...register('language', {
-												required: 'The language is required.',
-											})} */}
-                    {errors.language && errors.language.types && (
+                    {errors.language && errors.language && (
                       <p className=" text-danger">
                         {errors.language.types.required}
                       </p>
                     )}
-                    {/* {errors.language && (
-                      <p className=" text-danger">{errors.language.message}</p>
-                    )} */}
-                    {/* <select className="select2 form-control" multiple={true}>
-											<option value="English">English</option>
-											<option value="Hindi">Hindi</option>
-											<option value="Gujarati">Gujarati</option>
-										</select> */}
                   </div>
+                </div>
+              </div>
+              <div className="col-xl-6">
+                <div className="form-group mt-75">
+                  <label className="">Gender</label>
+                  <ul className="list-unstyled mb-0">
+                    <li className="d-inline-block mr-2">
+                      <fieldset>
+                        <div className="vs-radio-con">
+                          <input
+                            type="radio"
+                            name="gender"
+                            checked
+                            value="MALE"
+                            defaultChecked={stepInput?.input?.gender == "MALE"}
+                            onChange={handleChange}
+                          />
+                          {/*  */}
+                          <span className="vs-radio">
+                            <span className="vs-radio--border"></span>
+                            <span className="vs-radio--circle"></span>
+                          </span>
+                          <span className="">Male</span>
+                        </div>
+                      </fieldset>
+                    </li>
+                    <li className="d-inline-block mr-2">
+                      <fieldset>
+                        <div className="vs-radio-con">
+                          <input
+                            type="radio"
+                            name="gender"
+                            value="FEMALE"
+                            defaultChecked={
+                              stepInput?.input?.gender == "FEMALE"
+                            }
+                            onChange={handleChange}
+                          />
+                          <span className="vs-radio">
+                            <span className="vs-radio--border"></span>
+                            <span className="vs-radio--circle"></span>
+                          </span>
+                          <span className="">Female</span>
+                        </div>
+                      </fieldset>
+                    </li>
+                    <li className="d-inline-block mr-2">
+                      <fieldset>
+                        <div className="vs-radio-con">
+                          <input
+                            type="radio"
+                            name="gender"
+                            value="OTHER"
+                            defaultChecked={stepInput?.input?.gender == "OTHER"}
+                            onChange={handleChange}
+                          />
+                          {/* onChange={handleChange} */}
+                          <span className="vs-radio">
+                            <span className="vs-radio--border"></span>
+                            <span className="vs-radio--circle"></span>
+                          </span>
+                          <span className="">Other</span>
+                        </div>
+                      </fieldset>
+                    </li>
+                    {errors.gender && (
+                      <span className="mt-5 text-danger">
+                        {errors.gender.message}
+                      </span>
+                    )}
+                  </ul>
+                </div>
+              </div>
+              <div className="col-xl-6">
+                <div className="form-group pl-0">
+                  <label className="top-label text-capitalize">password</label>
+                  <input
+                    type="password"
+                    className="form-control form-control-lg"
+                    name="password"
+                    {...register("password", {
+                      required: "The password is required.",
+                    })}
+                  />
+                  {errors.password && (
+                    <p className=" text-danger">{errors.password.message}</p>
+                  )}
+                </div>
+              </div>
+              <div className="col-xl-6">
+                <div className="form-group">
+                  <label className="top-label text-capitalize">
+                    password confirmation
+                  </label>
+                  <input
+                    type="password"
+                    className="form-control form-control-lg"
+                    name="password_confirmation"
+                    {...register("password_confirmation", {
+                      required: "The password confirmation is required.",
+                      validate: (value) =>
+                        value === password.current ||
+                        "The confirm passwords do not match",
+                    })}
+                  />
+                  {errors.password_confirmation && (
+                    <p className=" text-danger">
+                      {errors.password_confirmation.message}
+                    </p>
+                  )}
                 </div>
               </div>
             </div>
