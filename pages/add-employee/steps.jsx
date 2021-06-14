@@ -3,33 +3,34 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { updateInputByStep } from "store/staff/StaffSlice";
 import { findIndex, findWhere, max, min } from "underscore";
-import Cookies from "js-cookie";
 import router from "next/router";
+import { getCookie, setCookie } from "services";
+import addStaffCloneData from "data/add_staff_clone.json";
 
 const Steps = () => {
-  const add_staff_clone = useSelector((state) => state.staff.add_staff_clone);
+  // const addStaffClone = JSON.parse(getCookie("step_data"));
+  const [addStaffClone, setAddStaffClone] = useState([]);
+  // const addStaffClone = useSelector((state) => state.staff.addStaffClone);
   const dispatch = useDispatch();
 
   const [currentStep, setCurrentStep] = useState(1);
   const [currentInput, setCurrentInput] = useState({});
+  const MIN_STEP = min(addStaffClone, "step")?.step || 1;
+  const MAX_STEP = max(addStaffClone, "step")?.step || 6;
 
-  const MIN_STEP = min(add_staff_clone, "step")?.step || 1;
-  const MAX_STEP = max(add_staff_clone, "step")?.step || 6;
-
-  useState(() => {
-    // function getEmpCurrentStep() {
-    // ;
-    // 	const item = Cookies.get("emp_current_step");
-    //	// const item = localStorage.getItem('emp_current_step');
-    // 	if (item) {
-    // 		setCurrentStep(item);
-    // 	}
-    // }
-    // window.addEventListener('storage', getEmpCurrentStep);
-    // return () => {
-    // 	window.removeEventListener('storage', getEmpCurrentStep);
-    // };
-    // dispatch(setInitialEmployeeData(add_staff_clone));
+  useEffect(async () => {
+    console.log("Fetching", addStaffClone);
+    /** Check if data stored in cookie or not. */
+    if (getCookie("step_data") && JSON.parse(getCookie("step_data"))) {
+      let dataClone = JSON.parse(getCookie("step_data"));
+      console.log("TRUE", dataClone);
+      setAddStaffClone(dataClone);
+    } else {
+      console.log("FALSE", addStaffCloneData);
+      setAddStaffClone(addStaffCloneData.data);
+      setCookie("step_data", addStaffCloneData.data);
+    }
+    console.log("Fetch ", addStaffClone);
   }, []);
 
   useEffect(() => {
@@ -37,26 +38,26 @@ const Steps = () => {
   }, [currentStep]);
 
   const setCurrentInputClone = () => {
-    let currentInputData = findWhere(add_staff_clone, { step: currentStep });
+    console.log("Data", addStaffClone);
+    let currentInputData = findWhere(addStaffClone, { step: currentStep });
+    console.log("currentInputData", addStaffClone, currentInputData);
     setCurrentInput(currentInputData);
   };
 
   const goToNextStep = (UpdatedData) => {
-    console.log("Next Update", UpdatedData);
-    // dispatch(updateInputByStep({ add_staff_clone, UpdatedData }));
-    console.log("Next Update", UpdatedData);
+    // dispatch(updateInputByStep({ addStaffClone, UpdatedData }));
     if (currentStep < MAX_STEP) {
       setCurrentStep(currentStep + 1);
     } else {
       /** Saving Data After Completing all Steps. */
-      router.push('/add-employee')
+      router.push("/add-employee");
       console.log("Final Step");
     }
   };
 
   const goToPrevStep = (UpdatedData) => {
     setCurrentStep(currentStep - 1);
-    // dispatch(updateInputByStep({ add_staff_clone, UpdatedData }))
+    // dispatch(updateInputByStep({ addStaffClone, UpdatedData }))
   };
 
   return (
@@ -77,7 +78,7 @@ const Steps = () => {
                 <div className="wizard-inner">
                   <div className="connecting-line"></div>
                   <ul className="d-flex justify-content-center">
-                    {add_staff_clone.map((staffClone) => {
+                    {addStaffClone.map((staffClone) => {
                       return (
                         <li key={staffClone.step}>
                           <a

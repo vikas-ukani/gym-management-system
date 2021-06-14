@@ -2,9 +2,11 @@ import { createSlice } from "@reduxjs/toolkit";
 import add_staff_clone from "data/add_staff_clone.json";
 import { findIndex } from "underscore";
 import Cookies from "js-cookie";
+import { getCookie } from "services";
 
 const initialState = {
   current_step: 1,
+  // add_staff_clone: JSON.parse(getCookie("step_data")),
   add_staff_clone: add_staff_clone.data,
 };
 
@@ -30,7 +32,6 @@ export const StaffSlice = createSlice({
         let index = findIndex(state.add_staff_clone, {
           step: data.UpdatedData.step,
         });
-        console.log("AdS", index, data);
         if (index >= 0) {
           state.add_staff_clone[index] = data.UpdatedData;
           state.current_step = data.NextStep;

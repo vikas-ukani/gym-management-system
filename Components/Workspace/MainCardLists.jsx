@@ -128,65 +128,42 @@ const MainCardLists = ({ workspaces = [] }) => {
             {workspaces &&
               workspaces.map((list, idx) => {
                 return (
-                  <div className="col-xl-4 col-md-6" key={idx}>
+                  <div className="col-xl-3 col-md-4  h-100" key={idx}>
                     <div
                       className={`card pl-25 bg-primary shadow-soft border-light not-interested-box ${
                         activeRecordId == list.id && activeClass
                       }`}
                     >
-                      <div className="card-body">
-                        {/* <div style={{ position: "absolute", right: "10px" }}>
-                          <fieldset>
-                            <pre>{ list.is_default == 1 || list.is_default == "true"} </pre>
-                            <div className="vs-radio-con">
-                              <input
-                                key={list.id}
-                                type="radio"
-                                name="is_default"
-                                value={
-                                  list.is_default == 1 ||
-                                  list.is_default == "true"
-                                }
-                                defaultChecked={activeRecordId == list.id}
-                                onClick={() => setDetafaultCard(list.id)}
-                              />
-                              <span className="vs-radio">
-                                <span className="vs-radio--border"></span>
-                                <span className="vs-radio--circle"></span>
-                              </span>
-                            </div>
-                          </fieldset>
-                        </div> */}
-
+                      <div className="card-body p-75">
                         <div
                           className="cursor-pointer"
                           onClick={() => setDetafaultCard(list.id)}
                         >
-                          <div className="text-default d-flex align-items-center font-medium-4 pb-50 font-weight-bold text-capitalize">
+                          <div className="text-default d-flex align-items-center font-medium-1 pb-50 font-weight-bold text-capitalize">
                             {list.location_address}
                           </div>{" "}
-                          <div className="lead-contact font-medium-3">
+                          <div className="lead-contact font-medium-1">
                             <i className="fa fa-map-marker "></i>{" "}
                             {list.location_address}
                           </div>
-                          <div className="lead-contact font-medium-3">
+                          {/* <div className="lead-contact font-medium-3">
                             <i className="fa fa-phone"></i>{" "}
                             {list?.phones[0]?.phone}
-                          </div>
-                          <div className="lead-contact font-medium-3">
+                          </div> */}
+                          {/* <div className="lead-contact font-medium-3">
                             <i className="fa fa-mail-forward"></i>{" "}
                             {list?.emails[0]?.email}
-                          </div>
+                          </div> */}
                         </div>
-                        <div className="bottom-btn text-center pt-50">
+                        <div className="bottom-btn text-center ">
                           <Link href={`${WORKSPACE_UPDATE_URL}/${list.id}`}>
-                            <a className="btn btn-primary custom_btn_card mr-1 px-1">
+                            <a className="btn btn-primary custom_btn_card px-50 py-75 mr-50 ">
                               <i className="fa fa-edit"></i> Edit
                             </a>
                           </Link>
 
                           <button
-                            className="btn btn-primary custom_btn_card px-1"
+                            className="btn btn-primary custom_btn_card px-50 py-75"
                             onClick={() => deleteRow(list.id)}
                           >
                             <i className="fa fa-trash"></i> Delete
