@@ -1,18 +1,18 @@
 import { useEffect, useState } from 'react';
 
-const Step6 = ({ currentInput, goToNextStep, goToPrevStep }) => {
+const Step6 = ({ currentData, goToNextStep, goToPrevStep }) => {
 	const [stepInput, setStepInput] = useState({});
 
 	useEffect(() => {
-		setStepInput(currentInput);
+		setStepInput(currentData);
 	}, []);
 
 	const handleChange = (e) => {
-		if (updatedCurrentInput?.input && e.target.name) {
+		if (updatedcurrentData?.input && e.target.name) {
 			let newUpdates = {
-				...currentInput,
+				...currentData,
 				input: {
-					...currentInput.input,
+					...currentData.input,
 					[e.target.name]: e.target.value,
 				},
 			};

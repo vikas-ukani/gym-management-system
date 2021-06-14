@@ -1,19 +1,20 @@
 import { useEffect, useState } from "react";
 import { Select } from "antd";
-const Step4 = ({ currentInput, goToNextStep, goToPrevStep }) => {
+const Step4 = ({ currentData, goToNextStep, goToPrevStep }) => {
   const [stepInput, setStepInput] = useState({});
   const [designation, setDesignation] = useState();
+  const [role, setRole] = useState();
 
   useEffect(() => {
-    setStepInput(currentInput);
+    setStepInput(currentData);
   }, []);
 
   const handleChange = (e) => {
-    if (updatedCurrentInput?.input && e.target.name) {
+    if (updatedcurrentData?.input && e.target.name) {
       let newUpdates = {
-        ...currentInput,
+        ...currentData,
         input: {
-          ...currentInput.input,
+          ...currentData.input,
           [e.target.name]: e.target.value,
         },
       };
@@ -49,7 +50,7 @@ const Step4 = ({ currentInput, goToNextStep, goToPrevStep }) => {
                   </div>
                 </div>
               </div>
-              <div className="col-lg-12">
+              <div className="col-12">
                 <div className="form-group">
                   <label className="top-label">About Me</label>
                   <textarea
@@ -58,72 +59,54 @@ const Step4 = ({ currentInput, goToNextStep, goToPrevStep }) => {
                   ></textarea>
                 </div>
               </div>
-              <div className="col-lg-12">
+              <div className="col-xl-6">
                 <div className="form-group">
-                  <div className="row">
-                    <div className="col-xl-4">
-                      <label className="w-100">
-                        Designation
-                        {/* <a href="#" className="btn btn-primary add-icon"><i className="fa fa-plus"></i></a> */}
-                      </label>
-                      <Select
-                        className=""
-                        placeholder="Select experience."
-                        value={designation}
-                        style={{ width: "100%" }}
-                        onChange={(id) => setDesignation(id)}
-                        name="experience"
-                      >
-                        {/* {specializations.map((role) => {
-											return ( */}
-                        <Select.Option value={1}>Trainer</Select.Option>
-                        <Select.Option value={2}>
-                          Relationship Manager
-                        </Select.Option>
-                        <Select.Option value={3}>Janitor</Select.Option>
-                        <Select.Option value={4}>Owner</Select.Option>
-                        {/* );
-										})} */}
-                      </Select>
-                      {/* <div className="input-group mb-1 mt-1">
-												<div className="input-group-prepend">
-													<span className="input-group-text">
-														<div className="vs-radio-con">
-															<input type="radio" name="specialized" value="false" />
-															<span className="vs-radio">
-																<span className="vs-radio--border"></span>
-																<span className="vs-radio--circle"></span>
-															</span>
-														</div>
-													</span>
-												</div>
-												<input
-													className="form-control form-control-lg datepicker"
-													type="text"
-												/>
-											</div> */}
-                    </div>
-                  </div>
-                  {/* <ul className="list-unstyled  mb-0">
-                    <li className="d-inline-block mr-2 checkbox-mobile">
-                      <fieldset>
-                        <div className="vs-radio-con">
-                          <input
-                            type="checkbox"
-                            name="specialized"
-                            value="false"
-                          />
-                          <span className="vs-radio">
-                            <span className="vs-radio--border"></span>
-                            <span className="vs-radio--circle"></span>
-                          </span>
-                          <span className="">Trainer</span>
-                        </div>
-                      </fieldset>
-                    </li>
-                  </ul> */}
+                  <label className="w-100">
+                    Designation
+                    {/* <a href="#" className="btn btn-primary add-icon"><i className="fa fa-plus"></i></a> */}
+                  </label>
+                  <Select
+                    className=""
+                    placeholder="Select experience."
+                    value={designation}
+                    style={{ width: "100%" }}
+                    onChange={(id) => setDesignation(id)}
+                    name="experience"
+                  >
+                    <Select.Option value={1}>Trainer</Select.Option>
+                    <Select.Option value={2}>
+                      Relationship Manager
+                    </Select.Option>
+                    <Select.Option value={3}>Janitor</Select.Option>
+                    <Select.Option value={4}>Owner</Select.Option>
+                  </Select>
                 </div>
               </div>
+
+              <div className="col-xl-6">
+                <div className="form-group">
+                  <label className="w-100">
+                    Role
+                    {/* <a href="#" className="btn btn-primary add-icon"><i className="fa fa-plus"></i></a> */}
+                  </label>
+                  <Select
+                    className=""
+                    placeholder="Select role."
+                    value={role}
+                    style={{ width: "100%" }}
+                    onChange={(id) => setRole(id)}
+                    name="role"
+                  >
+                    {/* {specializations.map((role) => {
+											return ( */}
+                    <Select.Option value={1}>Owner </Select.Option>
+                    <Select.Option value={2}>Admin</Select.Option>
+                    <Select.Option value={3}>Member</Select.Option>
+                    {/* );
+										})} */}
+                  </Select>
+                </div>
+               </div>
             </div>
 
             <div className="row">

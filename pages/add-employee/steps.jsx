@@ -6,6 +6,7 @@ import { findIndex, findWhere, max, min } from "underscore";
 import router from "next/router";
 import { getCookie, setCookie } from "services";
 import addStaffCloneData from "data/add_staff_clone.json";
+import { data as addStaffs } from "data/add_staff.json";
 
 const Steps = () => {
   // const addStaffClone = JSON.parse(getCookie("step_data"));
@@ -14,50 +15,35 @@ const Steps = () => {
   const dispatch = useDispatch();
 
   const [currentStep, setCurrentStep] = useState(1);
-  const [currentInput, setCurrentInput] = useState({});
+  const [currentData, setCurrentData] = useState({});
+  const [stepInput, setStepInput] = useState({});
   const MIN_STEP = min(addStaffClone, "step")?.step || 1;
   const MAX_STEP = max(addStaffClone, "step")?.step || 6;
 
-  useEffect(async () => {
-    console.log("Fetching", addStaffClone);
-    /** Check if data stored in cookie or not. */
-    if (getCookie("step_data") && JSON.parse(getCookie("step_data"))) {
-      let dataClone = JSON.parse(getCookie("step_data"));
-      console.log("TRUE", dataClone);
-      setAddStaffClone(dataClone);
-    } else {
-      console.log("FALSE", addStaffCloneData);
-      setAddStaffClone(addStaffCloneData.data);
-      setCookie("step_data", addStaffCloneData.data);
-    }
-    console.log("Fetch ", addStaffClone);
-  }, []);
-
   useEffect(() => {
-    setCurrentInputClone();
+    setCurrentDataClone();
   }, [currentStep]);
 
-  const setCurrentInputClone = () => {
-    console.log("Data", addStaffClone);
-    let currentInputData = findWhere(addStaffClone, { step: currentStep });
-    console.log("currentInputData", addStaffClone, currentInputData);
-    setCurrentInput(currentInputData);
+  const setCurrentDataClone = () => {
+    let currentDataData = findWhere(addStaffs, { step: currentStep });
+    setCurrentData(currentDataData);
+
+    /** Get Step wise Data from Cookies */
+    let data = JSON.parse(getCookie(`step${currentStep}`)) || null;
+    setStepInput(data);
   };
 
-  const goToNextStep = (UpdatedData) => {
-    // dispatch(updateInputByStep({ addStaffClone, UpdatedData }));
+  const goToNextStep = () => {
     if (currentStep < MAX_STEP) {
       setCurrentStep(currentStep + 1);
     } else {
       /** Saving Data After Completing all Steps. */
       router.push("/add-employee");
-      console.log("Final Step");
     }
   };
 
   const goToPrevStep = (UpdatedData) => {
     setCurrentStep(currentStep - 1);
-    // dispatch(updateInputByStep({ addStaffClone, UpdatedData }))
   };
 
   return (
@@ -67,18 +53,16 @@ const Steps = () => {
         <div className="header-navbar-shadow"> </div>
         <div className="content-wrapper">
           <div className="content-header row"> </div>
-
           <div className="content-body">
             <section>
               <h3 className="wizard-title text-capitalize">
-                {currentInput?.title?.toLowerCase()}
+                {currentData?.title?.toLowerCase()}
               </h3>
-              {/* <pre>{JSON.stringify(currentInput)}</pre> */}
               <div className="wizard">
                 <div className="wizard-inner">
                   <div className="connecting-line"></div>
                   <ul className="d-flex justify-content-center">
-                    {addStaffClone.map((staffClone) => {
+                    {addStaffs.map((staffClone) => {
                       return (
                         <li key={staffClone.step}>
                           <a
@@ -98,44 +82,41 @@ const Steps = () => {
                 </div>
               </div>
 
-              {/* <pre>{JSON.stringify(currentStep)}</pre> */}
-              {currentStep == 1 && currentInput.step == 1 && (
-                <Step1
-                  currentInput={currentInput}
-                  goToNextStep={goToNextStep}
-                />
+              {/* <pre>{JSON.stringify(currentData)}</pre> */}
+              {currentStep == 1 && currentData.step == 1 && (
+                <Step1 currentData={stepInput} goToNextStep={goToNextStep} />
               )}
-              {currentStep == 2 && currentInput.step == 2 && (
+              {currentStep == 2 && currentData.step == 2 && (
                 <Step2
-                  currentInput={currentInput}
+                  currentData={stepInput}
                   goToNextStep={goToNextStep}
                   goToPrevStep={goToPrevStep}
                 />
               )}
-              {currentStep == 3 && currentInput.step == 3 && (
+              {currentStep == 3 && currentData.step == 3 && (
                 <Step3
-                  currentInput={currentInput}
+                  currentData={stepInput}
                   goToNextStep={goToNextStep}
                   goToPrevStep={goToPrevStep}
                 />
               )}
-              {currentStep == 4 && currentInput.step == 4 && (
+              {currentStep == 4 && currentData.step == 4 && (
                 <Step4
-                  currentInput={currentInput}
+                  currentData={stepInput}
                   goToNextStep={goToNextStep}
                   goToPrevStep={goToPrevStep}
                 />
               )}
-              {currentStep == 5 && currentInput.step == 5 && (
+              {currentStep == 5 && currentData.step == 5 && (
                 <Step5
-                  currentInput={currentInput}
+                  currentData={stepInput}
                   goToNextStep={goToNextStep}
                   goToPrevStep={goToPrevStep}
                 />
               )}
-              {currentStep == 6 && currentInput.step == 6 && (
+              {currentStep == 6 && currentData.step == 6 && (
                 <Step6
-                  currentInput={currentInput}
+                  currentData={stepInput}
                   goToNextStep={goToNextStep}
                   goToPrevStep={goToPrevStep}
                 />

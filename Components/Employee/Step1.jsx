@@ -7,10 +7,11 @@ import moment, { utc } from "moment";
 import { getNumericalObject, getRangeByStep } from "utils/objects";
 import { getAge } from "utils/date_filters";
 import { getCookie, setCookie } from "services";
-import { findIndex } from "underscore";
-import { saveStepData } from "utils/employee";
+import { clone } from "underscore";
 
-const Step1 = ({ currentInput, goToNextStep }) => {
+const Step1 = ({ currentData, goToNextStep }) => {
+  /** Input */
+  const [input, setInput] = useState({});
   const [stepInput, setStepInput] = useState({});
   const [dob, setDob] = useState(null);
   const [selectedLanguage, setSelectedLanguage] = useState([]);
@@ -48,8 +49,9 @@ const Step1 = ({ currentInput, goToNextStep }) => {
   password.current = watch("password", "");
 
   useEffect(() => {
-    setStepInput(currentInput);
-    reset({ defaultValue: { ...stepInput } });
+    setStepInput(currentData);
+    reset({ ...currentData });
+    // reset({ defaultValue: stepInput });
   }, []);
 
   const heightFitOptionsConfig = { min: 3, max: 12, step: 0.1 };
@@ -69,25 +71,30 @@ const Step1 = ({ currentInput, goToNextStep }) => {
 
   const changeDOB = (date) => {
     const currentAge = getAge(date);
-    setStepInput({
-      ...stepInput,
-      input: { ...stepInput.input, age: currentAge, date_of_birth: date },
+    setInput({
+      ...input,
+      age: currentAge,
+      date_of_birth: date,
     });
     setDob(date);
     clearErrors("date_of_birth");
   };
 
   const handleChange = (e) => {
-    if (updatedCurrentInput?.input && e.target.name) {
-      let newUpdates = {
-        ...currentInput,
-        input: {
-          ...currentInput.input,
-          [e.target.name]: e.target.value,
-        },
-      };
-      setStepInput(newUpdates);
-    }
+    setInput({
+      ...input,
+      [e.target.name]: e.target.value,
+    });
+    // if (updatedcurrentData?.input && e.target.name) {
+    //   let newUpdates = {
+    //     ...currentData,
+    //     input: {
+    //       ...currentData.input,
+    //       [e.target.name]: e.target.value,
+    //     },
+    //   };
+    //   setStepInput(newUpdates);
+    // }
   };
 
   const stepNext = () => {
@@ -98,37 +105,46 @@ const Step1 = ({ currentInput, goToNextStep }) => {
     return moment(moment(date), "DD-MM-YYYY");
   };
 
-  const onSubmit = (input) => {
-    if (!dob) {
+  const onSubmit = (inputData) => {
+    // console.log("val", !dob && !currentData?.date_of_birth);
+    if (!dob && !currentData?.date_of_birth) {
       setError("date_of_birth", {
         type: "manual",
         message: "The date of birth field is required.!",
       });
+      return false;
     }
     let UpdatedData = {
-      ...stepInput,
-      input: {
-        ...stepInput.input,
-        ...input,
-        date_of_birth: dob,
-        language_ids: selectedLanguage,
-        blood_group: selectedBloodGroup,
-      },
-      NextStep: 2,
+      ...input,
+      ...inputData,
+      date_of_birth: dob
+        ? dob
+        : currentData?.date_of_birth
+        ? currentData?.date_of_birth
+        : null,
+      language_ids: selectedLanguage,
+      blood_group: selectedBloodGroup,
     };
-    saveStepData(stepInput.step, UpdatedData);
-    console.log("Final saveStepData", UpdatedData);
+
+    console.log("Final UpdatedData", input, UpdatedData);
+    setCookie("step1", UpdatedData);
     goToNextStep(UpdatedData);
   };
 
   const getHeightPoints = (height) => {
-    let returnHight = 5;
-    if (height) {
-      returnHight = parseFloat(
-        (height?.fit || returnHight) + "." + (height?.inch || 0)
-      );
-    }
+    let returnHight = 5.2;
+    // if (height) {
+    //   returnHight = parseFloat(
+    //     (height?.fit || returnHight) + "." + (height?.inch || 0)
+    //   );
+    // }
     return returnHight;
+  };
+
+  const getWeightPoints = (weight) => {
+    let returnWeight = 50.6;
+
+    return returnWeight;
   };
 
   const date_of_birth = register("date_of_birth");
@@ -143,12 +159,12 @@ const Step1 = ({ currentInput, goToNextStep }) => {
               <div className="col-xl-6">
                 <div className="form-group">
                   <label className="top-label">First Name</label>
-                  {/* <pre>{JSON.stringify(stepInput?.input?.first_name)}</pre> */}
+                  {/* <pre>{JSON.stringify(input?.first_name)}</pre> */}
                   <input
                     type="text"
                     className="form-control form-control-lg"
                     name="first_name"
-                    defaultValue={stepInput?.input?.first_name}
+                    defaultValue={input?.first_name}
                     onChange={handleChange}
                     {...register("first_name", {
                       required: "The first name field is required",
@@ -169,7 +185,7 @@ const Step1 = ({ currentInput, goToNextStep }) => {
                     type="text"
                     className="form-control form-control-lg"
                     name="last_name"
-                    defaultValue={stepInput?.input?.last_name}
+                    defaultValue={input?.last_name}
                     onChange={handleChange}
                     {...register("last_name", {
                       required: "The last name field is required",
@@ -193,10 +209,11 @@ const Step1 = ({ currentInput, goToNextStep }) => {
                       className="w-100"
                       format="DD-MM-YYYY"
                       name="date_of_birth"
-                      value={stepInput?.input?.date_of_birth}
+                      value={getDefaultDOB(currentData?.date_of_birth)}
                       onChange={(date) => {
                         changeDOB(date);
                       }}
+                      {...register("date_of_birth")}
                     />
 
                     {errors.date_of_birth && (
@@ -219,7 +236,7 @@ const Step1 = ({ currentInput, goToNextStep }) => {
                     className="form-control form-control-lg "
                     name="age"
                     readOnly={true}
-                    defaultValue={stepInput?.input?.age}
+                    defaultValue={input?.age}
                   />
                 </div>
               </div>
@@ -278,7 +295,7 @@ const Step1 = ({ currentInput, goToNextStep }) => {
                       className="js-range-slider "
                       data-type="single"
                       id="height-fit"
-                      defaultValue={getHeightPoints(stepInput?.input?.height)}
+                      defaultValue={getHeightPoints(input?.height)}
                       onChange={(val) => console.log(val)}
                       dots={false}
                       {...heightFitOptions}
@@ -309,7 +326,7 @@ const Step1 = ({ currentInput, goToNextStep }) => {
                       className="js-range-slider "
                       data-type="single"
                       id="weight"
-                      defaultValue={stepInput?.input?.weight}
+                      defaultValue={getWeightPoints(input?.weight)}
                       onChange={(val) => console.log(val)}
                       dots={false}
                       {...weightOptions}
@@ -319,7 +336,7 @@ const Step1 = ({ currentInput, goToNextStep }) => {
                     />
                     {/* <div className="form-group">
                                         <input type="text" className="js-range-slider" value="" data-type="single" id="weight"
-                                            name="weight" defaultValue={stepInput?.input?.weight} onChange={handleChange} />
+                                            name="weight" defaultValue={input?.weight} onChange={handleChange} />
                                     </div> */}
                   </div>
                 </div>
@@ -365,7 +382,7 @@ const Step1 = ({ currentInput, goToNextStep }) => {
                             name="gender"
                             checked
                             value="MALE"
-                            defaultChecked={stepInput?.input?.gender == "MALE"}
+                            defaultChecked={input?.gender == "MALE"}
                             onChange={handleChange}
                           />
                           {/*  */}
@@ -384,9 +401,7 @@ const Step1 = ({ currentInput, goToNextStep }) => {
                             type="radio"
                             name="gender"
                             value="FEMALE"
-                            defaultChecked={
-                              stepInput?.input?.gender == "FEMALE"
-                            }
+                            defaultChecked={input?.gender == "FEMALE"}
                             onChange={handleChange}
                           />
                           <span className="vs-radio">
@@ -404,7 +419,7 @@ const Step1 = ({ currentInput, goToNextStep }) => {
                             type="radio"
                             name="gender"
                             value="OTHER"
-                            defaultChecked={stepInput?.input?.gender == "OTHER"}
+                            defaultChecked={input?.gender == "OTHER"}
                             onChange={handleChange}
                           />
                           {/* onChange={handleChange} */}
