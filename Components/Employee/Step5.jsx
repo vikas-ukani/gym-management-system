@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useToasts } from "react-toast-notifications";
 import { uploadImageService } from "services/image";
 
-const Step5 = ({ currentInput, goToNextStep, goToPrevStep }) => {
+const Step5 = ({ currentData, goToNextStep, goToPrevStep }) => {
   const [stepInput, setStepInput] = useState({});
   const [defaultFileList1, setDefaultFileList1] = useState([]);
   const [imageIds1, setImageIds1] = useState([]);
@@ -13,15 +13,15 @@ const Step5 = ({ currentInput, goToNextStep, goToPrevStep }) => {
   const { addToast } = useToasts();
 
   useEffect(() => {
-    setStepInput(currentInput);
+    setStepInput(currentData);
   }, []);
 
   const handleChange = (e) => {
-    if (updatedCurrentInput?.input && e.target.name) {
+    if (updatedcurrentData?.input && e.target.name) {
       let newUpdates = {
-        ...currentInput,
+        ...currentData,
         input: {
-          ...currentInput.input,
+          ...currentData.input,
           [e.target.name]: e.target.value,
         },
       };

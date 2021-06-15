@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { Select } from "antd";
+import { setCookie } from "services";
 
-const Step2 = ({ currentInput, goToNextStep, goToPrevStep }) => {
+const Step2 = ({ currentData, goToNextStep, goToPrevStep }) => {
+  /** Input */
+  const [input, setInput] = useState({});
   const [stepInput, setStepInput] = useState({});
-  const [city, setCity] = useState();
 
   const {
     register,
@@ -14,24 +15,22 @@ const Step2 = ({ currentInput, goToNextStep, goToPrevStep }) => {
     reset,
     control,
     formState: { errors },
-  } = useForm();
+  } = useForm({
+    mode: "onBlur",
+    criteriaMode: "all",
+    reValidateMode: "onChange",
+  });
 
   useEffect(() => {
-    setStepInput(currentInput);
-    reset({ defaultValue: { ...stepInput } });
+    setStepInput(currentData);
+    reset({ ...currentData });
   }, []);
 
   const handleChange = (e) => {
-    if (updatedCurrentInput?.input && e.target.name) {
-      let newUpdates = {
-        ...currentInput,
-        input: {
-          ...currentInput.input,
-          [e.target.name]: e.target.value,
-        },
-      };
-      setStepInput(newUpdates);
-    }
+    setInput({
+      ...input,
+      [e.target.name]: e.target.value,
+    });
   };
 
   const stepNext = () => {
@@ -40,6 +39,20 @@ const Step2 = ({ currentInput, goToNextStep, goToPrevStep }) => {
 
   const stepPrev = () => {
     goToPrevStep();
+  };
+
+  /** SUBMITTING FORM */
+  const onSubmit = (inputData) => {
+    console.log("inputData", inputData);
+
+    let UpdatedData = {
+      ...input,
+      ...inputData,
+    };
+
+    console.log("Final UpdatedData", input, UpdatedData);
+    setCookie("step2", UpdatedData);
+    goToNextStep(UpdatedData);
   };
 
   return (
@@ -54,9 +67,17 @@ const Step2 = ({ currentInput, goToNextStep, goToPrevStep }) => {
                   <textarea
                     className="form-control form-control-lg"
                     name="address"
+                    defaultValue={input?.address}
                     onChange={handleChange}
-                    defaultValue={stepInput?.input?.address}
+                    {...register("address", {
+                      required: "The address field is required",
+                    })}
                   ></textarea>
+                  {errors.address && (
+                    <span className="mt-5 text-danger">
+                      {errors.address.message}
+                    </span>
+                  )}
                 </div>
               </div>
 
@@ -66,12 +87,15 @@ const Step2 = ({ currentInput, goToNextStep, goToPrevStep }) => {
                   <input
                     type="text"
                     className="form-control form-control-lg"
-                    defaultValue={stepInput?.input?.city}
+                    defaultValue={input?.city}
+                    onChange={handleChange}
                     {...register("city", {
                       required: "The city field is required",
                     })}
                   />
-
+                  {errors.city && (
+                    <p className=" text-danger">{errors.city.message}</p>
+                  )}
                   {/* <Select
                     placeholder="Select city."
                     value={city}
@@ -84,9 +108,6 @@ const Step2 = ({ currentInput, goToNextStep, goToPrevStep }) => {
                     <Select.Option value="mrs">Baroda</Select.Option>
                     <Select.Option value="miss">Mumbai</Select.Option>
                   </Select> */}
-                  {errors.city && (
-                    <p className=" text-danger">{errors.city.message}</p>
-                  )}
                 </div>
               </div>
 
@@ -96,11 +117,17 @@ const Step2 = ({ currentInput, goToNextStep, goToPrevStep }) => {
                   <input
                     type="text"
                     className="form-control form-control-lg"
-                    defaultValue={stepInput?.input?.state}
-                    {...register("city", {
+                    onChange={handleChange}
+                    defaultValue={input?.state}
+                    {...register("state", {
                       required: "The state field is required",
                     })}
                   />
+                  {errors.state && (
+                    <span className="mt-5 text-danger">
+                      {errors.state.message}
+                    </span>
+                  )}
                   {/* <select className="form-control form-control-lg">
                     <option value="mr">Gujrat</option>
                     <option value="mrs">Maharashtra</option>
@@ -112,7 +139,11 @@ const Step2 = ({ currentInput, goToNextStep, goToPrevStep }) => {
               <div className="col-xl-4 col-12">
                 <div className="form-group">
                   <label className="top-label">Zipcode</label>
-                  <input type="text" className="form-control form-control-lg" />
+                  <input
+                    type="text"
+                    className="form-control form-control-lg"
+                    {...register("zip_code")}
+                  />
                 </div>
               </div>
 
@@ -128,8 +159,18 @@ const Step2 = ({ currentInput, goToNextStep, goToPrevStep }) => {
                     <input
                       className="form-control form-control-lg datepicker"
                       type="text"
+                      defaultValue={input?.email}
+                      onChange={handleChange}
+                      {...register("email", {
+                        required: "The email field is required",
+                      })}
                     />
                   </div>
+                  {errors.email && (
+                    <span className="mt-5 text-danger">
+                      {errors.email.message}
+                    </span>
+                  )}
                 </div>
               </div>
 
@@ -147,8 +188,18 @@ const Step2 = ({ currentInput, goToNextStep, goToPrevStep }) => {
                     <input
                       className="form-control form-control-lg datepicker"
                       type="text"
+                      defaultValue={input?.mobile}
+                      onChange={handleChange}
+                      {...register("mobile", {
+                        required: "The mobile field is required",
+                      })}
                     />
                   </div>
+                  {errors.mobile && (
+                    <span className="mt-5 text-danger">
+                      {errors.mobile.message}
+                    </span>
+                  )}{" "}
                 </div>
               </div>
 
@@ -166,6 +217,7 @@ const Step2 = ({ currentInput, goToNextStep, goToPrevStep }) => {
                     <input
                       className="form-control form-control-lg datepicker"
                       type="text"
+                      {...register("alternative_mobile")}
                     />
                   </div>
                 </div>
@@ -174,7 +226,11 @@ const Step2 = ({ currentInput, goToNextStep, goToPrevStep }) => {
               <div className="col-xl-6">
                 <div className="form-group">
                   <label className="top-label">Emergency Contact Name</label>
-                  <input type="text" className="form-control form-control-lg" />
+                  <input
+                    type="text"
+                    className="form-control form-control-lg"
+                    {...register("emergency_contact_name")}
+                  />
                 </div>
               </div>
 
@@ -192,6 +248,7 @@ const Step2 = ({ currentInput, goToNextStep, goToPrevStep }) => {
                     <input
                       className="form-control form-control-lg datepicker"
                       type="text"
+                      {...register("emergency_contact_mobile")}
                     />
                   </div>
                 </div>
@@ -207,7 +264,7 @@ const Step2 = ({ currentInput, goToNextStep, goToPrevStep }) => {
                   <i className="fa fa-angle-left"></i> BACK
                 </a>
                 <a
-                  onClick={() => stepNext()}
+                  onClick={handleSubmit(onSubmit)}
                   className="float-right mx-1 btn btn-pill mb-sm-0 mb-2 text_theme_primary   default_gradient"
                 >
                   NEXT <i className="  fa fa-angle-right"></i>

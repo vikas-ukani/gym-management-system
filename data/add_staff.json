@@ -1,0 +1,34 @@
+{
+  "data": [
+    {
+      "step": 1,
+      "title": "Basic Information",
+      "is_completed": true
+    },
+    {
+      "step": 2,
+      "title": "Contact Information",
+      "is_completed": false
+    },
+    {
+      "step": 3,
+      "title": "PROFESSIONAL EXPERIENCE",
+      "is_completed": false
+    },
+    {
+      "step": 4,
+      "title": "ABOUT ME",
+      "is_completed": false
+    },
+    {
+      "step": 5,
+      "title": "Identification Information",
+      "is_completed": false
+    },
+    {
+      "step": 6,
+      "title": "Bank Account Details",
+      "is_completed": false
+    }
+  ]
+}
