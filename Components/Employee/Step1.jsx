@@ -143,7 +143,6 @@ const Step1 = ({ currentData, goToNextStep }) => {
 
   const getWeightPoints = (weight) => {
     let returnWeight = 50.6;
-
     return returnWeight;
   };
 

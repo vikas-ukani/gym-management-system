@@ -1,11 +1,16 @@
 import { useEffect, useState } from "react";
 import { Select } from "antd";
-import { useFieldArray, useForm } from "react-hook-form";
+import { Controller, useFieldArray, useForm } from "react-hook-form";
+import { setCookie } from "services";
 
 const Step3 = ({ currentData, goToNextStep, goToPrevStep }) => {
+  const [input, setInput] = useState({});
   const [stepInput, setStepInput] = useState({});
-  const [specialization, setSpecialization] = useState();
   const [experience, setExperience] = useState();
+
+  const [specialization, setSpecialization] = useState();
+  const [specializationError, setSpecializationError] = useState();
+  const [educationsYearError, setEducationsYearError] = useState();
 
   const specializations = [
     {
@@ -45,17 +50,36 @@ const Step3 = ({ currentData, goToNextStep, goToPrevStep }) => {
     setStepInput(currentData);
   }, []);
 
-  const handleChange = (e) => {
-    if (updatedcurrentData?.input && e.target.name) {
-      let newUpdates = {
-        ...currentData,
-        input: {
-          ...currentData.input,
-          [e.target.name]: e.target.value,
-        },
-      };
-      setStepInput(newUpdates);
+  const updateIndexedExperienceYear = (id, index) => {
+    setExperience({ ...experience, [index]: id });
+    /** Remove Errors after select */
+    setEducationsYearError({ ...educationsYearError, [index]: null });
+  };
+  const updateSpecialization = (id) => {
+    setSpecializationError(null);
+    setSpecialization(id);
+  };
+
+  const onSubmit = (inputData) => {
+    console.log("inputData", experience[0], inputData);
+
+    if (!specialization || specialization.length == 0) {
+      setSpecializationError("The select any specialization.!");
+      return false;
     }
+    let UpdatedData = {
+      ...input,
+      ...inputData,
+    };
+
+    UpdatedData.educations.forEach((education, idx) => {
+      education.education_year = experience[idx];
+    });
+    UpdatedData.specializations = specialization;
+    // console.log("Final UpdatedData", UpdatedData);
+    setCookie("step3", UpdatedData);
+    console.log("Saved", UpdatedData);
+    // goToNextStep(UpdatedData);
   };
 
   const stepNext = () => {
@@ -79,7 +103,7 @@ const Step3 = ({ currentData, goToNextStep, goToPrevStep }) => {
               <div className="col-xl-6">
                 <div className="form-group">
                   <label className="top-label w-100 text-capitalize">
-                    Years of experience
+                    Passing Year
                     {educationsFields.fields.length < 5 && (
                       <a
                         className="btn btn-primary add-icon custom_btn"
@@ -101,10 +125,25 @@ const Step3 = ({ currentData, goToNextStep, goToPrevStep }) => {
                   <div key={item.id} className="d-flex col-12 mt-0 ">
                     <div className="col-xl-6 pl-0">
                       <div className="form-group">
-                        <input
-                          type="text"
-                          className="form-control form-control-lg"
+                        <Controller
+                          render={({ field }) => (
+                            <input
+                              type="text"
+                              className="form-control form-control-lg mb-25 mt-25"
+                              {...field}
+                            />
+                          )}
+                          name={`educations.${index}.education`}
+                          control={control}
+                          {...register(`educations.${index}.education`, {
+                            required: "Education is required.",
+                          })}
                         />
+                        {errors?.educations && errors?.educations[index] && (
+                          <p className=" text-danger">
+                            {errors?.educations[index].education.message}
+                          </p>
+                        )}
                       </div>
                     </div>
                     <div className="col-xl-5">
@@ -112,21 +151,41 @@ const Step3 = ({ currentData, goToNextStep, goToPrevStep }) => {
                         <Select
                           className=""
                           placeholder="Select experience."
-                          value={3}
+                          value={experience?.[index]}
                           style={{ width: "100%" }}
-                          onChange={(id) => setExperience(id)}
-                          name="experience"
+                          name="education_year"
+                          onChange={(id) =>
+                            updateIndexedExperienceYear(id, index)
+                          }
                         >
-                          {/* {specializations.map((role) => {
-											return ( */}
-                          <Select.Option value={1}>1 Year</Select.Option>
-                          <Select.Option value={2}>2 Year</Select.Option>
-                          <Select.Option value={3}>3 Year</Select.Option>
-                          <Select.Option value={4}>4 Year</Select.Option>
-                          <Select.Option value={5}>5 Year</Select.Option>
+                          <Select.Option value={2001}>2001</Select.Option>
+                          <Select.Option value={2002}>2002</Select.Option>
+                          <Select.Option value={2003}>2003</Select.Option>
+                          <Select.Option value={2004}>2004</Select.Option>
+                          <Select.Option value={2005}>2005</Select.Option>
+                          <Select.Option value={2006}>2006</Select.Option>
+                          <Select.Option value={2007}>2007</Select.Option>
+                          <Select.Option value={2008}>2008</Select.Option>
+                          <Select.Option value={2009}>2009</Select.Option>
+                          <Select.Option value={2010}>2010</Select.Option>
+                          <Select.Option value={2011}>2011</Select.Option>
+                          <Select.Option value={2012}>2012</Select.Option>
+                          <Select.Option value={2013}>2013</Select.Option>
+                          <Select.Option value={2014}>2014</Select.Option>
+                          <Select.Option value={2015}>2015</Select.Option>
+                          <Select.Option value={2016}>2016</Select.Option>
+                          <Select.Option value={2017}>2017</Select.Option>
+                          <Select.Option value={2018}>2018</Select.Option>
+                          <Select.Option value={2019}>2019</Select.Option>
+                          <Select.Option value={2020}>2020</Select.Option>
                           {/* );
 										})} */}
                         </Select>
+                        {educationsYearError?.[index] && (
+                          <p className=" text-danger">
+                            {educationsYearError[index]}
+                          </p>
+                        )}
                       </div>
                     </div>
                     <div className="  ">
@@ -146,20 +205,14 @@ const Step3 = ({ currentData, goToNextStep, goToPrevStep }) => {
                 <div className="form-group">
                   <div className="row">
                     <div className="col-xl-12">
-                      <label className="w-100">
-                        Specialized
-                        {/* <a href="#" className="btn btn-primary add-icon">
-													<i className="fa fa-plus"></i>
-												</a> */}
-                      </label>
-                      {/* specializations */}
+                      <label className="w-100">Specialized</label>
                       <div className="input-group mb-1 mt-1">
                         <Select
                           mode="multiple"
                           placeholder="Select any specializations."
                           value={specialization}
                           style={{ width: "100%" }}
-                          onChange={(id) => setSpecialization(id)}
+                          onChange={(id) => updateSpecialization(id)}
                           name="specializations"
                         >
                           {specializations.map((role) => {
@@ -170,6 +223,9 @@ const Step3 = ({ currentData, goToNextStep, goToPrevStep }) => {
                             );
                           })}
                         </Select>
+                        {specializationError && (
+                          <p className=" text-danger">{specializationError}</p>
+                        )}
                         {/* <div className="input-group-prepend">
 													<span className="input-group-text">
 														<div className="vs-radio-con">
@@ -201,8 +257,8 @@ const Step3 = ({ currentData, goToNextStep, goToPrevStep }) => {
                   <i className="fa fa-angle-left"></i> BACK
                 </a>
                 <a
-                  onClick={() => stepNext()}
                   className="float-right mx-1 btn btn-pill mb-sm-0 mb-2 text_theme_primary  default_gradient"
+                  onClick={handleSubmit(onSubmit)}
                 >
                   NEXT <i className="fa fa-angle-right"></i>
                 </a>
