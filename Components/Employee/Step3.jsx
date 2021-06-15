@@ -42,11 +42,13 @@ const Step3 = ({ currentData, goToNextStep, goToPrevStep }) => {
   } = useForm({
     defaultValues: {
       educations: [{ education: null, education_year: null }],
+      ...currentData
     },
   });
   const educationsFields = useFieldArray({ control, name: "educations" });
 
   useEffect(() => {
+    console.log("currentData", currentData);
     setStepInput(currentData);
   }, []);
 
@@ -119,6 +121,7 @@ const Step3 = ({ currentData, goToNextStep, goToPrevStep }) => {
                     )}
                   </label>
                 </div>
+
               </div>
               {educationsFields.fields.map((item, index) => {
                 return (
@@ -130,10 +133,11 @@ const Step3 = ({ currentData, goToNextStep, goToPrevStep }) => {
                             <input
                               type="text"
                               className="form-control form-control-lg mb-25 mt-25"
-                              {...field}
+                              {...field} 
                             />
                           )}
                           name={`educations.${index}.education`}
+                          defaultValue={stepInput?.educations?.[index]?.education}
                           control={control}
                           {...register(`educations.${index}.education`, {
                             required: "Education is required.",
@@ -151,9 +155,10 @@ const Step3 = ({ currentData, goToNextStep, goToPrevStep }) => {
                         <Select
                           className=""
                           placeholder="Select experience."
-                          value={experience?.[index]}
+                          value={stepInput?.educations?.[index]?.education_year}
                           style={{ width: "100%" }}
                           name="education_year"
+                          defaultValue={stepInput?.educations?.[index]?.education_year}
                           onChange={(id) =>
                             updateIndexedExperienceYear(id, index)
                           }
@@ -201,7 +206,7 @@ const Step3 = ({ currentData, goToNextStep, goToPrevStep }) => {
                   </div>
                 );
               })}
-              <div className="col-xl-12">
+              <div className="col-xl-6">
                 <div className="form-group">
                   <div className="row">
                     <div className="col-xl-12">
@@ -212,6 +217,7 @@ const Step3 = ({ currentData, goToNextStep, goToPrevStep }) => {
                           placeholder="Select any specializations."
                           value={specialization}
                           style={{ width: "100%" }}
+                          defaultValue={stepInput.specializations}                          
                           onChange={(id) => updateSpecialization(id)}
                           name="specializations"
                         >

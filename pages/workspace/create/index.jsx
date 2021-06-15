@@ -19,6 +19,9 @@ const CreateWorkspace = () => {
     control,
     formState: { errors },
   } = useForm({
+    reValidateMode: "onChange",
+    mode: "onBlur",
+    criteriaMode: "all",
     defaultValues: {
       emails: [{ email: null }],
       phones: [{ phone: null }],
