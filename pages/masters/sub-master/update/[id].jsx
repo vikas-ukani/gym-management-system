@@ -20,7 +20,9 @@ const UpdateUser = ({ id }) => {
 		watch,
 		reset,
 		formState: { errors },
-	} = useForm();
+	} = useForm({
+		reValidateMode: "onSubmit"
+	  });
 
 	useEffect(async () => {
 		const { response, statusCode } = await useAxios(usersRoleListAPI());
@@ -46,8 +48,6 @@ const UpdateUser = ({ id }) => {
 		}
 	}, []);
 
-	const password = useRef({});
-	password.current = watch('password', '');
 	if (!id) {
 		return <div></div>;
 	}

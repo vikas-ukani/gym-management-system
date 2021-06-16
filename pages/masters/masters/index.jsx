@@ -10,7 +10,6 @@ import {
   updateActiveDeactiveIdAPI,
 } from "services/masters";
 import { MASTERS_CREATE_URL, MASTERS_UPDATE_URL } from "constants";
-import Pagination from "react-js-pagination";
 import Swal from "sweetalert2";
 import { SUB_MASTERS_UPDATE_URL } from "constants";
 import UpdateRowIcon from "Components/UX/TableActions/UpdateRowIcon";
@@ -26,19 +25,14 @@ const Masters = () => {
   const [totalCount, setTotalCount] = useState(0);
   const [lists, setLists] = useState([]);
   const { addToast } = useToasts();
-  const [activePage, setActivePage] = useState(1);
-  const [pageLimit, setPageLimit] = useState(20);
 
   const callingListData = async (params = {}) => {
-    // ?page=1&limit=1&all=true
-
     let Query = {
       all: true,
-      page: params?.page || activePage,
-      limit: params?.limit || pageLimit,
+      page: 1,
+      limit: 1000,
     };
     const qs = new URLSearchParams(Query).toString();
-
     const { response, error, loading, statusCode } = await useAxios(
       listMasterAPI(qs)
     );
@@ -103,10 +97,7 @@ const Masters = () => {
     }
   };
 
-  const handlePageChange = (pageNumber) => {
-    setActivePage(pageNumber);
-    callingListData();
-  };
+
 
   return (
     <div>
@@ -223,23 +214,6 @@ const Masters = () => {
                       </tbody>
                     </table>
                   )}
-                </div>
-                <div className="row mt-2">
-                  <div className="col-12">
-                    <nav aria-label="page navigation">
-                      <Pagination
-                        innerClass={"pagination justify-content-center mt-2"}
-                        activeClass={"active"}
-                        itemClass={"page-item"}
-                        activeLinkClass={"page-link"}
-                        activePage={activePage}
-                        itemsCountPerPage={pageLimit}
-                        totalItemsCount={totalCount}
-                        pageRangeDisplayed={5}
-                        onChange={handlePageChange}
-                      />{" "}
-                    </nav>
-                  </div>
                 </div>
               </div>
             </section>

@@ -19,7 +19,9 @@ const UpdateMaster = ({ id }) => {
     watch,
     reset,
     formState: { errors },
-  } = useForm();
+  } = useForm({
+    reValidateMode: "onSubmit"
+  });
   const watchAllFields = watch(); // when pass nothing as argument, you are watching everything
 
   const [master, setMaster] = useState(null);
@@ -41,8 +43,6 @@ const UpdateMaster = ({ id }) => {
     }
   }, []);
 
-  const password = useRef({});
-  password.current = watch("password", "");
   if (!id) {
     return <div></div>;
   }
@@ -144,14 +144,21 @@ const UpdateMaster = ({ id }) => {
                             className="form-control form-control-lg"
                             name="code"
                             readOnly={true}
-                            defaultValue={master?.code}
-                            value={watchAllFields?.name
+                            defaultValue={watchAllFields?.name
                               ?.replace(/ /g, "_")
-                              .toUpperCase()}
+                              .toUpperCase()
+                              ?
+                              watchAllFields?.name
+                                ?.replace(/ /g, "_")
+                                .toUpperCase()
+                              : master?.code?.replace(/ /g, "_").toUpperCase()}
                             {...register("code", {
                               required: "The code is required.",
                             })}
                           />
+                          {/* value={watchAllFields?.name
+                              ?.replace(/ /g, "_")
+                              .toUpperCase()} */}
                           {errors.code && (
                             <p className=" text-danger">
                               {errors.code.message}

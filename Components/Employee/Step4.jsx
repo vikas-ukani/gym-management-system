@@ -7,6 +7,9 @@ import { useToasts } from "react-toast-notifications";
 import { uploadImageService } from "services/image";
 import { useForm } from "react-hook-form";
 import { setCookie } from "services";
+
+
+
 const Step4 = ({ currentData, goToNextStep, goToPrevStep }) => {
   const { addToast } = useToasts()
 
@@ -82,29 +85,15 @@ const Step4 = ({ currentData, goToNextStep, goToPrevStep }) => {
     }
   };
 
-  const handleChange = (e) => {
-    if (updatedcurrentData?.input && e.target.name) {
-      let newUpdates = {
-        ...currentData,
-        input: {
-          ...currentData.input,
-          [e.target.name]: e.target.value,
-        },
-      };
-      setStepInput(newUpdates);
-    }
-  };
-
   const onSubmit = async inputData => {
 
     let UpdatedData = {
       ...stepInput,
       about_me: inputData.about_me ? inputData.about_me : stepInput.about_me,
       designation_id: designation,
-      profile_image_id: profileImageId
+      profile_image_id: profileImageId ? profileImageId : (stepInput?.profile_image_id ? stepInput?.profile_image_id : null  )
 
     };
-
 
     setCookie("step4", UpdatedData);
     console.log("Saved", UpdatedData);

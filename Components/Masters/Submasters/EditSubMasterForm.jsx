@@ -10,7 +10,9 @@ const EditSubMasterForm = ({ editRow, onEditSubmit, setIsEditForm }) => {
     watch,
     reset,
     formState: { errors },
-  } = useForm();
+  }  = useForm({
+    reValidateMode: "onSubmit"
+  });
   const watchAllFields = watch(); // when pass nothing as argument, you are watching everything
 
   const [defaultData, setDefaultData] = useState(null);
@@ -88,7 +90,14 @@ const EditSubMasterForm = ({ editRow, onEditSubmit, setIsEditForm }) => {
                         readOnly={true}
                         className="form-control form-control-lg"
                         name="code"
-                        defaultValue={defaultData?.code}
+                        defaultValue={watchAllFields?.name
+                          ?.replace(/ /g, "_")
+                          .toUpperCase()
+                          ?
+                          watchAllFields?.name
+                            ?.replace(/ /g, "_")
+                            .toUpperCase()
+                          : defaultData?.code?.replace(/ /g, "_").toUpperCase()}
                         value={watchAllFields?.name
                           ?.replace(/ /g, "_")
                           .toUpperCase()}
