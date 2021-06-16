@@ -48,7 +48,6 @@ const Step3 = ({ currentData, goToNextStep, goToPrevStep }) => {
   const educationsFields = useFieldArray({ control, name: "educations" });
 
   useEffect(() => {
-    console.log("currentData", currentData);
     setStepInput(currentData);
   }, []);
 
@@ -64,7 +63,6 @@ const Step3 = ({ currentData, goToNextStep, goToPrevStep }) => {
 
   const onSubmit = (inputData) => {
     console.log("inputData", experience[0], inputData);
-
     if (!specialization || specialization.length == 0) {
       setSpecializationError("The select any specialization.!");
       return false;
@@ -133,7 +131,7 @@ const Step3 = ({ currentData, goToNextStep, goToPrevStep }) => {
                             <input
                               type="text"
                               className="form-control form-control-lg mb-25 mt-25"
-                              {...field} 
+                              {...field}
                             />
                           )}
                           name={`educations.${index}.education`}
@@ -217,7 +215,7 @@ const Step3 = ({ currentData, goToNextStep, goToPrevStep }) => {
                           placeholder="Select any specializations."
                           value={specialization}
                           style={{ width: "100%" }}
-                          defaultValue={stepInput.specializations}                          
+                          defaultValue={stepInput.specializations}
                           onChange={(id) => updateSpecialization(id)}
                           name="specializations"
                         >

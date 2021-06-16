@@ -3,5 +3,6 @@ export const MOBILE_VALID_PATTERN = /^(\+\d{1,3}[- ]?)?\d{10}$/
 
 /** MASTER FIXED CONSTANTS */
 export const MASTER_CODES = {
-    DESIGNATION: "DESIGNATION"
+    DESIGNATION: "DESIGNATION",
+    DOCUMENT: "DOCUMENT"
 }

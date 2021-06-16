@@ -17,7 +17,6 @@ const Step4 = ({ currentData, goToNextStep, goToPrevStep }) => {
   const [designation, setDesignation] = useState();
   const [designationList, setDesignationList] = useState();
 
-
   const [defaultFileList, setDefaultFileList] = useState([]);
   const [profileImageId, setProfileImageId] = useState();
 
@@ -27,9 +26,6 @@ const Step4 = ({ currentData, goToNextStep, goToPrevStep }) => {
     watch,
     formState: { errors },
   } = useForm();
-
-
-
 
   useEffect(() => {
     setStepInput(currentData);
