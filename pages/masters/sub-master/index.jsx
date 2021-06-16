@@ -156,6 +156,7 @@ const SubMaster = () => {
   const onAddSubmit = async (input) => {
     // input.image_id = imageIds[0];
     input.parent_id = activeMaster;
+    input.code =  input?.name?.replace(/ /g, "_").toUpperCase()
     input.is_active = input.is_active === "true" || input.is_active == 1;
 
     const { response, error, loading, statusCode } = await useAxios(
