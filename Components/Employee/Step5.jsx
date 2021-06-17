@@ -63,27 +63,29 @@ const Step5 = ({ currentData, goToNextStep, goToPrevStep }) => {
     }
   }
 
-  const uploadImage1 = async (e) => {
+  const uploadImage1 = async (e, index) => {
     let input = { types: "masters" };
     const { response, error, loading, statusCode } = await uploadImageService(
       e,
       input
     );
     if (statusCode == 201) {
-      setImageIds1(response.data.ids);
+      setImageIds1({ ...imageIds1, [index]: response.data.ids });
+      // setImageIds1(response.data.ids);
       addToast(response.message, { appearance: "success", autoDismiss: true });
     } else {
       addToast(error.message, { appearance: "error", autoDismiss: true });
     }
   };
-  const uploadImage2 = async (e) => {
+  const uploadImage2 = async (e, index) => {
     let input = { types: "masters" };
     const { response, error, loading, statusCode } = await uploadImageService(
       e,
       input
     );
     if (statusCode == 201) {
-      setImageIds2(response.data.ids);
+      setImageIds2({ ...imageIds2, [index]: response.data.ids });
+      // setImageIds2(response.data.ids);
       addToast(response.message, { appearance: "success", autoDismiss: true });
     } else {
       addToast(error.message, { appearance: "error", autoDismiss: true });
@@ -118,7 +120,7 @@ const Step5 = ({ currentData, goToNextStep, goToPrevStep }) => {
     const imgWindow = window.open(src);
     imgWindow.document.write(image.outerHTML);
   };
-  const handleOnChange1 = ({ fileList }) => {
+  const handleOnChange1 = ({ fileList })  => {
     setDefaultFileList1(fileList);
   };
   const handleOnChange2 = ({ fileList }) => {
@@ -136,15 +138,17 @@ const Step5 = ({ currentData, goToNextStep, goToPrevStep }) => {
     let UpdatedData = {
       ...currentData,
       ...inputData,
+
     };
     UpdatedData.documents.forEach((documentL, idx) => {
+      documentL.front_image_id = imageIds1[idx];
+      documentL.back_image_id = imageIds2[idx];
       documentL.document_id = documents[idx];
     });
     setCookie("step5", UpdatedData);
     console.log("Saved step5", UpdatedData);
-    // goToNextStep(UpdatedData);
+    goToNextStep(UpdatedData);
   };
-
 
   const stepNext = () => {
     goToNextStep(stepInput);
@@ -174,103 +178,103 @@ const Step5 = ({ currentData, goToNextStep, goToPrevStep }) => {
               </label>
               {documentsFields.fields.map((item, index) => {
                 return (
-                  <>
-                  <div key={index} className="d-flex row mt-0 ">
-                    <div className="col-xl-6 ">
-                      <div className="form-group  ">
-                        <label className="top-label">Select Document</label>
-                        <Select
-                          className=""
-                          placeholder="Select document type."
-                          style={{ width: "100%" }}
-                          name={`documents.${index}.document_id`}
-                          control={control}
-                          value={stepInput?.documents?.[index]?.document_id}
-                          defaultValue={stepInput?.documents?.[index]?.document_id}
-                          onChange={(id) =>
-                            updateIndexedDocument(id, index)
-                          }
-                        >
+                  <div key={index}>
+                    <div className="d-flex row mt-0 ">
+                      <div className="col-xl-6 ">
+                        <div className="form-group  ">
+                          <label className="top-label">Select Document</label>
+                          <Select
+                            className=""
+                            placeholder="Select document type."
+                            style={{ width: "100%" }}
+                            name={`documents.${index}.document_id`}
+                            control={control}
+                            value={stepInput?.documents?.[index]?.document_id}
+                            defaultValue={stepInput?.documents?.[index]?.document_id}
+                            onChange={(id) =>
+                              updateIndexedDocument(id, index)
+                            }
+                          >
 
-                          {documentTypeList?.map(dL => (
-                            <Select.Option key={dL.id} value={dL.id}>
-                              {dL.name}
-                            </Select.Option>
-                          ))}
-                        </Select>
-                        {documentTypeError?.[index] && (
-                          <p className=" text-danger">
-                            {documentTypeError[index]}
-                          </p>
+                            {documentTypeList?.map(dL => (
+                              <Select.Option key={dL.id} value={dL.id}>
+                                {dL.name}
+                              </Select.Option>
+                            ))}
+                          </Select>
+                          {documentTypeError?.[index] && (
+                            <p className=" text-danger">
+                              {documentTypeError[index]}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="col-xl-5">
+                        <div className="form-group">
+                          <label className="top-label">Document Number</label>
+                          <input
+                            type="text"
+                            className="form-control form-control-lg mb-25 mt-25"
+                            name={`documents.${index}.document_number`}
+                            defaultValue={stepInput?.documents?.[index]?.document_number}
+                            control={control}
+                            {...register(`documents.${index}.document_number`, {
+                              required: "Document is required.",
+                            })}
+                          />
+                          {errors?.documents && errors?.documents[index] && (
+                            <p className=" text-danger">
+                              {errors?.documents[index].document_number.message}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                      <div className="col-xl-1 pt-2 ">
+                        {documentsFields.fields.length > 1 && (
+                          <a
+                            onClick={() => documentsFields.remove(index)}
+                            className="btn btn-danger custom_btn add-icon mt-1 float-left   "
+                          >
+                            <i className="fa fa-minus "></i>
+                          </a>
                         )}
                       </div>
-                    </div>
-
-                    <div className="col-xl-5">
-                      <div className="form-group">
-                        <label className="top-label">Document Number</label>
-                        <input
-                          type="text"
-                          className="form-control form-control-lg mb-25 mt-25"
-                          name={`documents.${index}.document_number`}
-                          defaultValue={stepInput?.documents?.[index]?.document_number}
-                          control={control}
-                          {...register(`documents.${index}.document_number`, {
-                            required: "Document is required.",
-                          })}
-                        />
-                        {errors?.documents && errors?.documents[index] && (
-                          <p className=" text-danger">
-                            {errors?.documents[index].document_number.message}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                    <div className="col-xl-1 pt-2 ">
-                      {documentsFields.fields.length > 1 && (
-                        <a
-                          onClick={() => documentsFields.remove(index)}
-                          className="btn btn-danger custom_btn add-icon mt-1 float-left   "
-                        >
-                          <i className="fa fa-minus "></i>
-                        </a>
-                      )}
-                    </div>
-                    <div className="col-xl-6">
-                      <div className="form-group   mb-1">
-                        <label className="w-100  ">
-                          Upload Document
-                          {/* <a href="#" className="btn btn-primary add-icon">
+                      <div className="col-xl-6">
+                        <div className="form-group   mb-1">
+                          <label className="w-100  ">
+                            Upload Document
+                            {/* <a href="#" className="btn btn-primary add-icon">
                       <i className="fa fa-plus"></i>
                     </a> */}
-                        </label>
-                        <div className="d-inline-flex ">
-                          <Upload
-                            accept="image/*"
-                            customRequest={(e) => uploadImage1(e)}
-                            defaultFileList={defaultFileList1}
-                            onChange={handleOnChange1}
-                            listType="picture-card"
-                            onPreview={onPreview1}
-                          >
-                            {defaultFileList1.length >= 1 ? null : (
-                              <div>Front Image</div>
-                            )}
-                          </Upload>
-                          <Upload
-                            accept="image/*"
-                            customRequest={(e) => uploadImage2(e)}
-                            defaultFileList={defaultFileList2}
-                            onChange={handleOnChange2}
-                            listType="picture-card"
-                            onPreview={onPreview2}
-                          >
-                            {defaultFileList2.length >= 1 ? null : (
-                              <div>Back Image</div>
-                            )}
-                          </Upload>
-                        </div>
-                        {/* <div className="custom-file">
+                          </label>
+                          <div className="d-inline-flex ">
+                            <Upload
+                              accept="image/*"
+                              customRequest={(e) => uploadImage1(e, index)}
+                              defaultFileList={defaultFileList1}
+                              onChange={handleOnChange1}
+                              listType="picture-card"
+                              onPreview={onPreview1}
+                            >
+                              {defaultFileList1.length >= 1 ? null : (
+                                <div>Front Image</div>
+                              )}
+                            </Upload>
+                            <Upload
+                              accept="image/*"
+                              customRequest={(e) => uploadImage2(e, index)}
+                              defaultFileList={defaultFileList2}
+                              onChange={handleOnChange2}
+                              listType="picture-card"
+                              onPreview={onPreview2}
+                            >
+                              {defaultFileList2.length >= 1 ? null : (
+                                <div>Back Image</div>
+                              )}
+                            </Upload>
+                          </div>
+                          {/* <div className="custom-file">
                     <input
                       type="file"
                       className="form-control custom-file-input"
@@ -281,12 +285,12 @@ const Step5 = ({ currentData, goToNextStep, goToPrevStep }) => {
                       Upload
                     </label>
                   </div> */}
+                        </div>
                       </div>
+
                     </div>
-                  
+                    <hr className="pb-2 mt-0" />
                   </div>
-                  <hr className="pb-2 mt-0"  />
-                </>
                 );
               })}
             </div>
