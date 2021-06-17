@@ -76,13 +76,14 @@ const AddSubMasterForm = ({ onAddSubmit, setIsAddForm }) => {
                       <label className="top-label">Code</label>
                       <input
                         type="text"
-                        readOnly={true}
                         className="form-control form-control-lg"
-                        value={watchAllFields?.name
+                        value={watchAllFields?.code
                           ?.replace(/ /g, "_")
                           .toUpperCase()}
                         name="code"
-                        {...register("code")}
+                        {...register("code", {
+                          required: "The code is required.",
+                        })}
                       />
                       {/* readOnly={true} */}
                       {errors.code && (
@@ -107,7 +108,7 @@ const AddSubMasterForm = ({ onAddSubmit, setIsAddForm }) => {
                     </div>
                   </div> */}
 
-                  <div className="col-xl-6">
+                  <div className="col-xl-4">
                     <div className="col-xl-12">
                       <div className="form-group">
                         <label className="text-capitalize"> active</label>
@@ -147,6 +148,100 @@ const AddSubMasterForm = ({ onAddSubmit, setIsAddForm }) => {
                                   <span className="vs-radio--circle"></span>
                                 </span>
                                 <span className="">Inactive</span>
+                              </div>
+                            </fieldset>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="col-xl-4">
+                    <div className="col-xl-12">
+                      <div className="form-group">
+                        <label className="text-capitalize"> is back image required?</label>
+                        <ul className="list-unstyled mb-0">
+                          <li className="d-inline-block mr-2">
+                            <fieldset>
+                              <div className="vs-radio-con">
+                                <input
+                                  type="radio"
+                                  name="back_image_required"
+                                  defaultChecked={true}
+                                  value={true}
+                                  {...register("back_image_required", {
+                                    required: "The back image is required.",
+                                  })}
+                                />
+                                <span className="vs-radio">
+                                  <span className="vs-radio--border"></span>
+                                  <span className="vs-radio--circle"></span>
+                                </span>
+                                <span className=""> Yes </span>
+                              </div>
+                            </fieldset>
+                          </li>
+                          <li className="d-inline-block mr-2">
+                            <fieldset>
+                              <div className="vs-radio-con">
+                                <input
+                                  type="radio"
+                                  name="back_image_required"
+                                  defaultChecked={false}
+                                  value={false}
+                                  {...register("back_image_required")}
+                                />
+                                <span className="vs-radio">
+                                  <span className="vs-radio--border"></span>
+                                  <span className="vs-radio--circle"></span>
+                                </span>
+                                <span className="">No</span>
+                              </div>
+                            </fieldset>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="col-xl-4">
+                    <div className="col-xl-12">
+                      <div className="form-group">
+                        <label className="text-capitalize"> Is default selected?</label>
+                        <ul className="list-unstyled mb-0">
+                          <li className="d-inline-block mr-2">
+                            <fieldset>
+                              <div className="vs-radio-con">
+                                <input
+                                  type="radio"
+                                  name="default_selection"
+                                  defaultChecked={true}
+                                  value={true}
+                                  {...register("default_selection", {
+                                    required: "The default selection is required.",
+                                  })}
+                                />
+                                <span className="vs-radio">
+                                  <span className="vs-radio--border"></span>
+                                  <span className="vs-radio--circle"></span>
+                                </span>
+                                <span className=""> Yes </span>
+                              </div>
+                            </fieldset>
+                          </li>
+                          <li className="d-inline-block mr-2">
+                            <fieldset>
+                              <div className="vs-radio-con">
+                                <input
+                                  type="radio"
+                                  name="default_selection"
+                                  defaultChecked={false}
+                                  value={false}
+                                  {...register("default_selection")}
+                                />
+                                <span className="vs-radio">
+                                  <span className="vs-radio--border"></span>
+                                  <span className="vs-radio--circle"></span>
+                                </span>
+                                <span className="">No</span>
                               </div>
                             </fieldset>
                           </li>

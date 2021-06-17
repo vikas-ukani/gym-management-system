@@ -154,6 +154,7 @@ const SubMaster = () => {
   };
 
   const onAddSubmit = async (input) => {
+  
     // input.image_id = imageIds[0];
     input.parent_id = activeMaster;
     input.code =  input?.name?.replace(/ /g, "_").toUpperCase()

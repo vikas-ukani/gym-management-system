@@ -10,7 +10,7 @@ const EditSubMasterForm = ({ editRow, onEditSubmit, setIsEditForm }) => {
     watch,
     reset,
     formState: { errors },
-  }  = useForm({
+  } = useForm({
     reValidateMode: "onSubmit"
   });
   const watchAllFields = watch(); // when pass nothing as argument, you are watching everything
@@ -87,18 +87,17 @@ const EditSubMasterForm = ({ editRow, onEditSubmit, setIsEditForm }) => {
                       <label className="top-label">Code</label>
                       <input
                         type="text"
-                        readOnly={true}
                         className="form-control form-control-lg"
                         name="code"
-                        defaultValue={watchAllFields?.name
+                        defaultValue={watchAllFields?.code
                           ?.replace(/ /g, "_")
                           .toUpperCase()
                           ?
-                          watchAllFields?.name
+                          watchAllFields?.code
                             ?.replace(/ /g, "_")
                             .toUpperCase()
                           : defaultData?.code?.replace(/ /g, "_").toUpperCase()}
-                        value={watchAllFields?.name
+                        value={watchAllFields?.code
                           ?.replace(/ /g, "_")
                           .toUpperCase()}
                         {...register("code", {
@@ -111,24 +110,9 @@ const EditSubMasterForm = ({ editRow, onEditSubmit, setIsEditForm }) => {
                       )}
                     </div>
                   </div>
-                  {/* <div className="col-xl-6">
-                    <div className="form-group">
-                      <Upload
-                        accept="image/*"
-                        customRequest={(e) => uploadImage(e)}
-                        defaultFileList={defaultFileList}
-                        onChange={handleOnChange}
-                        listType="picture-card"
-                        onPreview={onPreview}
-                      >
-                        {defaultFileList.length >= 1 ? null : (
-                          <div>Upload Image</div>
-                        )}
-                      </Upload>
-                    </div>
-                  </div> */}
 
-                  <div className="col-xl-6">
+
+                  <div className="col-xl-4">
                     <div className="col-xl-12">
                       <div className="form-group">
                         <label className="text-capitalize"> active</label>
@@ -178,7 +162,110 @@ const EditSubMasterForm = ({ editRow, onEditSubmit, setIsEditForm }) => {
                       </div>
                     </div>
                   </div>
+                  <div className="col-xl-4">
+                    <div className="col-xl-12">
+                      <div className="form-group">
+                        <label className="text-capitalize"> is back image required?</label>
+                        <ul className="list-unstyled mb-0">
+                          <li className="d-inline-block mr-2">
+                            <fieldset>
+                              <div className="vs-radio-con">
+                                <input
+                                  type="radio"
+                                  name="back_image_required"
+                                  defaultChecked={
+                                    defaultData?.back_image_required == true
+                                  }
+
+                                  value={true}
+                                  {...register("back_image_required", {
+                                    required: "The back image is required.",
+                                  })}
+                                />
+                                <span className="vs-radio">
+                                  <span className="vs-radio--border"></span>
+                                  <span className="vs-radio--circle"></span>
+                                </span>
+                                <span className=""> Yes </span>
+                              </div>
+                            </fieldset>
+                          </li>
+                          <li className="d-inline-block mr-2">
+                            <fieldset>
+                              <div className="vs-radio-con">
+                                <input
+                                  type="radio"
+                                  name="back_image_required"
+                                  defaultChecked={
+                                    defaultData?.back_image_required == false
+                                  } value={false}
+                                  {...register("back_image_required")}
+                                />
+                                <span className="vs-radio">
+                                  <span className="vs-radio--border"></span>
+                                  <span className="vs-radio--circle"></span>
+                                </span>
+                                <span className="">No</span>
+                              </div>
+                            </fieldset>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="col-xl-4">
+                    <div className="col-xl-12">
+                      <div className="form-group">
+                        <label className="text-capitalize"> Is default selected?</label>
+                        <ul className="list-unstyled mb-0">
+                          <li className="d-inline-block mr-2">
+                            <fieldset>
+                              <div className="vs-radio-con">
+                                <input
+                                  type="radio"
+                                  name="default_selection"
+                                  defaultChecked={
+                                    defaultData?.default_selection == true
+                                  }
+                                  value={true}
+                                  {...register("default_selection", {
+                                    required: "The default selection is required.",
+                                  })}
+                                />
+                                <span className="vs-radio">
+                                  <span className="vs-radio--border"></span>
+                                  <span className="vs-radio--circle"></span>
+                                </span>
+                                <span className=""> Yes </span>
+                              </div>
+                            </fieldset>
+                          </li>
+                          <li className="d-inline-block mr-2">
+                            <fieldset>
+                              <div className="vs-radio-con">
+                                <input
+                                  type="radio"
+                                  name="default_selection"
+                                  defaultChecked={
+                                    defaultData?.default_selection == false
+                                  }
+                                  value={false}
+                                  {...register("default_selection")}
+                                />
+                                <span className="vs-radio">
+                                  <span className="vs-radio--border"></span>
+                                  <span className="vs-radio--circle"></span>
+                                </span>
+                                <span className="">No</span>
+                              </div>
+                            </fieldset>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
                 </div>
+
                 <div className="row my-1">
                   <div className="col-6 "></div>
                   <div className="col-6  ">
@@ -206,8 +293,8 @@ const EditSubMasterForm = ({ editRow, onEditSubmit, setIsEditForm }) => {
             </div>
           </form>
         </div>
-      </section>
-    </div>
+      </section >
+    </div >
   );
 };
 

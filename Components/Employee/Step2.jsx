@@ -267,7 +267,7 @@ const Step2 = ({ currentData, goToNextStep, goToPrevStep }) => {
                   onClick={handleSubmit(onSubmit)}
                   className="float-right mx-1 btn btn-pill mb-sm-0 mb-2 text_theme_primary   default_gradient"
                 >
-                  NEXT <i className="  fa fa-angle-right"></i>
+                  NEXT <i className="fa fa-angle-right"></i>
                 </a>
               </div>
             </div>

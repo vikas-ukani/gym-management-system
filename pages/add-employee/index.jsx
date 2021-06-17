@@ -2,7 +2,6 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import EmployeeCard from "Components/Employee/EmployeeCard";
 import staffs from "data/staffs.json";
-import styles from "styles/Home.module.css";
 import Cookies from "js-cookie";
 
 const AddEmployee = () => {
@@ -133,9 +132,8 @@ const AddEmployee = () => {
                   return (
                     <li
                       key={index}
-                      className={`page-item ${
-                        currentPage == index && "active"
-                      }`}
+                      className={`page-item ${currentPage == index && "active"
+                        }`}
                       onClick={() => pageChangeEmployee(index)}
                     >
                       <a className="page-link">{index}</a>
