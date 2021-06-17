@@ -1,23 +1,41 @@
 import { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { setCookie } from 'services';
 
 const Step6 = ({ currentData, goToNextStep, goToPrevStep }) => {
+	/** Input */
 	const [stepInput, setStepInput] = useState({});
+
+	const {
+		register,
+		handleSubmit,
+		reset,
+		formState: { errors },
+	} = useForm();
 
 	useEffect(() => {
 		setStepInput(currentData);
+		reset({ ...currentData });
 	}, []);
 
-	const handleChange = (e) => {
-		if (updatedcurrentData?.input && e.target.name) {
-			let newUpdates = {
-				...currentData,
-				input: {
-					...currentData.input,
-					[e.target.name]: e.target.value,
-				},
+
+
+	/** SUBMITTING FORM */
+	const onSubmit = (inputData) => {
+		let UpdatedData = {}
+		if (stepInput) {
+			UpdatedData = {
+				...stepInput,
+				...inputData,
 			};
-			setStepInput(newUpdates);
+		} else {
+			UpdatedData = {
+				...inputData,
+			};
 		}
+		setCookie("step6", UpdatedData);
+		console.log("SAVED!!");
+		goToNextStep(UpdatedData);
 	};
 
 	const stepNext = () => {
@@ -45,7 +63,16 @@ const Step6 = ({ currentData, goToNextStep, goToPrevStep }) => {
 										name="bank_name"
 										className="form-control form-control-lg "
 										placeholder="Enter Bank Name"
+										defaultValue={stepInput?.bank_name}
+										{...register('bank_name', {
+											required: "Bank name is required"
+										})}
 									/>
+									{errors.bank_name && (
+										<span className=" text-danger">
+											{errors.bank_name.message}
+										</span>
+									)}
 								</div>
 							</div>
 							<div className="form-group col-6">
@@ -53,10 +80,19 @@ const Step6 = ({ currentData, goToNextStep, goToPrevStep }) => {
 								<div className="row no-gutters">
 									<input
 										type="text"
-										name="ifsc"
+										name="bank_ifsc_code"
 										className="form-control form-control-lg "
-										placeholder="Enter IFSC Code"
+										placeholder="Enter Bank IFSC  Code"
+										defaultValue={stepInput?.bank_ifsc_code}
+										{...register('bank_ifsc_code', {
+											required: "Bank IFSC is required"
+										})}
 									/>
+									{errors.bank_ifsc_code && (
+										<span className=" text-danger">
+											{errors.bank_ifsc_code.message}
+										</span>
+									)}
 								</div>
 							</div>
 							<div className="form-group col-6">
@@ -67,7 +103,16 @@ const Step6 = ({ currentData, goToNextStep, goToPrevStep }) => {
 										name="account_number"
 										className="form-control form-control-lg "
 										placeholder="Enter Account number"
+										defaultValue={stepInput?.bank_account_number}
+										{...register('bank_account_number', {
+											required: "Account number is required"
+										})}
 									/>
+									{errors.bank_account_number && (
+										<span className=" text-danger">
+											{errors.bank_account_number.message}
+										</span>
+									)}
 								</div>
 							</div>
 
@@ -93,7 +138,7 @@ const Step6 = ({ currentData, goToNextStep, goToPrevStep }) => {
 									<i className="fa fa-angle-left"></i> BACK
 								</a>
 								<a
-									onClick={() => stepNext()}
+									onClick={handleSubmit(onSubmit)}
 									className="float-right mx-1 btn btn-pill mb-sm-0 mb-2 text_theme_primary   default_gradient"
 								>
 									SUBMIT <i className="fa fa-angle-right"></i>

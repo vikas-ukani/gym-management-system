@@ -37,8 +37,9 @@ const Steps = () => {
     if (currentStep < MAX_STEP) {
       setCurrentStep(currentStep + 1);
     } else {
+      console.log("Call API");
       /** Saving Data After Completing all Steps. */
-      router.push("/add-employee");
+      // router.push("/add-employee");
     }
   };
 
