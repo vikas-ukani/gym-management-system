@@ -20,7 +20,12 @@ const Step1 = ({ currentData, goToNextStep }) => {
   const [age, setAge] = useState(null);
   const [selectedLanguage, setSelectedLanguage] = useState([]);
   const [selectedBloodGroup, setSelectedBloodGroup] = useState();
+  const [selectedRegionId, setSelectedRegionId] = useState();
 
+  const [weightPoints, setWeightPoints] = useState();
+  const [heightPoints, setHeightPoints] = useState();
+
+  const [regionList, setRegionList] = useState();
   const [languagesList, setLanguagesList] = useState();
 
   const { addToast } = useToasts()
@@ -45,15 +50,18 @@ const Step1 = ({ currentData, goToNextStep }) => {
   const password = useRef({});
   password.current = watch("password", "");
 
-  useEffect(() => {
+  useEffect(async () => {
     setStepInput({
       ...currentData,
-      gender: currentData.gender ? currentData.gender : "MALE"
+      gender: currentData?.gender ? currentData.gender : "MALE"
     });
-    setAge(currentData.age)
+    setSelectedRegionId(currentData?.region_id)
+    setAge(currentData?.age)
     setSelectedLanguage(currentData?.language_ids)
     reset({ ...currentData });
     fetchLanguagesList()
+
+    await fetchRegionList()
   }, []);
 
   const fetchLanguagesList = async () => {
@@ -62,6 +70,17 @@ const Step1 = ({ currentData, goToNextStep }) => {
     if (statusCode == 200) {
       let { child_masters } = data[MASTER_CODES_LANGUAGE];
       setLanguagesList(child_masters)
+    } else {
+      addToast(error.message, { appearance: 'error', autoDismiss: false })
+    }
+  }
+
+  const fetchRegionList = async () => {
+    const MASTER_CODE = MASTER_CODES.REGIONS
+    const { response: { data }, statusCode, error } = await useAxios(getMasterByCode(MASTER_CODE))
+    if (statusCode == 200) {
+      let { child_masters } = data[MASTER_CODE];
+      setRegionList(child_masters)
     } else {
       addToast(error.message, { appearance: 'error', autoDismiss: false })
     }
@@ -121,7 +140,6 @@ const Step1 = ({ currentData, goToNextStep }) => {
   };
 
   const onSubmit = (inputData) => {
-    // console.log("val", !dob && !currentData?.date_of_birth);
     if (!dob && !currentData?.date_of_birth) {
       setError("date_of_birth", {
         type: "manual",
@@ -133,6 +151,9 @@ const Step1 = ({ currentData, goToNextStep }) => {
       ...input,
       ...inputData,
       age,
+      height: heightPoints,
+      weight: weightPoints,
+      region_id: selectedRegionId,
       date_of_birth: dob
         ? dob
         : currentData?.date_of_birth
@@ -148,7 +169,8 @@ const Step1 = ({ currentData, goToNextStep }) => {
   };
 
   const getHeightPoints = (height) => {
-    let returnHight = 5.2;
+    let returnHight = (height || 8);
+    // let returnHight = heightPoints || (height || 8);
     // if (height) {
     //   returnHight = parseFloat(
     //     (height?.fit || returnHight) + "." + (height?.inch || 0)
@@ -157,8 +179,14 @@ const Step1 = ({ currentData, goToNextStep }) => {
     return returnHight;
   };
 
+  const handleHeightChange = (h) => {
+    console.log("Chamges", h);
+    // setHeightPoints(h)
+  }
+
+
   const getWeightPoints = (weight) => {
-    let returnWeight = 50.6;
+    let returnWeight = weight || 60.6;
     return returnWeight;
   };
 
@@ -303,13 +331,15 @@ const Step1 = ({ currentData, goToNextStep }) => {
                       data-type="single"
                       id="height-fit"
                       defaultValue={getHeightPoints(stepInput?.height)}
-                      onChange={(val) => console.log(val)}
+                      onChange={handleHeightChange}
                       dots={false}
                       {...heightFitOptions}
                       activeDotStyle
                       dots={false}
                       dotStyle={{ display: "none" }}
                     />
+                    {/* onChange={(val) => {setHeightPoints(val)}} */}
+                      {/* // defaultValue={getHeightPoints(stepInput?.height)} */}
                   </div>
                 </div>
               </div>
@@ -584,16 +614,26 @@ const Step1 = ({ currentData, goToNextStep }) => {
               <div className="col-xl-6">
                 <div className="form-group date-birth">
                   <label className="h6  text-capitalize" htmlFor="exampleInputDate1">
-                  Region
+                    Region
                   </label>
                   <div className="input-group">
-                    <select name="" id="" className="form-control"
-                      {...register('region_id', { required: "Select any one," })}
-                      >
-                      <option value="">Select Region</option>
-                      <option value="Asia">Asia</option>
-                      <option value="Pesific">Pesific</option>
-                    </select>
+                    <Select
+                      placeholder="Select any region."
+                      value={selectedRegionId}
+                      style={{ width: "100%" }}
+                      name="region_id"
+                      onChange={(id) => setSelectedRegionId(id)}
+                      
+                    >
+                      {/* {...register('region_id', { required: "Select any one," })} */}
+                      {/* onChange={(id) => setSelectedBloodGroup(id)} */}
+                      {/* {...register('blood_group', {
+												required: 'The blood group required.',
+											})} */}
+                      {regionList?.map((list, idx) =>
+                        (<Select.Option key={idx} value={list.id}>{list.name}</Select.Option>)
+                      )}
+                    </Select>
                   </div>
                   {errors.region_id && <p className="text-danger">
                     {errors.region_id.message}

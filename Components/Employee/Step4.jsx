@@ -29,7 +29,7 @@ const Step4 = ({ currentData, goToNextStep, goToPrevStep }) => {
 
   useEffect(() => {
     setStepInput(currentData);
-    setDesignation(currentData.designation_id)
+    setDesignation(currentData?.designation_id)
     fetchDesignations()
   }, []);
 
@@ -136,7 +136,7 @@ const Step4 = ({ currentData, goToNextStep, goToPrevStep }) => {
                   <textarea
                     className="form-control form-control-lg"
                     rows="5"
-                    defaultValue={stepInput.about_me}
+                    defaultValue={stepInput?.about_me}
                     {...register('about_me')}
                   ></textarea>
                 </div>

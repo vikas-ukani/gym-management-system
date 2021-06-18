@@ -79,7 +79,7 @@ const Step3 = ({ currentData, goToNextStep, goToPrevStep }) => {
     // console.log("Final UpdatedData", UpdatedData);
     setCookie("step3", UpdatedData);
     console.log("Saved", UpdatedData);
-    // goToNextStep(UpdatedData);
+    goToNextStep(UpdatedData);
   };
 
   const stepNext = () => {
@@ -215,7 +215,7 @@ const Step3 = ({ currentData, goToNextStep, goToPrevStep }) => {
                           placeholder="Select any specializations."
                           value={specialization}
                           style={{ width: "100%" }}
-                          defaultValue={stepInput.specializations}
+                          defaultValue={stepInput?.specializations}
                           onChange={(id) => updateSpecialization(id)}
                           name="specializations"
                         >

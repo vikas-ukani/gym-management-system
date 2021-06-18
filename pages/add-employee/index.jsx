@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import EmployeeCard from "Components/Employee/EmployeeCard";
 import staffs from "data/staffs.json";
 import Cookies from "js-cookie";
+import router from "next/router";
+import { removeCookie } from "services";
 
 const AddEmployee = () => {
   const [staffList, setEmployeeList] = useState([]);
@@ -58,6 +60,18 @@ const AddEmployee = () => {
     // setEmployeeList(getPerPageData())
   };
 
+  const goToAddSteps = () => {
+    // goToAddSteps
+    console.log("Clicking...");
+    removeCookie('step1')
+    removeCookie('step2')
+    removeCookie('step3')
+    removeCookie('step4')
+    removeCookie('step5')
+    removeCookie('step6')
+    router.push('/add-employee/steps')
+  }
+
   return (
     <div>
       {/* <!-- BEGIN: Content--> */}
@@ -101,15 +115,15 @@ const AddEmployee = () => {
             </div>
 
             <div className="col-lg-3 col-sm-6 col-12 mb-lg-0 mt-sm-2 offset-lg-6 text-sm-right text-center">
-              <Link href="/add-employee/steps">
-                <a
+              {/* <Link href="/add-employee/steps" > */}
+                <a onClick={goToAddSteps}
                   className={
                     "btn btn-pill mb-sm-0 mb-2  text_theme_primary custom_btn font-weight-bold"
                   }
                 >
                   <i className="fa fa-plus"> </i> Add New Employee
                 </a>
-              </Link>
+              {/* </Link> */}
             </div>
           </div>
 
