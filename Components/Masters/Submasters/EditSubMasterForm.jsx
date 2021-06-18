@@ -173,7 +173,7 @@ const EditSubMasterForm = ({ editRow, onEditSubmit, setIsEditForm }) => {
                                 <input
                                   type="radio"
                                   name="back_image_required"
-                                  defaultChecked={
+                                  defaultValue={
                                     defaultData?.back_image_required == true
                                   }
 
@@ -196,7 +196,7 @@ const EditSubMasterForm = ({ editRow, onEditSubmit, setIsEditForm }) => {
                                 <input
                                   type="radio"
                                   name="back_image_required"
-                                  defaultChecked={
+                                  defaultValue={
                                     defaultData?.back_image_required == false
                                   } value={false}
                                   {...register("back_image_required")}

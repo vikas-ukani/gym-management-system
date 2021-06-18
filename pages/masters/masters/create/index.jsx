@@ -36,7 +36,6 @@ const CreateMaster = () => {
     input.image_id = imageIds[0];
     input.parent_id = null;
     input.is_active = input.is_active === "true" || input.is_active == 1;
-    input.is_active = Boolean(input.is_active);
 
     const { response, error, loading, statusCode } = await useAxios(
       createMastersAPI(input)
@@ -125,12 +124,17 @@ const CreateMaster = () => {
                             type="text"
                             className="form-control form-control-lg"
                             name="code"
-                            value={watchAllFields?.name
+                            value={watchAllFields?.code
                               ?.replace(/ /g, "_")
-                              .toUpperCase()}
-                            readOnly={true}
+                              .toUpperCase()} 
                             {...register("code")}
                           />
+                          {/*  defaultValue={watchAllFields?.name
+                              ?.replace(/ /g, "_")
+                              .toUpperCase()}
+                            value={watchAllFields?.name
+                              ?.replace(/ /g, "_")
+                              .toUpperCase()} */}
                           {/* readOnly={true} */}
                           {errors.code && (
                             <p className=" text-danger">

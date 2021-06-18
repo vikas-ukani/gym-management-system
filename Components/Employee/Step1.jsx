@@ -17,6 +17,7 @@ const Step1 = ({ currentData, goToNextStep }) => {
   const [input, setInput] = useState({});
   const [stepInput, setStepInput] = useState({});
   const [dob, setDob] = useState(null);
+  const [age, setAge] = useState(null);
   const [selectedLanguage, setSelectedLanguage] = useState([]);
   const [selectedBloodGroup, setSelectedBloodGroup] = useState();
 
@@ -45,11 +46,14 @@ const Step1 = ({ currentData, goToNextStep }) => {
   password.current = watch("password", "");
 
   useEffect(() => {
-    setStepInput(currentData);
+    setStepInput({
+      ...currentData,
+      gender: currentData.gender ? currentData.gender : "MALE"
+    });
+    setAge(currentData.age)
+    setSelectedLanguage(currentData?.language_ids)
     reset({ ...currentData });
     fetchLanguagesList()
-
-    console.log('Initial Data', input, stepInput);
   }, []);
 
   const fetchLanguagesList = async () => {
@@ -62,7 +66,6 @@ const Step1 = ({ currentData, goToNextStep }) => {
       addToast(error.message, { appearance: 'error', autoDismiss: false })
     }
   }
-
 
   const heightFitOptionsConfig = { min: 3, max: 12, step: 0.1 };
   const heightFitOptions = {
@@ -81,13 +84,25 @@ const Step1 = ({ currentData, goToNextStep }) => {
 
   const changeDOB = (date) => {
     const currentAge = getAge(date);
+    setAge(currentAge)
     setStepInput({
       ...stepInput,
-      age: currentAge,
       date_of_birth: date,
     });
     setDob(date);
     clearErrors("date_of_birth");
+  };
+  const changeDOJ = (date) => {
+    setStepInput({
+      ...stepInput,
+      date_of_join: date,
+    });
+  };
+  const changeDOE = (date) => {
+    setStepInput({
+      ...stepInput,
+      date_of_expire: date,
+    });
   };
 
   const handleChange = (e) => {
@@ -101,7 +116,7 @@ const Step1 = ({ currentData, goToNextStep }) => {
     goToNextStep(stepInput);
   };
 
-  const getDefaultDOB = (date) => {
+  const getDefaultFormatedDate = (date) => {
     return moment(moment(date), "DD-MM-YYYY");
   };
 
@@ -117,6 +132,7 @@ const Step1 = ({ currentData, goToNextStep }) => {
     let UpdatedData = {
       ...input,
       ...inputData,
+      age,
       date_of_birth: dob
         ? dob
         : currentData?.date_of_birth
@@ -158,7 +174,6 @@ const Step1 = ({ currentData, goToNextStep }) => {
               <div className="col-xl-6">
                 <div className="form-group">
                   <label className="top-label">First Name</label>
-                  {/* <pre>{JSON.stringify(stepInput?.first_name)}</pre> */}
                   <input
                     type="text"
                     className="form-control form-control-lg"
@@ -208,7 +223,7 @@ const Step1 = ({ currentData, goToNextStep }) => {
                       className="w-100"
                       format="DD-MM-YYYY"
                       name="date_of_birth"
-                      value={getDefaultDOB(currentData?.date_of_birth)}
+                      defaultValue={getDefaultFormatedDate(currentData?.date_of_birth)}
                       onChange={(date) => {
                         changeDOB(date);
                       }}
@@ -232,10 +247,8 @@ const Step1 = ({ currentData, goToNextStep }) => {
                   <input
                     type="text"
                     className="form-control form-control-lg "
-                    name="age"
                     readOnly={true}
-                    {...register('age')}
-                    defaultValue={stepInput?.age}
+                    defaultValue={age}
                   />
                 </div>
               </div>
@@ -244,14 +257,9 @@ const Step1 = ({ currentData, goToNextStep }) => {
                 <div className="form-group">
                   <label className="h6">Blood Group</label>
                   <div className="input-group">
-                    {/* <div className="input-group-prepend">
-											<span className="input-group-text">
-												<span className="fa fa-tint blood-group-text text-danger"></span>
-											</span>
-										</div> */}
                     <Select
                       placeholder="Select blood group type."
-                      value={selectedBloodGroup}
+                      defaultValue={selectedBloodGroup}
                       style={{ width: "100%" }}
                       onChange={(id) => setSelectedBloodGroup(id)}
                       name="blood_group"
@@ -375,10 +383,10 @@ const Step1 = ({ currentData, goToNextStep }) => {
                           <input
                             type="radio"
                             name="gender"
-                            checked
                             value="MALE"
-                            defaultChecked={stepInput?.gender == "MALE"}
+                            defaultValue={stepInput?.gender == "MALE"}
                             onChange={handleChange}
+                            {...register('gender')}
                           />
                           {/*  */}
                           <span className="vs-radio">
@@ -396,8 +404,9 @@ const Step1 = ({ currentData, goToNextStep }) => {
                             type="radio"
                             name="gender"
                             value="FEMALE"
-                            defaultChecked={stepInput?.gender == "FEMALE"}
+                            defaultValue={stepInput?.gender === "FEMALE"}
                             onChange={handleChange}
+                            {...register('gender')}
                           />
                           <span className="vs-radio">
                             <span className="vs-radio--border"></span>
@@ -414,8 +423,9 @@ const Step1 = ({ currentData, goToNextStep }) => {
                             type="radio"
                             name="gender"
                             value="OTHER"
-                            defaultChecked={stepInput?.gender == "OTHER"}
+                            defaultValue={stepInput?.gender == "OTHER"}
                             onChange={handleChange}
+                            {...register('gender')}
                           />
                           {/* onChange={handleChange} */}
                           <span className="vs-radio">
@@ -473,13 +483,126 @@ const Step1 = ({ currentData, goToNextStep }) => {
                   )}
                 </div>
               </div>
+              <div className="col-xl-6">
+                <div className="form-group">
+                  <label className="top-label text-capitalize">
+                    Employee ID:
+                  </label>
+                  <input type="text" className="form-control form-control-lg"
+                    name="employee_id"
+                    {...register("employee_id")}
+                  />
+                </div>
+              </div>
+              <div className="col-xl-6">
+                <div className="form-group mt-75">
+                  <label className="">Is Activate?</label>
+                  <ul className="list-unstyled mb-0">
+                    <li className="d-inline-block mr-2">
+                      <fieldset>
+                        <div className="vs-radio-con">
+                          <input
+                            type="radio"
+                            name="is_active"
+                            value={true}
+                            defaultValue={stepInput?.is_active == true}
+                            onChange={handleChange}
+                            {...register('is_active')}
+                          />
+                          {/*  */}
+                          <span className="vs-radio">
+                            <span className="vs-radio--border"></span>
+                            <span className="vs-radio--circle"></span>
+                          </span>
+                          <span className="">Active</span>
+                        </div>
+                      </fieldset>
+                    </li>
+                    <li className="d-inline-block mr-2">
+                      <fieldset>
+                        <div className="vs-radio-con">
+                          <input
+                            type="radio"
+                            name="is_active"
+                            value={false}
+                            defaultValue={stepInput?.is_active === false}
+                            onChange={handleChange}
+                            {...register('is_active')}
+                          />
+                          <span className="vs-radio">
+                            <span className="vs-radio--border"></span>
+                            <span className="vs-radio--circle"></span>
+                          </span>
+                          <span className="">Deactive</span>
+                        </div>
+                      </fieldset>
+                    </li>
+                    {errors.is_active && (
+                      <span className="mt-5 text-danger">
+                        {errors.is_active.message}
+                      </span>
+                    )}
+                  </ul>
+                </div>
+              </div>
+              <div className="col-xl-6">
+                <div className="form-group date-birth">
+                  <label className="h6  text-capitalize" htmlFor="exampleInputDate1">
+                    date of join
+                  </label>
+                  <div className="input-group">
+                    <DatePicker
+                      className="w-100"
+                      format="DD-MM-YYYY"
+                      name="date_of_join"
+                      defaultValue={getDefaultFormatedDate(currentData?.date_of_join)}
+                      onChange={(date) => {
+                        changeDOJ(date);
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="col-xl-6">
+                <div className="form-group date-birth">
+                  <label className="h6  text-capitalize" htmlFor="exampleInputDate1">
+                    date of expire
+                  </label>
+                  <div className="input-group">
+                    <DatePicker
+                      className="w-100"
+                      format="DD-MM-YYYY"
+                      name="date_of_expire"
+                      defaultValue={getDefaultFormatedDate(currentData?.date_of_expire)}
+                      onChange={(date) => {
+                        changeDOE(date);
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="col-xl-6">
+                <div className="form-group date-birth">
+                  <label className="h6  text-capitalize" htmlFor="exampleInputDate1">
+                  Region
+                  </label>
+                  <div className="input-group">
+                    <select name="" id="" className="form-control"
+                      {...register('region_id', { required: "Select any one," })}
+                      >
+                      <option value="">Select Region</option>
+                      <option value="Asia">Asia</option>
+                      <option value="Pesific">Pesific</option>
+                    </select>
+                  </div>
+                  {errors.region_id && <p className="text-danger">
+                    {errors.region_id.message}
+                  </p>}
+                </div>
+              </div>
             </div>
             <div className="row">
               <div className="col-12 mb-2">
-                {/* <a href="step-1.html" className="btn btn-outline-light round btn-lg mr-1 mb-1 ">
-                                    <i className="fa fa-angle-left">
-                                    </i> BACK
-                                </a> */}
                 <a
                   onClick={handleSubmit(onSubmit)}
                   className="float-right mx-1 btn btn-pill mb-sm-0 mb-2 text_theme_primary   default_gradient"
