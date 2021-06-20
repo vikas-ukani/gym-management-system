@@ -1,5 +1,5 @@
 import axios from "axios";
-import { getToken } from "services";
+import { getToken, getTokenType } from "services";
 
 const EMPLOYEE_FILE_TYPE_MODULE = "employee";
 
@@ -34,6 +34,15 @@ export const mediaDeleteAPI = (params = {}) => {
       "content-type": "multipart/form-data",
       Authorization: "Bearer " + getToken(),
     },
+    body: params,
+  };
+};
+
+export const getMediaImageAPI = (params = {}) => {
+  return {
+    url: "media/find-by-ids",
+    method: "post",
+    headers: { accept: "*/*", Authorization:  `${getTokenType()} ${getToken()}`},
     body: params,
   };
 };
