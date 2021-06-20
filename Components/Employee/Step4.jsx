@@ -33,9 +33,7 @@ const Step4 = ({ currentData, goToNextStep, goToPrevStep }) => {
   }, []);
 
   const setProfileImagePreviewData = async () => {
-    // 
     if (stepInput.profile_image_id) {
-
       const { response: { data }, statusCode, error } = await useAxios(getMediaImageAPI({ ids: [stepInput.profile_image_id] }))
       console.log("S", statusCode, data, error);
       if (data) {
@@ -51,7 +49,6 @@ const Step4 = ({ currentData, goToNextStep, goToPrevStep }) => {
       if (statusCode == 200) {
       }
     }
-
   }
 
   const fetchDesignations = async () => {
@@ -61,7 +58,6 @@ const Step4 = ({ currentData, goToNextStep, goToPrevStep }) => {
       setDesignationList(child_masters)
       // setDesignationList([...child_masters.map(cM => {return {  "value": cM.id, "label" : cM.name }})])
     } else {
-
       addToast(error.message, { appearance: 'error', autoDismiss: false })
     }
   }

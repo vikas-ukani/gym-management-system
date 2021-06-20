@@ -30,7 +30,6 @@ const Step1 = ({ currentData, goToNextStep }) => {
 
   const { addToast } = useToasts()
 
-
   const CreateSliderWithTooltip = createSliderWithTooltip(Slider);
 
   const {
