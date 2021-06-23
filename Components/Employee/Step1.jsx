@@ -7,26 +7,28 @@ import moment, { utc } from "moment";
 import { getNumericalObject, getRangeByStep } from "utils/objects";
 import { getAge } from "utils/date_filters";
 import { getCookie, setCookie } from "services";
-import { clone } from "underscore";
+import { MASTER_CODES } from "constants/common";
+import { useAxios } from "hooks";
+import { getMasterByCode } from "services/masters";
+import { useToasts } from "react-toast-notifications";
 
 const Step1 = ({ currentData, goToNextStep }) => {
   /** Input */
   const [input, setInput] = useState({});
   const [stepInput, setStepInput] = useState({});
   const [dob, setDob] = useState(null);
+  const [age, setAge] = useState(null);
   const [selectedLanguage, setSelectedLanguage] = useState([]);
   const [selectedBloodGroup, setSelectedBloodGroup] = useState();
+  const [selectedRegionId, setSelectedRegionId] = useState();
 
-  const languages = [
-    {
-      id: 1,
-      name: "English",
-    },
-    {
-      id: 2,
-      name: "French",
-    },
-  ];
+  const [weightPoints, setWeightPoints] = useState();
+  const [heightPoints, setHeightPoints] = useState();
+
+  const [regionList, setRegionList] = useState();
+  const [languagesList, setLanguagesList] = useState();
+
+  const { addToast } = useToasts()
 
   const CreateSliderWithTooltip = createSliderWithTooltip(Slider);
 
@@ -36,7 +38,6 @@ const Step1 = ({ currentData, goToNextStep }) => {
     watch,
     setError,
     reset,
-    control,
     clearErrors,
     formState: { errors },
   } = useForm({
@@ -48,11 +49,41 @@ const Step1 = ({ currentData, goToNextStep }) => {
   const password = useRef({});
   password.current = watch("password", "");
 
-  useEffect(() => {
-    setStepInput(currentData);
+  useEffect(async () => {
+    setStepInput({
+      ...currentData,
+      gender: currentData?.gender ? currentData.gender : "MALE"
+    });
+    setSelectedRegionId(currentData?.region_id)
+    setAge(currentData?.age)
+    setSelectedLanguage(currentData?.language_ids)
     reset({ ...currentData });
-    // reset({ defaultValue: stepInput });
+    fetchLanguagesList()
+
+    await fetchRegionList()
   }, []);
+
+  const fetchLanguagesList = async () => {
+    const MASTER_CODES_LANGUAGE = MASTER_CODES.LANGUAGE
+    const { response: { data }, statusCode, error } = await useAxios(getMasterByCode(MASTER_CODES_LANGUAGE))
+    if (statusCode == 200) {
+      let { child_masters } = data[MASTER_CODES_LANGUAGE];
+      setLanguagesList(child_masters)
+    } else {
+      addToast(error.message, { appearance: 'error', autoDismiss: false })
+    }
+  }
+
+  const fetchRegionList = async () => {
+    const MASTER_CODE = MASTER_CODES.REGIONS
+    const { response: { data }, statusCode, error } = await useAxios(getMasterByCode(MASTER_CODE))
+    if (statusCode == 200) {
+      let { child_masters } = data[MASTER_CODE];
+      setRegionList(child_masters)
+    } else {
+      addToast(error.message, { appearance: 'error', autoDismiss: false })
+    }
+  }
 
   const heightFitOptionsConfig = { min: 3, max: 12, step: 0.1 };
   const heightFitOptions = {
@@ -71,42 +102,43 @@ const Step1 = ({ currentData, goToNextStep }) => {
 
   const changeDOB = (date) => {
     const currentAge = getAge(date);
-    setInput({
-      ...input,
-      age: currentAge,
+    setAge(currentAge)
+    setStepInput({
+      ...stepInput,
       date_of_birth: date,
     });
     setDob(date);
     clearErrors("date_of_birth");
   };
+  const changeDOJ = (date) => {
+    setStepInput({
+      ...stepInput,
+      date_of_join: date,
+    });
+  };
+  const changeDOE = (date) => {
+    setStepInput({
+      ...stepInput,
+      date_of_expire: date,
+    });
+  };
 
   const handleChange = (e) => {
-    setInput({
-      ...input,
+    setStepInput({
+      ...stepInput,
       [e.target.name]: e.target.value,
     });
-    // if (updatedcurrentData?.input && e.target.name) {
-    //   let newUpdates = {
-    //     ...currentData,
-    //     input: {
-    //       ...currentData.input,
-    //       [e.target.name]: e.target.value,
-    //     },
-    //   };
-    //   setStepInput(newUpdates);
-    // }
   };
 
   const stepNext = () => {
     goToNextStep(stepInput);
   };
 
-  const getDefaultDOB = (date) => {
+  const getDefaultFormatedDate = (date) => {
     return moment(moment(date), "DD-MM-YYYY");
   };
 
   const onSubmit = (inputData) => {
-    // console.log("val", !dob && !currentData?.date_of_birth);
     if (!dob && !currentData?.date_of_birth) {
       setError("date_of_birth", {
         type: "manual",
@@ -117,11 +149,15 @@ const Step1 = ({ currentData, goToNextStep }) => {
     let UpdatedData = {
       ...input,
       ...inputData,
+      age,
+      height: heightPoints,
+      weight: weightPoints,
+      region_id: selectedRegionId,
       date_of_birth: dob
         ? dob
         : currentData?.date_of_birth
-        ? currentData?.date_of_birth
-        : null,
+          ? currentData?.date_of_birth
+          : null,
       language_ids: selectedLanguage,
       blood_group: selectedBloodGroup,
     };
@@ -132,7 +168,8 @@ const Step1 = ({ currentData, goToNextStep }) => {
   };
 
   const getHeightPoints = (height) => {
-    let returnHight = 5.2;
+    let returnHight = (height || 8);
+    // let returnHight = heightPoints || (height || 8);
     // if (height) {
     //   returnHight = parseFloat(
     //     (height?.fit || returnHight) + "." + (height?.inch || 0)
@@ -141,8 +178,14 @@ const Step1 = ({ currentData, goToNextStep }) => {
     return returnHight;
   };
 
+  const handleHeightChange = (h) => {
+    console.log("Chamges", h);
+    // setHeightPoints(h)
+  }
+
+
   const getWeightPoints = (weight) => {
-    let returnWeight = 50.6;
+    let returnWeight = weight || 60.6;
     return returnWeight;
   };
 
@@ -158,12 +201,11 @@ const Step1 = ({ currentData, goToNextStep }) => {
               <div className="col-xl-6">
                 <div className="form-group">
                   <label className="top-label">First Name</label>
-                  {/* <pre>{JSON.stringify(input?.first_name)}</pre> */}
                   <input
                     type="text"
                     className="form-control form-control-lg"
                     name="first_name"
-                    defaultValue={input?.first_name}
+                    defaultValue={stepInput?.first_name}
                     onChange={handleChange}
                     {...register("first_name", {
                       required: "The first name field is required",
@@ -184,7 +226,7 @@ const Step1 = ({ currentData, goToNextStep }) => {
                     type="text"
                     className="form-control form-control-lg"
                     name="last_name"
-                    defaultValue={input?.last_name}
+                    defaultValue={stepInput?.last_name}
                     onChange={handleChange}
                     {...register("last_name", {
                       required: "The last name field is required",
@@ -208,11 +250,10 @@ const Step1 = ({ currentData, goToNextStep }) => {
                       className="w-100"
                       format="DD-MM-YYYY"
                       name="date_of_birth"
-                      value={getDefaultDOB(currentData?.date_of_birth)}
+                      defaultValue={getDefaultFormatedDate(currentData?.date_of_birth)}
                       onChange={(date) => {
                         changeDOB(date);
                       }}
-                      {...register("date_of_birth")}
                     />
 
                     {errors.date_of_birth && (
@@ -233,9 +274,8 @@ const Step1 = ({ currentData, goToNextStep }) => {
                   <input
                     type="text"
                     className="form-control form-control-lg "
-                    name="age"
                     readOnly={true}
-                    defaultValue={input?.age}
+                    defaultValue={age}
                   />
                 </div>
               </div>
@@ -244,14 +284,9 @@ const Step1 = ({ currentData, goToNextStep }) => {
                 <div className="form-group">
                   <label className="h6">Blood Group</label>
                   <div className="input-group">
-                    {/* <div className="input-group-prepend">
-											<span className="input-group-text">
-												<span className="fa fa-tint blood-group-text text-danger"></span>
-											</span>
-										</div> */}
                     <Select
                       placeholder="Select blood group type."
-                      value={selectedBloodGroup}
+                      defaultValue={selectedBloodGroup}
                       style={{ width: "100%" }}
                       onChange={(id) => setSelectedBloodGroup(id)}
                       name="blood_group"
@@ -294,14 +329,16 @@ const Step1 = ({ currentData, goToNextStep }) => {
                       className="js-range-slider "
                       data-type="single"
                       id="height-fit"
-                      defaultValue={getHeightPoints(input?.height)}
-                      onChange={(val) => console.log(val)}
+                      defaultValue={getHeightPoints(stepInput?.height)}
+                      onChange={handleHeightChange}
                       dots={false}
                       {...heightFitOptions}
                       activeDotStyle
                       dots={false}
                       dotStyle={{ display: "none" }}
                     />
+                    {/* onChange={(val) => {setHeightPoints(val)}} */}
+                      {/* // defaultValue={getHeightPoints(stepInput?.height)} */}
                   </div>
                 </div>
               </div>
@@ -325,7 +362,7 @@ const Step1 = ({ currentData, goToNextStep }) => {
                       className="js-range-slider "
                       data-type="single"
                       id="weight"
-                      defaultValue={getWeightPoints(input?.weight)}
+                      defaultValue={getWeightPoints(stepInput?.weight)}
                       onChange={(val) => console.log(val)}
                       dots={false}
                       {...weightOptions}
@@ -333,10 +370,6 @@ const Step1 = ({ currentData, goToNextStep }) => {
                       dots={false}
                       dotStyle={{ display: "none" }}
                     />
-                    {/* <div className="form-group">
-                                        <input type="text" className="js-range-slider" value="" data-type="single" id="weight"
-                                            name="weight" defaultValue={input?.weight} onChange={handleChange} />
-                                    </div> */}
                   </div>
                 </div>
               </div>
@@ -353,7 +386,7 @@ const Step1 = ({ currentData, goToNextStep }) => {
                       onChange={(id) => setSelectedLanguage(id)}
                       name="language"
                     >
-                      {languages.map((list) => {
+                      {languagesList?.map((list) => {
                         return (
                           <Select.Option key={list.id} value={list.id}>
                             {list.name}
@@ -379,10 +412,10 @@ const Step1 = ({ currentData, goToNextStep }) => {
                           <input
                             type="radio"
                             name="gender"
-                            checked
                             value="MALE"
-                            defaultChecked={input?.gender == "MALE"}
+                            defaultValue={stepInput?.gender == "MALE"}
                             onChange={handleChange}
+                            {...register('gender')}
                           />
                           {/*  */}
                           <span className="vs-radio">
@@ -400,8 +433,9 @@ const Step1 = ({ currentData, goToNextStep }) => {
                             type="radio"
                             name="gender"
                             value="FEMALE"
-                            defaultChecked={input?.gender == "FEMALE"}
+                            defaultValue={stepInput?.gender === "FEMALE"}
                             onChange={handleChange}
+                            {...register('gender')}
                           />
                           <span className="vs-radio">
                             <span className="vs-radio--border"></span>
@@ -418,8 +452,9 @@ const Step1 = ({ currentData, goToNextStep }) => {
                             type="radio"
                             name="gender"
                             value="OTHER"
-                            defaultChecked={input?.gender == "OTHER"}
+                            defaultValue={stepInput?.gender == "OTHER"}
                             onChange={handleChange}
+                            {...register('gender')}
                           />
                           {/* onChange={handleChange} */}
                           <span className="vs-radio">
@@ -477,13 +512,136 @@ const Step1 = ({ currentData, goToNextStep }) => {
                   )}
                 </div>
               </div>
+              <div className="col-xl-6">
+                <div className="form-group">
+                  <label className="top-label text-capitalize">
+                    Employee ID:
+                  </label>
+                  <input type="text" className="form-control form-control-lg"
+                    name="employee_id"
+                    {...register("employee_id")}
+                  />
+                </div>
+              </div>
+              <div className="col-xl-6">
+                <div className="form-group mt-75">
+                  <label className="">Is Activate?</label>
+                  <ul className="list-unstyled mb-0">
+                    <li className="d-inline-block mr-2">
+                      <fieldset>
+                        <div className="vs-radio-con">
+                          <input
+                            type="radio"
+                            name="is_active"
+                            value={true}
+                            defaultValue={stepInput?.is_active == true}
+                            onChange={handleChange}
+                            {...register('is_active')}
+                          />
+                          {/*  */}
+                          <span className="vs-radio">
+                            <span className="vs-radio--border"></span>
+                            <span className="vs-radio--circle"></span>
+                          </span>
+                          <span className="">Active</span>
+                        </div>
+                      </fieldset>
+                    </li>
+                    <li className="d-inline-block mr-2">
+                      <fieldset>
+                        <div className="vs-radio-con">
+                          <input
+                            type="radio"
+                            name="is_active"
+                            value={false}
+                            defaultValue={stepInput?.is_active === false}
+                            onChange={handleChange}
+                            {...register('is_active')}
+                          />
+                          <span className="vs-radio">
+                            <span className="vs-radio--border"></span>
+                            <span className="vs-radio--circle"></span>
+                          </span>
+                          <span className="">Deactive</span>
+                        </div>
+                      </fieldset>
+                    </li>
+                    {errors.is_active && (
+                      <span className="mt-5 text-danger">
+                        {errors.is_active.message}
+                      </span>
+                    )}
+                  </ul>
+                </div>
+              </div>
+              <div className="col-xl-6">
+                <div className="form-group date-birth">
+                  <label className="h6  text-capitalize" htmlFor="exampleInputDate1">
+                    date of join
+                  </label>
+                  <div className="input-group">
+                    <DatePicker
+                      className="w-100"
+                      format="DD-MM-YYYY"
+                      name="date_of_join"
+                      defaultValue={getDefaultFormatedDate(currentData?.date_of_join)}
+                      onChange={(date) => {
+                        changeDOJ(date);
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="col-xl-6">
+                <div className="form-group date-birth">
+                  <label className="h6  text-capitalize" htmlFor="exampleInputDate1">
+                    date of expire
+                  </label>
+                  <div className="input-group">
+                    <DatePicker
+                      className="w-100"
+                      format="DD-MM-YYYY"
+                      name="date_of_expire"
+                      defaultValue={getDefaultFormatedDate(currentData?.date_of_expire)}
+                      onChange={(date) => {
+                        changeDOE(date);
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="col-xl-6">
+                <div className="form-group date-birth">
+                  <label className="h6  text-capitalize" htmlFor="exampleInputDate1">
+                    Region
+                  </label>
+                  <div className="input-group">
+                    <Select
+                      placeholder="Select any region."
+                      value={selectedRegionId}
+                      style={{ width: "100%" }}
+                      name="region_id"
+                      onChange={(id) => setSelectedRegionId(id)}
+                      
+                    >
+                      {/* {...register('region_id', { required: "Select any one," })} */}
+                      {/* onChange={(id) => setSelectedBloodGroup(id)} */}
+                      {/* {...register('blood_group', {
+												required: 'The blood group required.',
+											})} */}
+                      {regionList?.map((list, idx) =>
+                        (<Select.Option key={idx} value={list.id}>{list.name}</Select.Option>)
+                      )}
+                    </Select>
+                  </div>
+                  {errors.region_id && <p className="text-danger">
+                    {errors.region_id.message}
+                  </p>}
+                </div>
+              </div>
             </div>
             <div className="row">
               <div className="col-12 mb-2">
-                {/* <a href="step-1.html" className="btn btn-outline-light round btn-lg mr-1 mb-1 ">
-                                    <i className="fa fa-angle-left">
-                                    </i> BACK
-                                </a> */}
                 <a
                   onClick={handleSubmit(onSubmit)}
                   className="float-right mx-1 btn btn-pill mb-sm-0 mb-2 text_theme_primary   default_gradient"

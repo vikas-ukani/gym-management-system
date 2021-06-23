@@ -1,39 +1,41 @@
 import { useEffect, useState } from "react";
-import { Select } from "antd";
+import { Select, Upload } from "antd";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { setCookie } from "services";
+import { MASTER_CODES } from "constants/common";
+import { useAxios } from "hooks";
+import { getMasterByCode } from "services/masters";
+import { useToasts } from "react-toast-notifications";
+import { uploadImageService } from "services/image";
 
 const Step3 = ({ currentData, goToNextStep, goToPrevStep }) => {
+  const { addToast } = useToasts()
+
+
   const [input, setInput] = useState({});
   const [stepInput, setStepInput] = useState({});
   const [experience, setExperience] = useState();
 
   const [specialization, setSpecialization] = useState();
+  const [specializations, setSpecializations] = useState([]);
   const [specializationError, setSpecializationError] = useState();
   const [educationsYearError, setEducationsYearError] = useState();
 
-  const specializations = [
-    {
-      id: 1,
-      name: "Aerobic",
-    },
-    {
-      id: 2,
-      name: "Cross Fit",
-    },
-    {
-      id: 3,
-      name: "Cycling",
-    },
-    {
-      id: 4,
-      name: "Kick Boxing",
-    },
-    {
-      id: 5,
-      name: "Pilates",
-    },
-  ];
+  const [educationLevelList, setEducationLevelList] = useState()
+  const [educationLevel, setEducationLevel] = useState()
+
+  const [defaultFileList, setDefaultFileList] = useState([]);
+  const [imageIds, setImageIds] = useState([]);
+
+
+  const EDUCATION_FIELDS = {
+    education_level: null,
+    school_name: null,
+    degree: null,
+    education_year: null,
+    marksheet_file: null
+  }
+
   const {
     register,
     handleSubmit,
@@ -41,7 +43,8 @@ const Step3 = ({ currentData, goToNextStep, goToPrevStep }) => {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      educations: [{ education: null, education_year: null }],
+      // school name, degree, passing year, mark-sheet file (optional)
+      educations: [EDUCATION_FIELDS],
       ...currentData
     },
   });
@@ -49,16 +52,81 @@ const Step3 = ({ currentData, goToNextStep, goToPrevStep }) => {
 
   useEffect(() => {
     setStepInput(currentData);
+    setSpecialization(currentData?.specializations)
+    fetchAllSpecializations()
+    fetchAllEducationLevelList()
   }, []);
+
+  const fetchAllSpecializations = async () => {
+    const MASTER_CODE_SPECIALIZATIONS = MASTER_CODES.SPECIALIZATION
+    const { response: { data }, statusCode, error } = await useAxios(getMasterByCode(MASTER_CODE_SPECIALIZATIONS))
+    if (statusCode == 200) {
+      let { child_masters } = data[MASTER_CODE_SPECIALIZATIONS];
+      setSpecializations(child_masters)
+      // setDesignationList([...child_masters.map(cM => {return {  "value": cM.id, "label" : cM.name }})])
+    } else {
+      addToast(error.message, { appearance: 'error', autoDismiss: false })
+    }
+  }
+  const fetchAllEducationLevelList = async () => {
+    const MASTER_CODE_GRADUATIONS = MASTER_CODES.GRADUATIONS
+    const { response: { data }, statusCode, error } = await useAxios(getMasterByCode(MASTER_CODE_GRADUATIONS))
+    if (statusCode == 200) {
+      let { child_masters } = data[MASTER_CODE_GRADUATIONS];
+      setEducationLevelList(child_masters)
+      // setDesignationList([...child_masters.map(cM => {return {  "value": cM.id, "label" : cM.name }})])
+    } else {
+      addToast(error.message, { appearance: 'error', autoDismiss: false })
+    }
+  }
 
   const updateIndexedExperienceYear = (id, index) => {
     setExperience({ ...experience, [index]: id });
     /** Remove Errors after select */
-    setEducationsYearError({ ...educationsYearError, [index]: null });
+    // setEducationsYearError({ ...educationsYearError, [index]: null });
+  };
+  const updateIndexedEducationLevel = (id, index) => {
+    setEducationLevel({ ...educationLevel, [index]: id });
+    /** Remove Errors after select */
+    // setEducationsYearError({ ...educationsYearError, [index]: null });
   };
   const updateSpecialization = (id) => {
     setSpecializationError(null);
     setSpecialization(id);
+  };
+
+
+  const uploadImage = async (e, index) => {
+    let input = { types: "masters" };
+    const { response, error, loading, statusCode } = await uploadImageService(
+      e,
+      input
+    );
+    if (statusCode == 201) {
+      setImageIds({ ...imageIds, [index]: response.data.ids });
+      // setImageIds1(response.data.ids);
+      addToast(response.message, { appearance: "success", autoDismiss: true });
+    } else {
+      addToast(error.message, { appearance: "error", autoDismiss: true });
+    }
+  };
+  const onPreview = async (file) => {
+    let src = file.url;
+    if (!src) {
+      src = await new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file.originFileObj);
+        reader.onload = () => resolve(reader.result);
+      });
+    }
+    const image = new Image();
+    image.src = src;
+    const imgWindow = window.open(src);
+    imgWindow.document.write(image.outerHTML);
+  };
+
+  const handleOnChange = ({ fileList }) => {
+    setDefaultFileList(fileList);
   };
 
   const onSubmit = (inputData) => {
@@ -73,13 +141,15 @@ const Step3 = ({ currentData, goToNextStep, goToPrevStep }) => {
     };
 
     UpdatedData.educations.forEach((education, idx) => {
+      console.log("Education Level", educationLevel[idx]);
       education.education_year = experience[idx];
+      education.education_level = educationLevel[idx];
+      documentL.marksheet_id = imageIds[idx];
     });
     UpdatedData.specializations = specialization;
-    // console.log("Final UpdatedData", UpdatedData);
+    console.log("Final UpdatedData", UpdatedData);
     setCookie("step3", UpdatedData);
-    console.log("Saved", UpdatedData);
-    // goToNextStep(UpdatedData);
+    goToNextStep(UpdatedData);
   };
 
   const stepNext = () => {
@@ -95,103 +165,169 @@ const Step3 = ({ currentData, goToNextStep, goToPrevStep }) => {
         <div className="tab-content" id="main_form">
           <div className="tab-pane active" role="tabpanel" id="step1">
             <div className="row mt-3">
-              <div className="col-xl-6">
-                <div className="form-group">
-                  <label className="top-label">Education</label>
-                </div>
-              </div>
-              <div className="col-xl-6">
-                <div className="form-group">
-                  <label className="top-label w-100 text-capitalize">
-                    Passing Year
-                    {educationsFields.fields.length < 5 && (
-                      <a
-                        className="btn btn-primary add-icon custom_btn"
-                        onClick={() => {
-                          educationsFields.append({
-                            education: "",
-                            education_year: "",
-                          });
-                        }}
-                      >
-                        <i className="fa fa-plus"></i>
-                      </a>
-                    )}
-                  </label>
-                </div>
+              <div className="col-12 form-group">
+                <label className="top-label w-100 text-capitalize">
 
+                  {educationsFields.fields.length < 5 && (
+                    <a
+                      className="btn btn-primary add-icon custom_btn"
+                      onClick={() => {
+                        educationsFields.append(EDUCATION_FIELDS);
+                      }}
+                    >
+                      <i className="fa fa-plus"></i>
+                    </a>
+                  )}
+                </label>
               </div>
+
               {educationsFields.fields.map((item, index) => {
                 return (
-                  <div key={item.id} className="d-flex col-12 mt-0 ">
-                    <div className="col-xl-6 pl-0">
-                      <div className="form-group">
-                        <Controller
-                          render={({ field }) => (
-                            <input
-                              type="text"
-                              className="form-control form-control-lg mb-25 mt-25"
-                              {...field}
-                            />
+                  <div key={item.id} className="d-flex col-xl-12 mt-0 ">
+                    <div className="col-xl-11 row pl-0">
+                      <pre>{JSON.stringify(stepInput?.educations?.[index]?.education_level, null, 1)}</pre> 
+                      <div className="col-6 ">
+                        <div className="form-group">
+                          <label className="top-label">Education Level</label>
+                          <Select
+                            className=""
+                            placeholder="Select education level."
+                            style={{ width: "100%" }}
+                            name="education_level"
+                            defaultValue={stepInput?.educations?.[index]?.education_level}
+
+                            onChange={(id) => updateIndexedEducationLevel(id, index) }
+                          >
+                            {/*  setEducationLevel(id) */}
+                            {educationLevelList?.map((list) => {
+                              return (
+                                <Select.Option key={list.id} value={list.id}>
+                                  {list.name}
+                                </Select.Option>
+                              );
+                            })}
+                          </Select>
+                        </div>
+                      </div>
+
+                      <div className="col-xl-6  ">
+                        <div className="form-group">
+                          <label className="top-label">Education Title</label>
+                          <Controller
+                            render={({ field }) => (
+                              <input
+                                type="text"
+                                className="form-control form-control-lg mb-25 mt-25"
+                                {...field}
+                              />
+                            )}
+                            name={`educations.${index}.education`}
+                            defaultValue={stepInput?.educations?.[index]?.education}
+                            control={control}
+                            {...register(`educations.${index}.education`, {
+                              required: "Education is required.",
+                            })}
+                          />
+                          {errors?.educations && errors?.educations[index] && (
+                            <p className=" text-danger">
+                              {errors?.educations[index].education.message}
+                            </p>
                           )}
-                          name={`educations.${index}.education`}
-                          defaultValue={stepInput?.educations?.[index]?.education}
-                          control={control}
-                          {...register(`educations.${index}.education`, {
-                            required: "Education is required.",
-                          })}
-                        />
-                        {errors?.educations && errors?.educations[index] && (
-                          <p className=" text-danger">
-                            {errors?.educations[index].education.message}
-                          </p>
-                        )}
+                        </div>
                       </div>
-                    </div>
-                    <div className="col-xl-5">
-                      <div className="form-group">
-                        <Select
-                          className=""
-                          placeholder="Select experience."
-                          value={stepInput?.educations?.[index]?.education_year}
-                          style={{ width: "100%" }}
-                          name="education_year"
-                          defaultValue={stepInput?.educations?.[index]?.education_year}
-                          onChange={(id) =>
-                            updateIndexedExperienceYear(id, index)
-                          }
-                        >
-                          <Select.Option value={2001}>2001</Select.Option>
-                          <Select.Option value={2002}>2002</Select.Option>
-                          <Select.Option value={2003}>2003</Select.Option>
-                          <Select.Option value={2004}>2004</Select.Option>
-                          <Select.Option value={2005}>2005</Select.Option>
-                          <Select.Option value={2006}>2006</Select.Option>
-                          <Select.Option value={2007}>2007</Select.Option>
-                          <Select.Option value={2008}>2008</Select.Option>
-                          <Select.Option value={2009}>2009</Select.Option>
-                          <Select.Option value={2010}>2010</Select.Option>
-                          <Select.Option value={2011}>2011</Select.Option>
-                          <Select.Option value={2012}>2012</Select.Option>
-                          <Select.Option value={2013}>2013</Select.Option>
-                          <Select.Option value={2014}>2014</Select.Option>
-                          <Select.Option value={2015}>2015</Select.Option>
-                          <Select.Option value={2016}>2016</Select.Option>
-                          <Select.Option value={2017}>2017</Select.Option>
-                          <Select.Option value={2018}>2018</Select.Option>
-                          <Select.Option value={2019}>2019</Select.Option>
-                          <Select.Option value={2020}>2020</Select.Option>
-                          {/* );
+                      <div className="col-xl-6 ">
+                        <div className="form-group">
+                          <label className="top-label">Degree</label>
+                          <Controller
+                            render={({ field }) => (
+                              <input
+                                type="text"
+                                className="form-control form-control-lg mb-25 mt-25"
+                                {...field}
+                              />
+                            )}
+                            name={`educations.${index}.degree`}
+                            defaultValue={stepInput?.educations?.[index]?.degree}
+                            control={control}
+                            {...register(`educations.${index}.degree`)}
+                          />
+                          {/* {errors?.educations && errors?.educations[index] && (
+                            <p className=" text-danger">
+                              {errors?.educations[index].degree.message}
+                            </p>
+                          )} */}
+                        </div>
+                      </div>
+                      <div className="col-xl-6">
+                        <div className="form-group">
+                          <label className="top-label">Passing Year</label>
+                          <Select
+                            className=""
+                            placeholder="Select experience."
+                            value={stepInput?.educations?.[index]?.education_year}
+                            style={{ width: "100%" }}
+                            name="education_year"
+                            defaultValue={stepInput?.educations?.[index]?.education_year}
+                            onChange={(id) =>
+                              updateIndexedExperienceYear(id, index)
+                            }
+                          >
+                            <Select.Option value={2001}>2001</Select.Option>
+                            <Select.Option value={2002}>2002</Select.Option>
+                            <Select.Option value={2003}>2003</Select.Option>
+                            <Select.Option value={2004}>2004</Select.Option>
+                            <Select.Option value={2005}>2005</Select.Option>
+                            <Select.Option value={2006}>2006</Select.Option>
+                            <Select.Option value={2007}>2007</Select.Option>
+                            <Select.Option value={2008}>2008</Select.Option>
+                            <Select.Option value={2009}>2009</Select.Option>
+                            <Select.Option value={2010}>2010</Select.Option>
+                            <Select.Option value={2011}>2011</Select.Option>
+                            <Select.Option value={2012}>2012</Select.Option>
+                            <Select.Option value={2013}>2013</Select.Option>
+                            <Select.Option value={2014}>2014</Select.Option>
+                            <Select.Option value={2015}>2015</Select.Option>
+                            <Select.Option value={2016}>2016</Select.Option>
+                            <Select.Option value={2017}>2017</Select.Option>
+                            <Select.Option value={2018}>2018</Select.Option>
+                            <Select.Option value={2019}>2019</Select.Option>
+                            <Select.Option value={2020}>2020</Select.Option>
+                            {/* );
 										})} */}
-                        </Select>
-                        {educationsYearError?.[index] && (
-                          <p className=" text-danger">
-                            {educationsYearError[index]}
-                          </p>
-                        )}
+                          </Select>
+                          {educationsYearError?.[index] && (
+                            <p className=" text-danger">
+                              {educationsYearError[index]}
+                            </p>
+                          )}
+                        </div>
                       </div>
+
+
+                      <div className="col-xl-6">
+                        <div className="form-group   mb-1">
+                          <label className="w-100  ">
+                            Marksheet File.
+                          </label>
+                          <div className="d-inline-flex ">
+                            <Upload
+                              accept="image/*"
+                              customRequest={(e) => uploadImage(e, index)}
+                              defaultFileList={defaultFileList}
+                              onChange={handleOnChange}
+                              listType="picture-card"
+                              onPreview={onPreview}
+                            >
+                              {defaultFileList.length >= 1 ? null : (
+                                <div>Upload Image</div>
+                              )}
+                            </Upload>
+                          </div>
+                        </div>
+                      </div>
+
                     </div>
-                    <div className="  ">
+                    <div className="col-xl-1">
                       {educationsFields.fields.length > 1 && (
                         <a
                           onClick={() => educationsFields.remove(index)}
@@ -215,7 +351,6 @@ const Step3 = ({ currentData, goToNextStep, goToPrevStep }) => {
                           placeholder="Select any specializations."
                           value={specialization}
                           style={{ width: "100%" }}
-                          defaultValue={stepInput.specializations}
                           onChange={(id) => updateSpecialization(id)}
                           name="specializations"
                         >

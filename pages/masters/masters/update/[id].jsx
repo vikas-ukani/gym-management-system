@@ -143,12 +143,11 @@ const UpdateMaster = ({ id }) => {
                             type="text"
                             className="form-control form-control-lg"
                             name="code"
-                            readOnly={true}
-                            defaultValue={watchAllFields?.name
+                            value={watchAllFields?.code
                               ?.replace(/ /g, "_")
                               .toUpperCase()
                               ?
-                              watchAllFields?.name
+                              watchAllFields?.code
                                 ?.replace(/ /g, "_")
                                 .toUpperCase()
                               : master?.code?.replace(/ /g, "_").toUpperCase()}

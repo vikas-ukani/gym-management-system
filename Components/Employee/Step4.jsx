@@ -4,11 +4,9 @@ import { useAxios } from "hooks";
 import { getMasterByCode } from "services/masters";
 import { MASTER_CODES } from "constants/common";
 import { useToasts } from "react-toast-notifications";
-import { uploadImageService } from "services/image";
+import { getMediaImageAPI, uploadImageService } from "services/image";
 import { useForm } from "react-hook-form";
 import { setCookie } from "services";
-
-
 
 const Step4 = ({ currentData, goToNextStep, goToPrevStep }) => {
   const { addToast } = useToasts()
@@ -29,23 +27,39 @@ const Step4 = ({ currentData, goToNextStep, goToPrevStep }) => {
 
   useEffect(() => {
     setStepInput(currentData);
-    setDesignation(currentData.designation_id)
+    setDesignation(currentData?.designation_id)
     fetchDesignations()
+    setProfileImagePreviewData()
   }, []);
+
+  const setProfileImagePreviewData = async () => {
+    if (stepInput.profile_image_id) {
+      const { response: { data }, statusCode, error } = await useAxios(getMediaImageAPI({ ids: [stepInput.profile_image_id] }))
+      console.log("S", statusCode, data, error);
+      if (data) {
+        setDefaultFileList([
+          {
+            uid: data[0].id,
+            name: data[0].name,
+            status: 'done',
+            url: data[0].url,
+          }
+        ])
+      }
+      if (statusCode == 200) {
+      }
+    }
+  }
 
   const fetchDesignations = async () => {
     const { response: { data }, statusCode, error } = await useAxios(getMasterByCode(MASTER_CODES.DESIGNATION))
     if (statusCode == 200) {
       let { child_masters } = data[MASTER_CODES.DESIGNATION];
-
       setDesignationList(child_masters)
       // setDesignationList([...child_masters.map(cM => {return {  "value": cM.id, "label" : cM.name }})])
     } else {
-
       addToast(error.message, { appearance: 'error', autoDismiss: false })
     }
-    console.log("response, statusCode, error", data, statusCode, error);
-    // fetchDesignations
   }
 
 
@@ -53,6 +67,7 @@ const Step4 = ({ currentData, goToNextStep, goToPrevStep }) => {
     setDefaultFileList(fileList);
   };
   const onPreview = async (file) => {
+    console.log("Preview Cakk");
     let src = file.url;
     if (!src) {
       src = await new Promise((resolve) => {
@@ -82,13 +97,11 @@ const Step4 = ({ currentData, goToNextStep, goToPrevStep }) => {
   };
 
   const onSubmit = async inputData => {
-
     let UpdatedData = {
       ...stepInput,
       about_me: inputData.about_me ? inputData.about_me : stepInput.about_me,
       designation_id: designation,
-      profile_image_id: profileImageId ? profileImageId : (stepInput?.profile_image_id ? stepInput?.profile_image_id : null  )
-
+      profile_image_id: profileImageId ? profileImageId : (stepInput?.profile_image_id ? stepInput?.profile_image_id : null)
     };
 
     setCookie("step4", UpdatedData);
@@ -113,16 +126,18 @@ const Step4 = ({ currentData, goToNextStep, goToPrevStep }) => {
           <div className="tab-pane active" role="tabpanel" id="step1">
             <div className="row d-flex">
               <div className="col-2">
+
                 <div className="form-group">
                   <label className="top-label">Profile Picture</label>
                   <Upload
                     accept="image/*"
                     customRequest={(e) => uploadImage(e)}
-                    defaultFileList={defaultFileList}
+                    fileList={defaultFileList}
                     onChange={handleOnChange}
                     listType="picture-card"
                     onPreview={onPreview}
                   >
+                    {/* defaultFileList={defaultFileList} */}
                     {defaultFileList.length >= 1 ? null : (
                       <div>Upload Image</div>
                     )}
@@ -136,7 +151,7 @@ const Step4 = ({ currentData, goToNextStep, goToPrevStep }) => {
                   <textarea
                     className="form-control form-control-lg"
                     rows="5"
-                    defaultValue={stepInput.about_me}
+                    defaultValue={stepInput?.about_me}
                     {...register('about_me')}
                   ></textarea>
                 </div>

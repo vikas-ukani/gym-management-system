@@ -138,7 +138,7 @@ const Step2 = ({ currentData, goToNextStep, goToPrevStep }) => {
 
               <div className="col-xl-4 col-12">
                 <div className="form-group">
-                  <label className="top-label">Zipcode</label>
+                  <label className="top-label">Pincode</label>
                   <input
                     type="text"
                     className="form-control form-control-lg"
@@ -174,7 +174,7 @@ const Step2 = ({ currentData, goToNextStep, goToPrevStep }) => {
                 </div>
               </div>
 
-              <div className="col-xl-4">
+              <div className="col-xl-3">
                 <div className="form-group">
                   <label className="h6" htmlFor="exampleInputDate1">
                     Mobile Number
@@ -203,7 +203,59 @@ const Step2 = ({ currentData, goToNextStep, goToPrevStep }) => {
                 </div>
               </div>
 
-              <div className="col-xl-4">
+
+              <div className="col-xl-2">
+                <div className="form-group mt-75">
+                  <label className="">Is it WhatsApp number or not?</label>
+                  <ul className="list-unstyled mb-0">
+                    <li className="d-inline-block mr-2">
+                      <fieldset>
+                        <div className="vs-radio-con">
+                          <input
+                            type="radio"
+                            name="is_whatsapp"
+                            value={true}
+                            defaultValue={stepInput?.is_whatsapp == "true" || stepInput?.is_whatsapp == 1}
+                            onChange={handleChange}
+                            {...register('is_whatsapp')}
+                          />
+                          <span className="vs-radio">
+                            <span className="vs-radio--border"></span>
+                            <span className="vs-radio--circle"></span>
+                          </span>
+                          <span className="">Yes</span>
+                        </div>
+                      </fieldset>
+                    </li>
+                    <li className="d-inline-block mr-2">
+                      <fieldset>
+                        <div className="vs-radio-con">
+                          <input
+                            type="radio"
+                            name="is_whatsapp"
+                            value={false}
+                            defaultValue={stepInput?.is_whatsapp == "false" || stepInput?.is_whatsapp == 0}
+                            onChange={handleChange}
+                            {...register('is_whatsapp')}
+                          />
+                          <span className="vs-radio">
+                            <span className="vs-radio--border"></span>
+                            <span className="vs-radio--circle"></span>
+                          </span>
+                          <span className="">No</span>
+                        </div>
+                      </fieldset>
+                    </li>
+
+                    {errors.is_whatsapp && (
+                      <span className="mt-5 text-danger">
+                        {errors.is_whatsapp.message}
+                      </span>
+                    )}
+                  </ul>
+                </div>
+              </div>
+              <div className="col-xl-3">
                 <div className="form-group">
                   <label className="h6" htmlFor="exampleInputDate1">
                     Alternate Phone
@@ -267,7 +319,7 @@ const Step2 = ({ currentData, goToNextStep, goToPrevStep }) => {
                   onClick={handleSubmit(onSubmit)}
                   className="float-right mx-1 btn btn-pill mb-sm-0 mb-2 text_theme_primary   default_gradient"
                 >
-                  NEXT <i className="  fa fa-angle-right"></i>
+                  NEXT <i className="fa fa-angle-right"></i>
                 </a>
               </div>
             </div>

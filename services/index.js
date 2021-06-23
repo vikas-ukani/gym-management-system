@@ -37,3 +37,6 @@ export const getCookie = (key = null) => {
 export const setCookie = (key = null, value = null) => {
   Cookies.set(key, value) || null;
 };
+export const removeCookie = (key = null) => {
+  Cookies.remove(key) || null;
+};

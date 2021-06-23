@@ -1,7 +1,5 @@
 import { Step1, Step2, Step3, Step4, Step5, Step6 } from "Components/Employee";
 import { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { updateInputByStep } from "store/staff/StaffSlice";
 import { findIndex, findWhere, max, min } from "underscore";
 import router from "next/router";
 import { getCookie, setCookie } from "services";
@@ -9,10 +7,7 @@ import addStaffCloneData from "data/add_staff_clone.json";
 import { data as addStaffs } from "data/add_staff.json";
 
 const Steps = () => {
-  // const addStaffClone = JSON.parse(getCookie("step_data"));
   const [addStaffClone, setAddStaffClone] = useState([]);
-  // const addStaffClone = useSelector((state) => state.staff.addStaffClone);
-  const dispatch = useDispatch();
 
   const [currentStep, setCurrentStep] = useState(1);
   const [currentData, setCurrentData] = useState({});

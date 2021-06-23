@@ -30,3 +30,4 @@ yarn.lock
 # Vercel
 .vercel
 .now
+.vscode/launch.json

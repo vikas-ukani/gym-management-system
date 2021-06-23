@@ -138,7 +138,6 @@ const Step5 = ({ currentData, goToNextStep, goToPrevStep }) => {
     let UpdatedData = {
       ...currentData,
       ...inputData,
-
     };
     UpdatedData.documents.forEach((documentL, idx) => {
       documentL.front_image_id = imageIds1[idx];

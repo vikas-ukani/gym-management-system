@@ -154,10 +154,13 @@ const SubMaster = () => {
   };
 
   const onAddSubmit = async (input) => {
+  
     // input.image_id = imageIds[0];
     input.parent_id = activeMaster;
     input.code =  input?.name?.replace(/ /g, "_").toUpperCase()
     input.is_active = input.is_active === "true" || input.is_active == 1;
+    input.back_image_required = input.back_image_required === "true" || input.back_image_required === 1;
+    input.default_selection = input.default_selection === "true" || input.default_selection === 1;
 
     const { response, error, loading, statusCode } = await useAxios(
       createMastersAPI(input)
@@ -175,6 +178,8 @@ const SubMaster = () => {
     // input.image_id = imageIds[0];
     input.parent_id = editRow.parent_id;
     input.is_active = input.is_active === "true" || input.is_active === 1;
+    input.back_image_required = input.back_image_required === "true" || input.back_image_required === 1;
+    input.default_selection = input.default_selection === "true" || input.default_selection === 1;
 
     let id = editRow.id;
     const { response, error, loading, statusCode } = await useAxios(
