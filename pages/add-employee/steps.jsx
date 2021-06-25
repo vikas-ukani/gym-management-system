@@ -5,8 +5,14 @@ import router from "next/router";
 import { getCookie, setCookie } from "services";
 import addStaffCloneData from "data/add_staff_clone.json";
 import { data as addStaffs } from "data/add_staff.json";
+import { useAxios } from "hooks";
+import { createEmployeeAPI } from "services/employee";
+import { useToasts } from "react-toast-notifications";
 
 const Steps = () => {
+
+  const { addToast } = useToasts()
+
   const [addStaffClone, setAddStaffClone] = useState([]);
 
   const [currentStep, setCurrentStep] = useState(1);
@@ -28,11 +34,43 @@ const Steps = () => {
     setStepInput(data);
   };
 
-  const goToNextStep = () => {
+  const goToNextStep = async () => {
     if (currentStep < MAX_STEP) {
       setCurrentStep(currentStep + 1);
     } else {
       console.log("Call API");
+
+      let step1 = JSON.parse(getCookie('step1'))
+      let step2 = JSON.parse(getCookie('step2'))
+      let step3 = JSON.parse(getCookie('step3'))
+      let step4 = JSON.parse(getCookie('step4'))
+      let step5 = JSON.parse(getCookie('step5'))
+      let step6 = JSON.parse(getCookie('step6'))
+
+
+      let apiData = {
+        ...step1,
+        ...step2,
+        ...step3,
+        ...step4,
+        ...step5,
+        ...step6,
+        workspace_id: 1
+      }
+
+      console.log("API Final Data", apiData);
+
+      const { response, error, loading, statusCode } = await useAxios(
+        createEmployeeAPI(apiData)
+      );
+      console.log("Created", response);
+      if (statusCode === 201) {
+        let { list, count } = response.data;
+        addToast(response.message, { appearance: "success", autoDismiss: true })
+      } else {
+        addToast(error.message, { appearance: "error", autoDismiss: false })
+      }
+
       /** Saving Data After Completing all Steps. */
       // router.push("/add-employee");
     }

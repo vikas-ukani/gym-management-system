@@ -50,7 +50,7 @@ const Step5 = ({ currentData, goToNextStep, goToPrevStep }) => {
   const updateIndexedDocument = (id, index) => {
     setDocuments({ ...documents, [index]: id });
     /** Remove Errors after select */
-    setDocumentTypeError({ ...documentTypeError, [index]: null });
+    // setDocumentTypeError({ ...documentTypeError, [index]: null });
   };
 
   const fetchDocumentsTypes = async () => {
@@ -131,7 +131,7 @@ const Step5 = ({ currentData, goToNextStep, goToPrevStep }) => {
   const onSubmit = (inputData) => {
     inputData.documents.forEach((element, idx) => {
       if (documentTypeError && documentTypeError[idx] !== null) {
-        setDocumentTypeError({ ...documentTypeError, [idx]: " Document type is required" })
+        // setDocumentTypeError({ ...documentTypeError, [idx]: " Document type is required" })
       }
     });
 
