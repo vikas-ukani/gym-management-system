@@ -5,6 +5,8 @@ import staffs from "data/staffs.json";
 import Cookies from "js-cookie";
 import router from "next/router";
 import { removeCookie } from "services";
+import { useAxios } from "hooks";
+import { listEmployeeListAPI } from "services/employee";
 
 const AddEmployee = () => {
   const [staffList, setEmployeeList] = useState([]);
@@ -14,10 +16,23 @@ const AddEmployee = () => {
   const [perPage] = useState(5);
   const data = staffs.data;
   const allEmployee = data;
+  // const [allEmployee, setAllEmployee] = useState()
+
 
   useEffect(() => {
     Cookies.set("emp_current_step", 1);
+
+    // getAllEmployeeListData()
+
   }, []);
+
+  const getAllEmployeeListData = async () => {
+    // setAllEmployee
+    const { response: data, success } = await useAxios(listEmployeeListAPI())
+    console.log('data', data.data);
+    setAllEmployee(data.data.list)
+  }
+
 
   useEffect(() => {
     setEmployeeList(getPerPageData());
@@ -116,19 +131,19 @@ const AddEmployee = () => {
 
             <div className="col-lg-3 col-sm-6 col-12 mb-lg-0 mt-sm-2 offset-lg-6 text-sm-right text-center">
               {/* <Link href="/add-employee/steps" > */}
-                <a onClick={goToAddSteps}
-                  className={
-                    "btn btn-pill mb-sm-0 mb-2  text_theme_primary custom_btn font-weight-bold"
-                  }
-                >
-                  <i className="fa fa-plus"> </i> Add New Employee
-                </a>
+              <a onClick={goToAddSteps}
+                className={
+                  "btn btn-pill mb-sm-0 mb-2  text_theme_primary custom_btn font-weight-bold"
+                }
+              >
+                <i className="fa fa-plus"> </i> Add New Employee
+              </a>
               {/* </Link> */}
             </div>
           </div>
 
           <div className="content-body">
-            <div className="row">
+            1<div className="row">
               {staffList.map((employee, index) => {
                 return <EmployeeCard key={index} employee={employee} />;
               })}

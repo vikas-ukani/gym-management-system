@@ -25,6 +25,11 @@ const Step1 = ({ currentData, goToNextStep }) => {
   const [weightPoints, setWeightPoints] = useState();
   const [heightPoints, setHeightPoints] = useState();
 
+  var globalHeight = 7
+  var globalWeight = 60
+
+
+
   const [regionList, setRegionList] = useState();
   const [languagesList, setLanguagesList] = useState();
 
@@ -59,7 +64,6 @@ const Step1 = ({ currentData, goToNextStep }) => {
     setSelectedLanguage(currentData?.language_ids)
     reset({ ...currentData });
     fetchLanguagesList()
-
     await fetchRegionList()
   }, []);
 
@@ -138,6 +142,7 @@ const Step1 = ({ currentData, goToNextStep }) => {
     return moment(moment(date), "DD-MM-YYYY");
   };
 
+
   const onSubmit = (inputData) => {
     if (!dob && !currentData?.date_of_birth) {
       setError("date_of_birth", {
@@ -150,8 +155,6 @@ const Step1 = ({ currentData, goToNextStep }) => {
       ...input,
       ...inputData,
       age,
-      height: heightPoints,
-      weight: weightPoints,
       region_id: selectedRegionId,
       date_of_birth: dob
         ? dob
@@ -162,7 +165,10 @@ const Step1 = ({ currentData, goToNextStep }) => {
       blood_group: selectedBloodGroup,
     };
 
-    console.log("Final UpdatedData", input, UpdatedData);
+    UpdatedData.height = globalHeight.toString()
+    UpdatedData.weight = globalWeight
+
+    console.log("Final UpdatedData", UpdatedData);
     setCookie("step1", UpdatedData);
     goToNextStep(UpdatedData);
   };
@@ -178,11 +184,13 @@ const Step1 = ({ currentData, goToNextStep }) => {
     return returnHight;
   };
 
-  const handleHeightChange = (h) => {
-    console.log("Chamges", h);
-    // setHeightPoints(h)
+  const handleHeightChange = async (h) => {
+    globalHeight = h
   }
 
+  const handleWeightChange = async (h) => {
+    globalWeight = h
+  }
 
   const getWeightPoints = (weight) => {
     let returnWeight = weight || 60.6;
@@ -198,6 +206,17 @@ const Step1 = ({ currentData, goToNextStep }) => {
           {/* <!-- step-1-start --> */}
           <div className="tab-pane active" role="tabpanel" id="step1">
             <div className="row">
+              <div className="col-xl-6">
+                <div className="form-group">
+                  <label className="top-label text-capitalize">
+                    Employee ID:
+                  </label>
+                  <input type="text" className="form-control form-control-lg"
+                    name="employee_id"
+                    {...register("employee_id")}
+                  />
+                </div>
+              </div>
               <div className="col-xl-6">
                 <div className="form-group">
                   <label className="top-label">First Name</label>
@@ -240,7 +259,7 @@ const Step1 = ({ currentData, goToNextStep }) => {
                 </div>
               </div>
 
-              <div className="col-xl-4 col-9">
+              <div className="col-xl-4 ">
                 <div className="form-group date-birth">
                   <label className="h6" htmlFor="exampleInputDate1">
                     Date of Birth
@@ -266,7 +285,7 @@ const Step1 = ({ currentData, goToNextStep }) => {
                 </div>
               </div>
 
-              <div className="col-xl-4 col-3 age-field">
+              <div className="col-xl-2">
                 <div className="form-group date-birth">
                   <label className="h6" htmlFor="exampleInputDate1">
                     Age
@@ -280,7 +299,7 @@ const Step1 = ({ currentData, goToNextStep }) => {
                 </div>
               </div>
 
-              <div className="col-5 col-xl-4">
+              <div className="col-xl-4">
                 <div className="form-group">
                   <label className="h6">Blood Group</label>
                   <div className="input-group">
@@ -336,9 +355,11 @@ const Step1 = ({ currentData, goToNextStep }) => {
                       activeDotStyle
                       dots={false}
                       dotStyle={{ display: "none" }}
+                      autoFocus={false}
+
                     />
                     {/* onChange={(val) => {setHeightPoints(val)}} */}
-                      {/* // defaultValue={getHeightPoints(stepInput?.height)} */}
+                    {/* // defaultValue={getHeightPoints(stepInput?.height)} */}
                   </div>
                 </div>
               </div>
@@ -363,12 +384,13 @@ const Step1 = ({ currentData, goToNextStep }) => {
                       data-type="single"
                       id="weight"
                       defaultValue={getWeightPoints(stepInput?.weight)}
-                      onChange={(val) => console.log(val)}
+                      onChange={handleWeightChange}
                       dots={false}
                       {...weightOptions}
                       activeDotStyle
                       dots={false}
                       dotStyle={{ display: "none" }}
+                      autoFocus={false}
                     />
                   </div>
                 </div>
@@ -512,17 +534,7 @@ const Step1 = ({ currentData, goToNextStep }) => {
                   )}
                 </div>
               </div>
-              <div className="col-xl-6">
-                <div className="form-group">
-                  <label className="top-label text-capitalize">
-                    Employee ID:
-                  </label>
-                  <input type="text" className="form-control form-control-lg"
-                    name="employee_id"
-                    {...register("employee_id")}
-                  />
-                </div>
-              </div>
+
               <div className="col-xl-6">
                 <div className="form-group mt-75">
                   <label className="">Is Activate?</label>
@@ -622,7 +634,7 @@ const Step1 = ({ currentData, goToNextStep }) => {
                       style={{ width: "100%" }}
                       name="region_id"
                       onChange={(id) => setSelectedRegionId(id)}
-                      
+
                     >
                       {/* {...register('region_id', { required: "Select any one," })} */}
                       {/* onChange={(id) => setSelectedBloodGroup(id)} */}

@@ -15,6 +15,9 @@ const Step4 = ({ currentData, goToNextStep, goToPrevStep }) => {
   const [designation, setDesignation] = useState();
   const [designationList, setDesignationList] = useState();
 
+  const [department, setDepartment] = useState();
+  const [departmentList, setDepartmentList] = useState();
+
   const [defaultFileList, setDefaultFileList] = useState([]);
   const [profileImageId, setProfileImageId] = useState();
 
@@ -28,14 +31,15 @@ const Step4 = ({ currentData, goToNextStep, goToPrevStep }) => {
   useEffect(() => {
     setStepInput(currentData);
     setDesignation(currentData?.designation_id)
+    setDepartment(currentData?.department_id)
     fetchDesignations()
+    fetchsetDepartmentList()
     setProfileImagePreviewData()
   }, []);
 
   const setProfileImagePreviewData = async () => {
     if (stepInput.profile_image_id) {
       const { response: { data }, statusCode, error } = await useAxios(getMediaImageAPI({ ids: [stepInput.profile_image_id] }))
-      console.log("S", statusCode, data, error);
       if (data) {
         setDefaultFileList([
           {
@@ -57,6 +61,16 @@ const Step4 = ({ currentData, goToNextStep, goToPrevStep }) => {
       let { child_masters } = data[MASTER_CODES.DESIGNATION];
       setDesignationList(child_masters)
       // setDesignationList([...child_masters.map(cM => {return {  "value": cM.id, "label" : cM.name }})])
+    } else {
+      addToast(error.message, { appearance: 'error', autoDismiss: false })
+    }
+  }
+
+  const fetchsetDepartmentList = async () => {
+    const { response: { data }, statusCode, error } = await useAxios(getMasterByCode(MASTER_CODES.DEPARTMENT))
+    if (statusCode == 200) {
+      let { child_masters } = data[MASTER_CODES.DEPARTMENT];
+      setDepartmentList(child_masters)
     } else {
       addToast(error.message, { appearance: 'error', autoDismiss: false })
     }
@@ -101,6 +115,7 @@ const Step4 = ({ currentData, goToNextStep, goToPrevStep }) => {
       ...stepInput,
       about_me: inputData.about_me ? inputData.about_me : stepInput.about_me,
       designation_id: designation,
+      department_id: department,
       profile_image_id: profileImageId ? profileImageId : (stepInput?.profile_image_id ? stepInput?.profile_image_id : null)
     };
 
@@ -126,13 +141,12 @@ const Step4 = ({ currentData, goToNextStep, goToPrevStep }) => {
           <div className="tab-pane active" role="tabpanel" id="step1">
             <div className="row d-flex">
               <div className="col-2">
-
                 <div className="form-group">
                   <label className="top-label">Profile Picture</label>
                   <Upload
                     accept="image/*"
                     customRequest={(e) => uploadImage(e)}
-                    fileList={defaultFileList}
+                    defaultFileList={defaultFileList}
                     onChange={handleOnChange}
                     listType="picture-card"
                     onPreview={onPreview}
@@ -177,7 +191,6 @@ const Step4 = ({ currentData, goToNextStep, goToPrevStep }) => {
                 <div className="form-group">
                   <label className="w-100">
                     Designation
-                    {/* <a href="#" className="btn btn-primary add-icon"><i className="fa fa-plus"></i></a> */}
                   </label>
                   <Select
                     className=""
@@ -187,8 +200,27 @@ const Step4 = ({ currentData, goToNextStep, goToPrevStep }) => {
                     onChange={(id) => setDesignation(id)}
                     name="experience"
                   >
-                    {/* <Select.Option value={null} disabled={true}>Select Designation</Select.Option> */}
                     {designationList?.map(dL => (
+                      <Select.Option key={dL.id} value={dL.id}>{dL.name}</Select.Option>
+                    ))}
+                  </Select>
+                </div>
+              </div>
+
+              <div className="col-xl-6">
+                <div className="form-group">
+                  <label className="w-100">
+                    Department
+                  </label>
+                  <Select
+                    className=""
+                    placeholder="Select Department."
+                    value={department}
+                    style={{ width: "100%" }}
+                    onChange={(id) => setDepartment(id)}
+                    name="department"
+                  >
+                    {departmentList?.map(dL => (
                       <Select.Option key={dL.id} value={dL.id}>{dL.name}</Select.Option>
                     ))}
                   </Select>
