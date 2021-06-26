@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { DatePicker, Select, Upload } from "antd";
+import { DatePicker, Image, Select, Upload } from "antd";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { setCookie } from "services";
 import { MASTER_CODES } from "constants/common";
@@ -7,7 +7,7 @@ import { useAxios } from "hooks";
 import moment from 'moment'
 import { getMasterByCode } from "services/masters";
 import { useToasts } from "react-toast-notifications";
-import { uploadImageService } from "services/image";
+import { getMediaImageAPI, uploadImageService } from "services/image";
 import { first } from "underscore";
 
 const Step3 = ({ currentData, goToNextStep, goToPrevStep }) => {
@@ -83,6 +83,32 @@ const Step3 = ({ currentData, goToNextStep, goToPrevStep }) => {
     fetchAllSpecializations()
     fetchAllEducationLevelList()
   }, []);
+
+  const getImagePreviewById = async (id) => {
+    console.log('get id', id);
+    if (id) {
+      const { response: { data }, statusCode, error } = await useAxios(getMediaImageAPI({ ids: [id] }))
+      if (data) {
+        console.log('path', data[0].url);
+        return data[0].url
+        return {
+          uid: data[0].id,
+          name: data[0].name,
+          status: 'done',
+          url: data[0].url,
+        }
+        // return data[0].url
+        // setDefaultFileList([
+        //   {
+        //     uid: data[0].id,
+        //     name: data[0].name,
+        //     status: 'done',
+        //     url: data[0].url,
+        //   }
+        // ])
+      }
+    }
+  }
 
   const fetchAllSpecializations = async () => {
     const MASTER_CODE_SPECIALIZATIONS = MASTER_CODES.SPECIALIZATION
@@ -602,16 +628,15 @@ const Step3 = ({ currentData, goToNextStep, goToPrevStep }) => {
                           <div className="col-xl-6 ">
                             <div className="form-group">
                               <label className="top-label text-capitalize">date of joining</label>
-
+                              {/* <pre>{JSON.stringify(moment(moment(stepInput?.experiences?.[index]?.date_of_joining).format( 'DD-MM-YYYY')), null, 1)}</pre> */}
                               <Controller
                                 control={control}
                                 name={`experiences.${index}.date_of_joining`}
                                 {...register(`experiences.${index}.date_of_joining`)}
                                 render={({ field }) => (
                                   <DatePicker
-                                    {...field}
                                     format={"DD-MM-YYYY"}
-                                    defaultValue={moment(stepInput?.experiences?.[index]?.date_of_joining).format("DD-MM-YYYY")}
+                                    defaultValue={stepInput?.experiences?.[index]?.date_of_joining}
                                     className="form-control form-control-lg mb-25 mt-25"
                                     placeholder='Select joining date'
                                     onChange={(date) => setValue(`experiences.${index}.date_of_joining`, date, { shouldValidate: true, shouldDirty: true })}
@@ -647,14 +672,17 @@ const Step3 = ({ currentData, goToNextStep, goToPrevStep }) => {
                                 experience letter
                               </label>
                               <div className="d-inline-flex ">
+                            
                                 <Upload
                                   accept="image/*"
                                   customRequest={(e) => uploadExperienceLetterFile(e, index)}
                                   defaultFileList={defaultExperienceLetterFileList}
                                   onChange={handleOnChangeExperienceLetterFile}
                                   listType="picture-card"
-                                  onPreview={onPreviewExperienceLetterFile}
+                                  onPreview={onPreview}
                                 >
+                                  {/* defaultFileList={() => stepInput?.experiences?.[index]?.experience_letter_id ? getImagePreviewById(stepInput?.experiences?.[index]?.experience_letter_id) : onPreviewExperienceLetterFile} */}
+                                  {/* onPreview={() => { stepInput?.experiences?.[index]?.experience_letter_id ? getImagePreviewById(stepInput?.experiences?.[index]?.experience_letter_id) :  onPreviewExperienceLetterFile }} */}
                                   {defaultExperienceLetterFileList.length >= 1 ? null : (
                                     <div>Upload</div>
                                   )}
