@@ -17,6 +17,8 @@ const Step1 = ({ currentData, goToNextStep }) => {
   const [input, setInput] = useState({});
   const [stepInput, setStepInput] = useState({});
   const [dob, setDob] = useState(null);
+  const [DOJ, setDOJ] = useState(null);
+  const [DOE, setDOE] = useState(null);
   const [age, setAge] = useState(null);
   const [selectedLanguage, setSelectedLanguage] = useState([]);
   const [selectedBloodGroup, setSelectedBloodGroup] = useState();
@@ -119,12 +121,16 @@ const Step1 = ({ currentData, goToNextStep }) => {
       ...stepInput,
       date_of_join: date,
     });
+    setDOJ(date);
+
   };
   const changeDOE = (date) => {
     setStepInput({
       ...stepInput,
       date_of_expire: date,
     });
+    setDOE(date);
+
   };
 
   const handleChange = (e) => {
@@ -155,11 +161,21 @@ const Step1 = ({ currentData, goToNextStep }) => {
       ...input,
       ...inputData,
       age,
-      region_id: selectedRegionId,
+      religion_id: selectedRegionId,
       date_of_birth: dob
         ? dob
         : currentData?.date_of_birth
           ? currentData?.date_of_birth
+          : null,
+          date_of_join: DOJ
+        ? DOJ
+        : currentData?.date_of_join
+          ? currentData?.date_of_join
+          : null,
+          date_of_expire: DOE
+        ? DOE
+        : currentData?.date_of_expire
+          ? currentData?.date_of_expire
           : null,
       language_ids: selectedLanguage,
       blood_group: selectedBloodGroup,
@@ -167,7 +183,7 @@ const Step1 = ({ currentData, goToNextStep }) => {
 
     UpdatedData.height = globalHeight.toString()
     UpdatedData.weight = globalWeight
-
+    UpdatedData.is_active = UpdatedData.is_active == 'true' || UpdatedData.is_active == 1
     console.log("Final UpdatedData", UpdatedData);
     setCookie("step1", UpdatedData);
     goToNextStep(UpdatedData);
@@ -632,7 +648,7 @@ const Step1 = ({ currentData, goToNextStep }) => {
                       placeholder="Select any region."
                       value={selectedRegionId}
                       style={{ width: "100%" }}
-                      name="region_id"
+                      name="religion_id"
                       onChange={(id) => setSelectedRegionId(id)}
 
                     >

@@ -302,7 +302,7 @@ const Step3 = ({ currentData, goToNextStep, goToPrevStep }) => {
             <div className="row mt-3">
               <div className="col-xl-12">
                 <div className="card p-1">
-                  <div className="col-12 form-group">
+                  <div className="col-12 form-group mb-0 pt-1">
                     <label className="top-label text-capitalize w-100 text-capitalize">
                       <b className="font-medium-5">educations</b>
                       {educationsFields.fields.length < 5 && (
@@ -466,7 +466,7 @@ const Step3 = ({ currentData, goToNextStep, goToPrevStep }) => {
               </div>
               <div className="col-xl-12">
                 <div className="card p-1">
-                  <div className="col-12 form-group">
+                  <div className="col-12 form-group mb-0 pt-1">
                     <label className="top-label text-capitalize w-100 text-capitalize">
                       <b className="font-medium-5">Certificate</b>
                       {certificationsFields.fields.length < 5 && (
@@ -581,7 +581,7 @@ const Step3 = ({ currentData, goToNextStep, goToPrevStep }) => {
               </div>
               <div className="col-xl-12">
                 <div className="card p-1">
-                  <div className="col-12 form-group">
+                  <div className="col-12 form-group mb-0 pt-1">
                     <label className="top-label text-capitalize w-100 text-capitalize">
                       <b className="font-medium-5">experiences</b>
                       {experiencesFields.fields.length < 5 && (

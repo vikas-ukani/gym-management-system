@@ -4,6 +4,7 @@ import { useAxios } from "hooks";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useToasts } from "react-toast-notifications";
+import { setCookie } from "services";
 import { deleteWorkspaceAPI, setDefaultWorkspaceAPI } from "services/workspace";
 import Swal from "sweetalert2";
 import { filter, findWhere } from "underscore";
@@ -46,6 +47,7 @@ const MainCardLists = ({ workspaces = [] }) => {
             setDefaultWorkspaceAPI(id, params)
           );
           if (statusCode === 200) {
+            setCookie('workspace_id', id)
             setActiveRecordId(id);
             let newLists = workspaces.forEach((list) => {
               let newData = {

@@ -59,7 +59,6 @@ const Steps = () => {
       }
 
       console.log("API Final Data", apiData);
-
       const { response, error, loading, statusCode } = await useAxios(
         createEmployeeAPI(apiData)
       );

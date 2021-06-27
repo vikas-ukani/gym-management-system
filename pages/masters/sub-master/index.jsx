@@ -47,7 +47,7 @@ const SubMaster = () => {
     let Query = {
       all: true,
       page: params?.page || 1,
-      limit: params?.limit || 100,
+      limit: params?.limit || 1000,
     };
     const qs = new URLSearchParams(Query).toString();
 
