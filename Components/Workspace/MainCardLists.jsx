@@ -23,6 +23,7 @@ const MainCardLists = ({ workspaces = [] }) => {
   useEffect(() => {
     let found = findWhere(workspaces, { is_default: 1 });
     if (found?.id) {
+      setCookie('workspace_id', found?.id)
       setActiveRecordId(found?.id);
     }
   }, [workspaces]);
