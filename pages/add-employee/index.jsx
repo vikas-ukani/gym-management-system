@@ -143,12 +143,11 @@ const AddEmployee = () => {
           </div>
 
           <div className="content-body">
-            1<div className="row">
+            <div className="row">
               {staffList.map((employee, index) => {
                 return <EmployeeCard key={index} employee={employee} />;
               })}
             </div>
-
             <nav aria-label="Blog page navigation">
               <ul className="pagination justify-content-center mt-2">
                 <li className="page-item">

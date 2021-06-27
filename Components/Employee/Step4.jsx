@@ -187,25 +187,7 @@ const Step4 = ({ currentData, goToNextStep, goToPrevStep }) => {
                 </div>
               </div> */}
 
-              <div className="col-xl-6">
-                <div className="form-group">
-                  <label className="w-100">
-                    Designation
-                  </label>
-                  <Select
-                    className=""
-                    placeholder="Select Designation."
-                    value={designation}
-                    style={{ width: "100%" }}
-                    onChange={(id) => setDesignation(id)}
-                    name="experience"
-                  >
-                    {designationList?.map(dL => (
-                      <Select.Option key={dL.id} value={dL.id}>{dL.name}</Select.Option>
-                    ))}
-                  </Select>
-                </div>
-              </div>
+
 
               <div className="col-xl-6">
                 <div className="form-group">
@@ -221,6 +203,25 @@ const Step4 = ({ currentData, goToNextStep, goToPrevStep }) => {
                     name="department"
                   >
                     {departmentList?.map(dL => (
+                      <Select.Option key={dL.id} value={dL.id}>{dL.name}</Select.Option>
+                    ))}
+                  </Select>
+                </div>
+              </div>
+              <div className="col-xl-6">
+                <div className="form-group">
+                  <label className="w-100">
+                    Designation
+                  </label>
+                  <Select
+                    className=""
+                    placeholder="Select Designation."
+                    value={designation}
+                    style={{ width: "100%" }}
+                    onChange={(id) => setDesignation(id)}
+                    name="experience"
+                  >
+                    {designationList?.map(dL => (
                       <Select.Option key={dL.id} value={dL.id}>{dL.name}</Select.Option>
                     ))}
                   </Select>
