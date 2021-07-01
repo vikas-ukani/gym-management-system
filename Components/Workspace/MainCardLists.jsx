@@ -133,9 +133,8 @@ const MainCardLists = ({ workspaces = [] }) => {
                 return (
                   <div className="col-xl-3 col-md-4  h-100" key={idx}>
                     <div
-                      className={`card pl-25 bg-primary shadow-soft border-light not-interested-box ${
-                        activeRecordId == list.id && activeClass
-                      }`}
+                      className={`card pl-25 bg-primary shadow-soft border-light not-interested-box ${activeRecordId == list.id && activeClass
+                        }`}
                     >
                       <div className="card-body p-75">
                         <div
@@ -164,7 +163,6 @@ const MainCardLists = ({ workspaces = [] }) => {
                               <i className="fa fa-edit"></i> Edit
                             </a>
                           </Link>
-
                           <button
                             className="btn btn-primary custom_btn_card px-50 py-75"
                             onClick={() => deleteRow(list.id)}

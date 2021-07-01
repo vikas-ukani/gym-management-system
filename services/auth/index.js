@@ -30,7 +30,7 @@ const axios = Axios.create({
 export const loginProcess = async (params) => {
   try {
     const { data, status } = await axios
-      .post(baseAPIUrl + "auth/login", params)
+      .post("auth/login", params)
       .then((res) => res)
       .catch((err) => err.response);
 

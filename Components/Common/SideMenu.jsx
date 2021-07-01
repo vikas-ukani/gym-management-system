@@ -35,9 +35,9 @@ const SideMenu = () => {
             title={"Employee"}
             iconClass={"fa-users"}
           />
-          {!(user?.role == USER_ROLE_GYM_OWNER) && (
+          {/* {!(user?.role == USER_ROLE_GYM_OWNER) && ( */}
             <NavLinkLI url={"/users"} title={"Users"} iconClass={"fa-users"} />
-          )}
+          {/* )} */}
           <NavLinkLI url={"/members"} title={"Members"} iconClass={"fa-user"} />
           <NavLinkLI
             url={"/exercise"}
