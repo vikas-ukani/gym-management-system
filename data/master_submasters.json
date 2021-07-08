@@ -97,6 +97,27 @@
             "code": "HALF_DAY",
             "is_active": true,
             "parent_id": 4
+        },
+        {
+            "id": 5,
+            "name": "Language",
+            "code": "LANGUAGE",
+            "is_active": true,
+            "parent_id": null
+        },
+        {
+            "id": 541,
+            "name": "English",
+            "code": "ENGLISH",
+            "is_active": true,
+            "parent_id": 5
+        },
+        {
+            "id": 522,
+            "name": "Spainish",
+            "code": "SPAINISH",
+            "is_active": true,
+            "parent_id": 5
         }
     ]
 }

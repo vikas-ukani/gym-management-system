@@ -44,7 +44,6 @@ const UpdateWorkspace = ({ id }) => {
   // let { id } = router.query
 
   useEffect(async () => {
-    console.log('All ');
     let {
       response: { statusCode, data: { data } },
     } = await getAxios(getWorkspaceAPI(id));
