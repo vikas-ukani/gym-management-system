@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { useAxios } from "hooks";
 import { useToasts } from "react-toast-notifications";
@@ -12,28 +12,46 @@ import getAxios from "hooks/getAxios";
 import { MOBILE_VALID_PATTERN } from "constants/common";
 
 export const getServerSideProps = async (ctx) => {
-  let token = await ctx.req?.cookies.token;
+  //   let token = await ctx.req?.cookies.token;
   let id = ctx.query.id || null;
-  let newRequest = getWorkspaceAPI(id);
-  newRequest.headers.Authorization = getTokenType() + token;
-  let {
-    response: { statusCode, data: workspace },
-  } = await getAxios(newRequest);
+  // let newRequest = getWorkspaceAPI(id);
+  //   newRequest.headers.Authorization = getTokenType() + token;
+  //   let {
+  //     response: { statusCode, data: workspace },
+  //   } = await getAxios(newRequest);
 
-  if (statusCode == 422 || statusCode == 400) {
-    return { workspace };
-  }
-  workspace.is_default =
-    workspace.is_default == 1 || workspace.is_default == "true";
+  //   console.log('workspace', newRequest, workspace);
+  //   if (!workspace || statusCode == 422 || statusCode == 400) {
+  //     return { props: { workspace } };
+  //   }
+
+  //   if (workspace && workspace.is_default) {
+  //     workspace.is_default = workspace?.is_default == 1 || workspace?.is_default == "true";
+  //   }
   return {
-    props: { workspace },
+    props: { id },
   };
 };
 
-const UpdateWorkspace = ({ workspace }) => {
+//const UpdateWorkspace = ({ workspace }) => {
+const UpdateWorkspace = ({ id }) => {
   const MODULE_NAME = " Update Workspace";
   const { addToast } = useToasts();
-  const id = workspace?.id;
+  const [workspace, setWorkspace] = useState({
+    emails: [{}],
+    phones: [{}],
+  })
+  // let { id } = router.query
+
+  useEffect(async () => {
+    console.log('All ');
+    let {
+      response: { statusCode, data: { data } },
+    } = await getAxios(getWorkspaceAPI(id));
+    console.log('data', data);
+    setWorkspace(data)
+  }, [])
+  // const id = workspace?.id;
   const {
     register,
     handleSubmit,
@@ -85,7 +103,7 @@ const UpdateWorkspace = ({ workspace }) => {
                         name="location_name"
                         defaultValue={workspace?.location_name}
                         {...register("location_name", {
-                          required: "The   name is required.",
+                          required: "The name is required.",
                         })}
                       />
                       {errors.location_name && (

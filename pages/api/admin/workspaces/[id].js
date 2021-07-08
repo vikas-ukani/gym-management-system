@@ -1,10 +1,9 @@
-import { sendFailer, sendSuccess } from 'utils/apiResponse'
+import { sendSuccess } from "utils/apiResponse"
 import { data } from 'data/workspaces.json'
+import { where } from "underscore"
 
 export default (req, res) => {
-    console.log('IN ' );
-    let { id } = req.query
-    let data = data
-    console.log('req', id, data);
-    sendSuccess(res, 200, { list: data, count: data.length }, `Masters retrived successfully.`)
+    const { id } = req.query
+    let datas = where(data, { id: parseInt(id) })
+    sendSuccess(res, 200, { data: datas[0] }, "Message")
 }
