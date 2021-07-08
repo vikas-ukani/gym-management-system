@@ -1,0 +1,102 @@
+{
+    "masters": [
+        {
+            "id": 1,
+            "name": "First",
+            "code": "FIRST",
+            "is_active": false,
+            "parent_id": null
+        },
+        {
+            "id": 111,
+            "name": "SubF",
+            "code": "SUBF",
+            "is_active": false,
+            "parent_id": 1
+        },
+        {
+            "id": 2,
+            "name": "Roles",
+            "code": "ROLES",
+            "is_active": true,
+            "parent_id": null
+        },
+        {
+            "id": 222,
+            "name": "Admin",
+            "code": "ADMIN",
+            "is_active": true,
+            "parent_id": 2
+        },
+        {
+            "id": 223,
+            "name": "Staff",
+            "code": "STAFF",
+            "is_active": true,
+            "parent_id": 2
+        },
+        {
+            "id": 224,
+            "name": "GYM Owner",
+            "code": "GYM_OWNER",
+            "is_active": true,
+            "parent_id": 2
+        },
+        {
+            "id": 225,
+            "name": "Member",
+            "code": "MEMBER",
+            "is_active": true,
+            "parent_id": 2
+        },
+        {
+            "id": 3,
+            "name": "Gender",
+            "code": "GENDER",
+            "is_active": true,
+            "parent_id": null
+        },
+        {
+            "id": 331,
+            "name": "Male",
+            "code": "MALE",
+            "is_active": true,
+            "parent_id": 3
+        },
+        {
+            "id": 332,
+            "name": "Female",
+            "code": "FEMALE",
+            "is_active": true,
+            "parent_id": 3
+        },
+        {
+            "id": 333,
+            "name": "Other",
+            "code": "OTHER",
+            "is_active": true,
+            "parent_id": 3
+        },
+        {
+            "id": 4,
+            "name": "Leave Type",
+            "code": "LEAVE TYPE",
+            "is_active": true,
+            "parent_id": null
+        },
+        {
+            "id": 441,
+            "name": "Full Day",
+            "code": "FULL_DAY",
+            "is_active": true,
+            "parent_id": 4
+        },
+        {
+            "id": 422,
+            "name": "Half Day",
+            "code": "HALF_DAY",
+            "is_active": true,
+            "parent_id": 4
+        }
+    ]
+}
