@@ -49,7 +49,7 @@ const Step2 = ({ currentData, goToNextStep, goToPrevStep }) => {
       ...input,
       ...inputData,
     };
-
+    UpdatedData.is_whatsapp_number = UpdatedData.is_whatsapp_number == 'true' || UpdatedData.is_whatsapp_number == 1
     console.log("Final UpdatedData", input, UpdatedData);
     setCookie("step2", UpdatedData);
     goToNextStep(UpdatedData);
@@ -213,11 +213,11 @@ const Step2 = ({ currentData, goToNextStep, goToPrevStep }) => {
                         <div className="vs-radio-con">
                           <input
                             type="radio"
-                            name="is_whatsapp"
+                            name="is_whatsapp_number"
                             value={true}
-                            defaultValue={stepInput?.is_whatsapp == "true" || stepInput?.is_whatsapp == 1}
+                            defaultValue={stepInput?.is_whatsapp_number == "true" || stepInput?.is_whatsapp_number == 1}
                             onChange={handleChange}
-                            {...register('is_whatsapp')}
+                            {...register('is_whatsapp_number')}
                           />
                           <span className="vs-radio">
                             <span className="vs-radio--border"></span>
@@ -232,11 +232,11 @@ const Step2 = ({ currentData, goToNextStep, goToPrevStep }) => {
                         <div className="vs-radio-con">
                           <input
                             type="radio"
-                            name="is_whatsapp"
+                            name="is_whatsapp_number"
                             value={false}
-                            defaultValue={stepInput?.is_whatsapp == "false" || stepInput?.is_whatsapp == 0}
+                            defaultValue={stepInput?.is_whatsapp_number == "false" || stepInput?.is_whatsapp_number == 0}
                             onChange={handleChange}
-                            {...register('is_whatsapp')}
+                            {...register('is_whatsapp_number')}
                           />
                           <span className="vs-radio">
                             <span className="vs-radio--border"></span>
@@ -247,9 +247,9 @@ const Step2 = ({ currentData, goToNextStep, goToPrevStep }) => {
                       </fieldset>
                     </li>
 
-                    {errors.is_whatsapp && (
+                    {errors.is_whatsapp_number && (
                       <span className="mt-5 text-danger">
-                        {errors.is_whatsapp.message}
+                        {errors.is_whatsapp_number.message}
                       </span>
                     )}
                   </ul>

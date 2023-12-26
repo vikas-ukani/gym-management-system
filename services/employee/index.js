@@ -15,7 +15,7 @@ export const createEmployeeAPI = (params = {}) => {
     return {
         url: "admin/employees",
         method: "post",
-        headers: { accept: "*/*", Authorization: "Bearer " + getToken() },
+        headers: { Accept: "*/*", 'Content-Type': 'application/json', Authorization: "Bearer " + getToken() },
         body: params,
     };
 };
